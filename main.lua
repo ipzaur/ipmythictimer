@@ -40,10 +40,10 @@ local function UpdateCriteria()
         elseif isWeightedProgress then
             local progress = tonumber(strsub(quantityString, 1, -2)) / totalQuantity * 100
             progress = math.min(100, progress)
-            if (progress % 20 > 13) then
-                fIPMT.progress:SetTextColor(1,0,0)
-            elseif (progress % 20 > 17) then
+            if (progress % 20 > 17) then
                 fIPMT.progress:SetTextColor(1,1,0)
+            elseif (progress % 20 > 13) then
+                fIPMT.progress:SetTextColor(1,0,0)
             else
                 fIPMT.progress:SetTextColor(1,1,1)
             end

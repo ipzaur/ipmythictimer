@@ -1,7 +1,7 @@
 local maxWidth = 150
 local noticeWidth = 220
 
-local FONT_ROBOTO = "Interface\\AddOns\\iPMythicTimer\\RobotoCondensed-Light.ttf"
+local FONT_ROBOTO = "Interface\\AddOns\\ipmythictimer\\RobotoCondensed-Light.ttf"
 local backdrop = {
     bgFile   = "Interface\\TutorialFrame\\TutorialFrameBackground",
     edgeFile = nil,--"Interface\\Tooltips\\UI-Tooltip-Border",
