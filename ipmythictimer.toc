@@ -4,6 +4,7 @@
 ## Notes-ruRU: Компактный Таймер для Мификов
 ## Author: iP
 ## Version: 8.1.5
+## SavedVariables: IPMTDB
 ## X-eMail: ipzaur@gmail.com
 
 main.lua
