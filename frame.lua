@@ -119,4 +119,7 @@ for f = 1,4 do
     fIPMT.affix[f]:SetSize(affixSize.width, affixSize.height)
     fIPMT.affix[f].Portrait:SetSize(affixSize.width - 2, affixSize.height - 2)
     fIPMT.affix[f]:SetPoint("RIGHT", fIPMT, "TOPRIGHT", right - 4, -16)
+    fIPMT.affix[f]:SetScript("OnEnter", function(self, event, ...)
+        IPMythicTimer:OnAffixEnter(self, f)
+    end)
 end

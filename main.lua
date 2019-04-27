@@ -212,19 +212,36 @@ local function UpdateDeath()
     end
 end
 
+
+
+function IPMythicTimer:OnAffixEnter(self, affixNum)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetText(dungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
+    GameTooltip:AddLine(dungeon.affixes[affixNum].text, nil, nil, nil, true)
+    GameTooltip:Show()
+end
+
+
 local function ShowFrame()
     local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
     local name, type, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
 
     dungeon.level = level
-    dungeon.affixes = affixes
+    dungeon.affixes = {}
     dungeon.isReaping = false
 
     fIPMT.level:SetText(dungeon.level)
-    local count = #dungeon.affixes
-    for i,affix in pairs(dungeon.affixes) do
-        local _, _, filedataid = C_ChallengeMode.GetAffixInfo(affix);
+    local count = #affixes
+    for i,affix in pairs(affixes) do
+        local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix);
         local iconNum = count - i + 1
+        dungeon.affixes[i] = {
+            name = name,
+            text = description,
+        }
+        print(dungeon.affixes[i].name, dungeon.affixes[i].text)
         SetPortraitToTexture(fIPMT.affix[iconNum].Portrait, filedataid);
         fIPMT.affix[iconNum]:Show()
 
@@ -238,6 +255,8 @@ local function ShowFrame()
     UpdateDeath()
     UpdateCriteria()
     fIPMT:Show()
+    fIPMT.progress:SetTextColor(1,1,1)
+    fIPMT.prognosis:SetTextColor(1,1,1)
     ObjectiveTrackerFrame:Hide()
 end
 
@@ -249,7 +268,6 @@ local function StopTimer()
     ObjectiveTrackerFrame:Show()
 end
 
--- Based on addon "Mythic Plus Pull Estimator"
 local function ShowPrognosis()
     local prognosis = 0
     for _, nameplate in pairs(C_NamePlate.GetNamePlates()) do
@@ -267,15 +285,18 @@ local function ShowPrognosis()
         end
     end
     if prognosis > 0 then
-        local progress = dungeon.trash.current / dungeon.trash.total * 100 + prognosis
+        local currentProgress = dungeon.trash.current / dungeon.trash.total * 100
+        local progress = currentProgress + prognosis
         progress = math.min(100, progress)
         if dungeon.isReaping then
-            if (progress % 20 > 18) then
-                fIPMT.progress:SetTextColor(1,0,0)
+            local currentWave = math.floor(currentProgress / 20)
+            local prognosisWave = math.floor(progress / 20)
+            if (progress % 20 > 18 or currentWave < prognosisWave) then
+                fIPMT.prognosis:SetTextColor(1,0,0)
             elseif (progress % 20 > 15) then
-                fIPMT.progress:SetTextColor(1,1,0)
+                fIPMT.prognosis:SetTextColor(1,1,0)
             else
-                fIPMT.progress:SetTextColor(1,1,1)
+                fIPMT.prognosis:SetTextColor(1,1,1)
             end
         end
         fIPMT.prognosis:SetFormattedText("%.2f%%", progress)
