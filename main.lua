@@ -241,7 +241,6 @@ local function ShowFrame()
             name = name,
             text = description,
         }
-        print(dungeon.affixes[i].name, dungeon.affixes[i].text)
         SetPortraitToTexture(fIPMT.affix[iconNum].Portrait, filedataid);
         fIPMT.affix[iconNum]:Show()
 
