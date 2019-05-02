@@ -92,6 +92,9 @@ end
 local function GrabMobInfo()
     if killInfo.npcID and killInfo.diedTime and killInfo.progress and killInfo.progressTime then
         if abs(killInfo.progressTime - killInfo.diedTime) < 0.1 then
+            if not IPMTDB then
+                IPMTDB = {}
+            end
             if not IPMTDB[killInfo.npcID] then
                 IPMTDB[killInfo.npcID] = killInfo.progress
             end
@@ -257,6 +260,8 @@ local function ShowFrame()
     fIPMT.progress:SetTextColor(1,1,1)
     fIPMT.prognosis:SetTextColor(1,1,1)
     ObjectiveTrackerFrame:Hide()
+
+    fIPMT:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
 local function StopTimer()
@@ -265,6 +270,7 @@ local function StopTimer()
     dungeon.trash.current = 0
     dungeon.trash.killed = 0
     ObjectiveTrackerFrame:Show()
+    fIPMT:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
 local function ShowPrognosis()
@@ -370,7 +376,6 @@ function IPMythicTimer:StartAddon()
     fIPMT:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
     fIPMT:RegisterEvent("PLAYER_ENTERING_WORLD")
     fIPMT:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    fIPMT:RegisterEvent("UNIT_COMBAT")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 end
