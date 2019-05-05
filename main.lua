@@ -67,6 +67,10 @@ end
 
 local function GetEnemyPercent(npcID)
     local percent = nil
+    -- Exclude Reaping mobs
+    if npcID == 148716 or npcID == 148893 or npcID == 148894 then
+        return percent
+    end
     if (IPMTDB and IPMTDB[npcID]) then
         percent = IPMTDB[npcID]
     else
