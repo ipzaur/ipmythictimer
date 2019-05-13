@@ -1,6 +1,6 @@
-﻿local REAPING = 117
+﻿local AddonName, Addon = ...
 
-IPMythicTimer = {}
+local REAPING = 117
 
 local dungeon = {
     id = 0,
@@ -131,14 +131,14 @@ local function UpdateCriteria()
             progress = math.min(100, progress)
             if dungeon.isReaping then
                 if (progress % 20 > 18) then
-                    fIPMT.progress:SetTextColor(1,0,0)
+                    Addon.fMain.progress:SetTextColor(1,0,0)
                 elseif (progress % 20 > 15) then
-                    fIPMT.progress:SetTextColor(1,1,0)
+                    Addon.fMain.progress:SetTextColor(1,1,0)
                 else
-                    fIPMT.progress:SetTextColor(1,1,1)
+                    Addon.fMain.progress:SetTextColor(1,1,1)
                 end
             end
-            fIPMT.progress:SetFormattedText("%.2f%%", progress)
+            Addon.fMain.progress:SetFormattedText("%.2f%%", progress)
 
         else
             dungeon.bosses.count = dungeon.bosses.count + 1
@@ -148,7 +148,7 @@ local function UpdateCriteria()
         end
     end
 
-    fIPMT.bosses:SetText(dungeon.bosses.killed .. "/" .. dungeon.bosses.count)
+    Addon.fMain.bosses:SetText(dungeon.bosses.killed .. "/" .. dungeon.bosses.count)
 end
 
 local function CombatLogEvent()
@@ -185,43 +185,41 @@ local function UpdateTime(block, elapsedTime)
                 break
             end
         end
-        fIPMT.timer:SetText(GetTimeStringFromSeconds(block.timeLimit - elapsedTime, false, true))
-        fIPMT.timer:SetTextColor(0, 1, 0)
+        Addon.fMain.timer:SetText(GetTimeStringFromSeconds(block.timeLimit - elapsedTime, false, true))
+        Addon.fMain.timer:SetTextColor(0, 1, 0)
         if plusTimer > 0 then
-            fIPMT.plusTimer:SetText(GetTimeStringFromSeconds(plusTimer, false, true))
-            fIPMT.plusTimer:Show()
+            Addon.fMain.plusTimer:SetText(GetTimeStringFromSeconds(plusTimer, false, true))
+            Addon.fMain.plusTimer:Show()
             g = 1
             if (plusLevel < 2) then
                 r = 1
             end
         else
-            fIPMT.plusTimer:Hide()
+            Addon.fMain.plusTimer:Hide()
             r, g, b = 1, 1, 1
         end
         plusLevel = "+" .. plusLevel+1
     else
         plusLevel = "-1"
-        fIPMT.timer:SetText(GetTimeStringFromSeconds(elapsedTime - block.timeLimit, false, true))
-        fIPMT.plusTimer:Hide()
+        Addon.fMain.timer:SetText(GetTimeStringFromSeconds(elapsedTime - block.timeLimit, false, true))
+        Addon.fMain.plusTimer:Hide()
         r = 1
     end
-    fIPMT.timer:SetTextColor(r, g, b)
-    fIPMT.plusLevel:SetText(plusLevel)
+    Addon.fMain.timer:SetTextColor(r, g, b)
+    Addon.fMain.plusLevel:SetText(plusLevel)
 end
 
 local function UpdateDeath()
     local deathes, timeLost = C_ChallengeMode.GetDeathCount()
     if deathes > 0 then
-        fIPMT.deathTimer:SetText("-" .. GetTimeStringFromSeconds(timeLost, false, true) .. " [" .. deathes .. "]")
-        fIPMT.deathTimer:Show()
+        Addon.fMain.deathTimer:SetText("-" .. GetTimeStringFromSeconds(timeLost, false, true) .. " [" .. deathes .. "]")
+        Addon.fMain.deathTimer:Show()
     else
-        fIPMT.deathTimer:Hide()
+        Addon.fMain.deathTimer:Hide()
     end
 end
 
-
-
-function IPMythicTimer:OnAffixEnter(self, affixNum)
+function Addon:OnAffixEnter(self, affixNum)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -239,7 +237,7 @@ local function ShowFrame()
     dungeon.affixes = {}
     dungeon.isReaping = false
 
-    fIPMT.level:SetText(dungeon.level)
+    Addon.fMain.level:SetText(dungeon.level)
     local count = #affixes
     for i,affix in pairs(affixes) do
         local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix);
@@ -248,33 +246,35 @@ local function ShowFrame()
             name = name,
             text = description,
         }
-        SetPortraitToTexture(fIPMT.affix[iconNum].Portrait, filedataid);
-        fIPMT.affix[iconNum]:Show()
+        SetPortraitToTexture(Addon.fMain.affix[iconNum].Portrait, filedataid);
+        Addon.fMain.affix[iconNum]:Show()
 
         if affix == REAPING then
             dungeon.isReaping = true
         end
     end
     for a = count+1,4 do
-        fIPMT.affix[a]:Hide()
+        Addon.fMain.affix[a]:Hide()
     end
     UpdateDeath()
     UpdateCriteria()
-    fIPMT:Show()
-    fIPMT.progress:SetTextColor(1,1,1)
-    fIPMT.prognosis:SetTextColor(1,1,1)
+    Addon.fMain:Show()
+    Addon.fMain.progress:SetTextColor(1,1,1)
+    Addon.fMain.prognosis:SetTextColor(1,1,1)
     ObjectiveTrackerFrame:Hide()
 
-    fIPMT:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    Addon.started = true
 end
 
 local function StopTimer()
-    fIPMT:Hide()
+    Addon.fMain:Hide()
     dungeon.trash.total = 0
     dungeon.trash.current = 0
     dungeon.trash.killed = 0
     ObjectiveTrackerFrame:Show()
-    fIPMT:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+    Addon.started = false
 end
 
 local function ShowPrognosis()
@@ -301,17 +301,17 @@ local function ShowPrognosis()
             local currentWave = math.floor(currentProgress / 20)
             local prognosisWave = math.floor(progress / 20)
             if (progress % 20 > 18 or currentWave < prognosisWave) then
-                fIPMT.prognosis:SetTextColor(1,0,0)
+                Addon.fMain.prognosis:SetTextColor(1,0,0)
             elseif (progress % 20 > 15) then
-                fIPMT.prognosis:SetTextColor(1,1,0)
+                Addon.fMain.prognosis:SetTextColor(1,1,0)
             else
-                fIPMT.prognosis:SetTextColor(1,1,1)
+                Addon.fMain.prognosis:SetTextColor(1,1,1)
             end
         end
-        fIPMT.prognosis:SetFormattedText("%.2f%%", progress)
-        fIPMT.prognosis:Show()
+        Addon.fMain.prognosis:SetFormattedText("%.2f%%", progress)
+        Addon.fMain.prognosis:Show()
     else
-        fIPMT.prognosis:Hide()
+        Addon.fMain.prognosis:Hide()
     end
 end
 
@@ -335,11 +335,48 @@ end
 hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
 hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowFrame)
 
-function IPMythicTimer:OnEvent(self, event, ...)
-    local arg1, arg2 = ...;
+local updateTimer = 0 
+function Addon:OnUpdate(elapsed)
+    if Addon.started then
+        updateTimer = updateTimer + elapsed * 1000
+        if updateTimer >= 400 then
+            updateTimer = 0
+            ShowPrognosis()
+        end
+    end
+end
 
-    if (event == "ADDON_LOADED" and arg1 == "IPMythicTimer") then
-        InitDB()
+function Addon:Init()
+    if (IPMTDB == nil) then
+        IPMTDB = {}
+    end
+    Addon.started = false
+    Addon:LoadOptions()
+end
+
+local function toggleOptions()
+    Addon:ShowOptions()
+end
+
+function Addon:StartAddon()
+    SLASH_IPMTOPTIONS1 = "/ipmt"
+    SlashCmdList["IPMTOPTIONS"] = toggleOptions
+
+    Addon.fMain:RegisterEvent("ADDON_LOADED")
+    Addon.fMain:RegisterEvent("CHALLENGE_MODE_DEATH_COUNT_UPDATED")
+    Addon.fMain:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+    Addon.fMain:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
+    Addon.fMain:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+    GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
+
+    DEFAULT_CHAT_FRAME:AddMessage(Addon.localization.STARTINFO)
+end
+
+function Addon:OnEvent(self, event, ...)
+    local arg1, arg2 = ...
+    if (event == "ADDON_LOADED" and arg1 == AddonName) then
+        Addon:Init()
     elseif (event == "CHALLENGE_MODE_DEATH_COUNT_UPDATED") then
         UpdateDeath()
     elseif (event == "SCENARIO_CRITERIA_UPDATE") then
@@ -355,31 +392,4 @@ function IPMythicTimer:OnEvent(self, event, ...)
     elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
         CombatLogEvent()
     end
-end
-
-local updateTimer = 0 
-
-function IPMythicTimer:OnUpdate(elapsed)
-    updateTimer = updateTimer + elapsed * 1000
-    if updateTimer >= 400 then
-        updateTimer = 0
-        ShowPrognosis()
-    end
-end
-
-function InitDB()
-    if (IPMTDB == nil) then
-        IPMTDB = {}
-    end
-end
-
-function IPMythicTimer:StartAddon()
-    fIPMT:RegisterEvent("ADDON_LOADED")
-    fIPMT:RegisterEvent("CHALLENGE_MODE_DEATH_COUNT_UPDATED")
-    fIPMT:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-    fIPMT:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
-    fIPMT:RegisterEvent("PLAYER_ENTERING_WORLD")
-    fIPMT:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-
-    GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 end

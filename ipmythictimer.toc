@@ -4,10 +4,17 @@
 ## Notes-ruRU: Компактный Таймер для Мификов
 ## Author: iP
 ## Version: 8.1.5
-## SavedVariables: IPMTDB
+## SavedVariables: IPMTDB, IPMTOptions
 ## X-eMail: ipzaur@gmail.com
+
+localization.lua
+localization_ru.lua
+utility.lua
 
 main.lua
 frame.lua
+
+options.lua
+optionsFrame.lua
 
 ipmythictimer.lua

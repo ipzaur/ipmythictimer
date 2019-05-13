@@ -1,1 +1,3 @@
-IPMythicTimer:StartAddon()
+local AddonName, Addon = ...
+
+Addon:StartAddon()
