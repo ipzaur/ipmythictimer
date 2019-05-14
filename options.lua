@@ -1,8 +1,20 @@
 local AddonName, Addon = ...
 
 Addon.defaultOptions = {
-    opacity = 100,
-    scale   = 0,
+    opacity  = 100,
+    scale    = 0,
+    position = {
+        main = {
+            point = 'CENTER',
+            x = 0,
+            y = 0,
+        },
+        options = {
+            point = 'CENTER',
+            x = 0,
+            y = 0,
+        }
+    }
 }
 
 function Addon:SetOpacity(value, initialize)
@@ -25,14 +37,18 @@ function Addon:LoadOptions()
     if (IPMTOptions == nil) then
         IPMTOptions = Addon.defaultOptions
     end
+    if (not IPMTOptions.position) then
+        IPMTOptions.position = Addon.defaultOptions.position
+    end
     Addon:SetOpacity(IPMTOptions.opacity, true)
     Addon:SetScale(IPMTOptions.scale, true)
+    Addon:OnShow()
 end
 
 function Addon:ShowOptions()
     Addon.fOptions:Show()
     Addon.fMain:Show()
-    if not Addon.started then
+    if not Addon.keyActive then
         Addon.fMain.level:SetText("24")
         Addon.fMain.plusLevel:SetText("+3")
         Addon.fMain.timer:SetText("27:32")
@@ -57,7 +73,7 @@ end
 
 function Addon:CloseOptions()
     Addon.fOptions:Hide()
-    if not Addon.started then
+    if not Addon.keyActive then
         Addon.fMain:Hide()
     end
 end

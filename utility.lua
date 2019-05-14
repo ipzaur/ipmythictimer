@@ -16,4 +16,19 @@ end
 function Addon:StopDragging(self, button)
     self:StopMovingOrSizing()
     self.isMoving = false
+
+    local point, relativeTo, relativePoint, x, y = self:GetPoint()
+    if (self:GetName() == "IPMTMain") then
+        IPMTOptions.position.main = {
+            point = point,
+            x     = x,
+            y     = y,
+        }
+    elseif (self:GetName() == "IPMTSettings") then
+        IPMTOptions.position.options = {
+            point = point,
+            x     = x,
+            y     = y,
+        }
+    end
 end

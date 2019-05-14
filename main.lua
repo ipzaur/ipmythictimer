@@ -219,10 +219,11 @@ local function UpdateDeath()
     end
 end
 
-function Addon:OnAffixEnter(self, affixNum)
+function Addon:OnAffixEnter(self, iconNum)
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    local affixNum = #dungeon.affixes - iconNum + 1
     GameTooltip:SetText(dungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
     GameTooltip:AddLine(dungeon.affixes[affixNum].text, nil, nil, nil, true)
     GameTooltip:Show()
@@ -264,7 +265,7 @@ local function ShowFrame()
     ObjectiveTrackerFrame:Hide()
 
     Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    Addon.started = true
+    Addon.keyActive = true
 end
 
 local function StopTimer()
@@ -274,7 +275,7 @@ local function StopTimer()
     dungeon.trash.killed = 0
     ObjectiveTrackerFrame:Show()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    Addon.started = false
+    Addon.keyActive = false
 end
 
 local function ShowPrognosis()
@@ -337,9 +338,9 @@ hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowFrame)
 
 local updateTimer = 0 
 function Addon:OnUpdate(elapsed)
-    if Addon.started then
+    if Addon.keyActive then
         updateTimer = updateTimer + elapsed * 1000
-        if updateTimer >= 400 then
+        if updateTimer >= 300 then
             updateTimer = 0
             ShowPrognosis()
         end
@@ -350,7 +351,7 @@ function Addon:Init()
     if (IPMTDB == nil) then
         IPMTDB = {}
     end
-    Addon.started = false
+    Addon.keyActive = false
     Addon:LoadOptions()
 end
 
@@ -359,8 +360,8 @@ local function toggleOptions()
 end
 
 function Addon:StartAddon()
-    SLASH_IPMTOPTIONS1 = "/ipmt"
-    SlashCmdList["IPMTOPTIONS"] = toggleOptions
+    SLASH_IPMTOPTS1 = "/ipmt"
+    SlashCmdList["IPMTOPTS"] = toggleOptions
 
     Addon.fMain:RegisterEvent("ADDON_LOADED")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_DEATH_COUNT_UPDATED")
@@ -392,4 +393,10 @@ function Addon:OnEvent(self, event, ...)
     elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
         CombatLogEvent()
     end
+end
+
+function Addon:OnShow()
+    Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
+    local point, relativeTo, relativePoint, x, y = Addon.fMain:GetPoint()
+    Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
 end

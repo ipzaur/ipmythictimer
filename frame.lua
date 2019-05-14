@@ -26,7 +26,10 @@ Addon.fMain:SetMovable(true)
 Addon.fMain:SetScript("OnEvent", function(self, event, ...)
     Addon:OnEvent(self, event, ...)
 end)
---Addon.fMain:Hide()
+Addon.fMain:SetScript("OnShow", function() 
+    Addon:OnShow()
+end)
+Addon.fMain:Hide()
 
 -- Key Level
 Addon.fMain.level = Addon.fMain:CreateFontString(nil, "BACKGROUND", "GameFontHighlight")

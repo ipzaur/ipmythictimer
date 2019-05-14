@@ -1,7 +1,7 @@
 local AddonName, Addon = ...
 
 -- Options Frame
-Addon.fOptions = CreateFrame("Frame", "IPMTOptions")
+Addon.fOptions = CreateFrame("Frame", "IPMTSettings")
 Addon.fOptions:SetSize(270, 180)
 Addon.fOptions:SetPoint("CENTER", UIParent)
 Addon.fOptions:SetBackdrop(Addon.backdrop)
