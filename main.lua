@@ -241,13 +241,13 @@ local function ShowFrame()
     Addon.fMain.level:SetText(dungeon.level)
     local count = #affixes
     for i,affix in pairs(affixes) do
-        local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix);
+        local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix)
         local iconNum = count - i + 1
         dungeon.affixes[i] = {
             name = name,
             text = description,
         }
-        SetPortraitToTexture(Addon.fMain.affix[iconNum].Portrait, filedataid);
+        SetPortraitToTexture(Addon.fMain.affix[iconNum].Portrait, filedataid)
         Addon.fMain.affix[iconNum]:Show()
 
         if affix == REAPING then
@@ -269,7 +269,9 @@ local function ShowFrame()
 end
 
 local function StopTimer()
-    Addon.fMain:Hide()
+    if not Addon.fOptions:IsShown() then
+        Addon.fMain:Hide()
+    end
     dungeon.trash.total = 0
     dungeon.trash.current = 0
     dungeon.trash.killed = 0
@@ -396,7 +398,8 @@ function Addon:OnEvent(self, event, ...)
 end
 
 function Addon:OnShow()
-    Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
-    local point, relativeTo, relativePoint, x, y = Addon.fMain:GetPoint()
+    Addon.fOptions:ClearAllPoints()
     Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
+    Addon.fMain:ClearAllPoints()
+    Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
 end

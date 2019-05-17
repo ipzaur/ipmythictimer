@@ -2,7 +2,7 @@ local AddonName, Addon = ...
 
 -- Options Frame
 Addon.fOptions = CreateFrame("Frame", "IPMTSettings")
-Addon.fOptions:SetSize(270, 180)
+Addon.fOptions:SetSize(270, 210)
 Addon.fOptions:SetPoint("CENTER", UIParent)
 Addon.fOptions:SetBackdrop(Addon.backdrop)
 Addon.fOptions:SetBackdropColor(0,0,0, 1)
@@ -70,10 +70,19 @@ Addon.fOptions.scale:SetScript('OnMouseWheel', function(self)
     Addon:SetScale(self:GetValue())
 end)
 
+-- Restore button
+Addon.fOptions.restore = CreateFrame("Button", nil, Addon.fOptions, "UIPanelButtonTemplate")
+Addon.fOptions.restore:SetPoint("CENTER", Addon.fOptions, "BOTTOM", 0, 64)
+Addon.fOptions.restore:SetSize(150, 30)
+Addon.fOptions.restore:SetText(Addon.localization.RESTORE)
+Addon.fOptions.restore:SetScript("OnClick", function(self)
+    Addon.RestoreOptions()
+end)
+
 -- Close button
 Addon.fOptions.close = CreateFrame("Button", nil, Addon.fOptions, "UIPanelButtonTemplate")
 Addon.fOptions.close:SetPoint("CENTER", Addon.fOptions, "BOTTOM", 0, 30)
-Addon.fOptions.close:SetSize(120, 30)
+Addon.fOptions.close:SetSize(150, 30)
 Addon.fOptions.close:SetText(Addon.localization.CLOSE)
 Addon.fOptions.close:SetScript("OnClick", function(self)
     Addon.CloseOptions()

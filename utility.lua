@@ -21,14 +21,14 @@ function Addon:StopDragging(self, button)
     if (self:GetName() == "IPMTMain") then
         IPMTOptions.position.main = {
             point = point,
-            x     = x,
-            y     = y,
+            x     = math.floor(x),
+            y     = math.floor(y),
         }
     elseif (self:GetName() == "IPMTSettings") then
         IPMTOptions.position.options = {
             point = point,
-            x     = x,
-            y     = y,
+            x     = math.floor(x),
+            y     = math.floor(y),
         }
     end
 end
