@@ -220,13 +220,15 @@ local function UpdateDeath()
 end
 
 function Addon:OnAffixEnter(self, iconNum)
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    if Addon.keyActive then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    local affixNum = #dungeon.affixes - iconNum + 1
-    GameTooltip:SetText(dungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
-    GameTooltip:AddLine(dungeon.affixes[affixNum].text, nil, nil, nil, true)
-    GameTooltip:Show()
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        local affixNum = #dungeon.affixes - iconNum + 1
+        GameTooltip:SetText(dungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
+        GameTooltip:AddLine(dungeon.affixes[affixNum].text, nil, nil, nil, true)
+        GameTooltip:Show()
+    end
 end
 
 
