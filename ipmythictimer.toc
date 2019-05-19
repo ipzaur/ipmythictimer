@@ -9,6 +9,7 @@
 
 localization.lua
 localization_ru.lua
+localization_zhtw.lua
 utility.lua
 
 main.lua
