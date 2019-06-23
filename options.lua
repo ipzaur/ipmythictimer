@@ -1,14 +1,15 @@
 local AddonName, Addon = ...
 
+local LSM = LibStub("LibSharedMedia-3.0")
+
 Addon.defaultOptions = {
     opacity     = 100,
     scale       = 0,
-    wasLaunched = false,
     position    = {
         main = {
-            point = 'CENTER',
-            x = 0,
-            y = 100,
+            point = 'TOPRIGHT',
+            x = -30,
+            y = -220,
         },
         options = {
             point = 'CENTER',
@@ -16,6 +17,7 @@ Addon.defaultOptions = {
             y = -50,
         },
     },
+    font = Addon.FONT_ROBOTO,
 }
 
 function Addon:SetOpacity(value, initialize)
@@ -34,11 +36,54 @@ function Addon:SetScale(value, initialize)
     IPMTOptions.scale = value
 end
 
-function Addon:LoadOptions()
-    if (IPMTOptions == nil) then
-        IPMTOptions = Addon.defaultOptions
+function Addon:SetFont(filepath)
+    IPMTOptions.font = filepath
+    for frame, info in pairs(IPMTOptions.frame) do
+        if (info.fontSize) then
+            Addon.fMain[frame].text:SetFont(IPMTOptions.font, info.fontSize)
+            local width = Addon.fMain[frame].text:GetStringWidth()
+            local height = Addon.fMain[frame].text:GetStringHeight()
+            Addon.fMain[frame]:SetSize(width, height)
+        end
     end
-    if (IPMTOptions.position == nil) then
+end
+
+function Addon:MoveElement(self, frame)
+    local x = self:GetLeft() - Addon.fMain:GetLeft()
+    local y = self:GetTop() - Addon.fMain:GetTop() - self:GetHeight() / 2
+    local point = "LEFT"
+    local rPoint
+    if x > Addon.fMain:GetWidth() / 2 then
+        point = "RIGHT"
+        x = self:GetRight() - Addon.fMain:GetRight()
+    end
+    if y < Addon.fMain:GetHeight() / -2 then
+        rPoint = "BOTTOM" .. point
+        y = self:GetBottom() - Addon.fMain:GetBottom() + self:GetHeight() / 2
+    else
+        rPoint = "TOP" .. point
+    end
+    self:ClearAllPoints()
+    self:SetPoint(point, Addon.fMain, rPoint, x, y)
+    IPMTOptions.frame[frame].point = point
+    IPMTOptions.frame[frame].rPoint = rPoint
+    IPMTOptions.frame[frame].x = x
+    IPMTOptions.frame[frame].y = y
+end
+
+function Addon:LoadOptions()
+    if IPMTOptions == nil then
+        IPMTOptions = {}
+    end
+
+    if IPMTOptions.opacity == nil then
+        IPMTOptions.opacity = Addon.defaultOptions.opacity
+    end
+    if IPMTOptions.scale == nil then
+        IPMTOptions.scale = Addon.defaultOptions.scale
+    end
+
+    if IPMTOptions.position == nil then
         IPMTOptions.position = {
             main = {
                 point = Addon.defaultOptions.position.main.point,
@@ -53,13 +98,117 @@ function Addon:LoadOptions()
             
         }
     end
+
+    if IPMTOptions.size == nil then
+        IPMTOptions.size = {
+            [0] = Addon.defaultSize[0],
+            [1] = Addon.defaultSize[1],
+        }
+    else
+        Addon.fMain:SetSize(IPMTOptions.size[0], IPMTOptions.size[1])
+    end
+
+    if IPMTOptions.frame == nil then
+        IPMTOptions.frame = {}
+        for frame, info in pairs(Addon.frameInfo) do
+            IPMTOptions.frame[frame] = {
+                x      = info.position.x,
+                y      = info.position.y,
+                point  = info.position.point,
+                rPoint = info.position.rPoint,
+            }
+            if IPMTOptions.frame[frame].point == nil then
+                IPMTOptions.frame[frame].point = 'LEFT'
+            end
+            if IPMTOptions.frame[frame].rPoint == nil then
+                IPMTOptions.frame[frame].rPoint = 'TOPLEFT'
+            end
+            if info.text ~= nil then
+                IPMTOptions.frame[frame].fontSize = info.text.fontSize
+            end
+        end
+    else
+        for frame, info in pairs(Addon.frameInfo) do
+            Addon.fMain[frame]:ClearAllPoints()
+            Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
+        end
+    end
+
+    if IPMTOptions.font == nil then
+        IPMTOptions.font = Addon.defaultOptions.font
+    end
+    Addon:SetFont(IPMTOptions.font)
+
     Addon:SetOpacity(IPMTOptions.opacity, true)
     Addon:SetScale(IPMTOptions.scale, true)
     Addon:OnShow()
-    
-    if (not IPMTOptions.wasLaunched) then
+
+    if not IPMTOptions.version or IPMTOptions.version ~= Addon.version then
         Addon:ShowOptions()
-        IPMTOptions.wasLaunched = true
+        IPMTOptions.version = Addon.version
+    end
+end
+
+local function SelectFont(font)
+    local fontList = LSM:List('font')
+    for i,fontName in pairs(fontList) do
+        local filepath = LSM:Fetch('font', fontName)
+        if (font == filepath) then
+            UIDropDownMenu_SetText(Addon.fOptions.fonts, fontName)
+        end
+    end
+end
+
+local fontSizeFrame = nil
+
+function Addon:SetFontSize(value)
+    if fontSizeFrame ~= nil then
+        IPMTOptions.frame[fontSizeFrame].fontSize = value
+        Addon.fMain[fontSizeFrame].text:SetFont(IPMTOptions.font, IPMTOptions.frame[fontSizeFrame].fontSize)
+        local width = Addon.fMain[fontSizeFrame].text:GetStringWidth()
+        local height = Addon.fMain[fontSizeFrame].text:GetStringHeight()
+        Addon.fMain[fontSizeFrame]:SetSize(width, height)
+        local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[fontSizeFrame].fontSize .. ']'
+        getglobal(Addon.fOptions.FS.slider:GetName() .. 'Text'):SetText(FStext)
+    end
+end
+
+function Addon:StartFontSize(frame)
+    if Addon.fMain[frame].text ~= nil then
+        if fontSizeFrame ~= frame then
+            fontSizeFrame = frame
+            Addon.fOptions.FS:ClearAllPoints()
+            Addon.fOptions.FS:SetPoint('TOP', Addon.fMain[frame], 'BOTTOM', 0, -4)
+            Addon.fOptions.FS.slider:SetValue(IPMTOptions.frame[fontSizeFrame].fontSize)
+            local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[fontSizeFrame].fontSize .. ']'
+            getglobal(Addon.fOptions.FS.slider:GetName() .. 'Text'):SetText(FStext)
+            Addon.fOptions.FS:Show()
+        else
+            fontSizeFrame = nil
+            Addon.fOptions.FS:Hide()
+        end
+    end
+end
+
+function Addon:ToggleCustomize(enable)
+    if enable then
+        for frame, info in pairs(Addon.frameInfo) do
+            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0.1)
+            Addon.fMain[frame]:EnableMouse(true)
+            Addon.fMain[frame]:SetMovable(true)
+        end
+        Addon.fMain:SetResizable(true)
+        Addon.fMain.cCaption:Show()
+    else
+        for frame, info in pairs(Addon.frameInfo) do
+            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            Addon.fMain[frame]:EnableMouse(false)
+            Addon.fMain[frame]:SetMovable(false)
+        end
+        Addon.fMain:SetResizable(false)
+        Addon.fMain.cCaption:Hide()
+        Addon.fOptions.FS:SetPoint("CENTER", UIParent)
+        Addon.fOptions.FS:Hide()
     end
 end
 
@@ -69,19 +218,14 @@ function Addon:ShowOptions()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
     if not Addon.keyActive then
-        Addon.fMain.level:SetText("24")
-        Addon.fMain.plusLevel:SetText("+3")
-        Addon.fMain.timer:SetText("27:32")
-        Addon.fMain.timer:SetTextColor(0, 1, 0)
-        Addon.fMain.plusTimer:SetText("04:19")
-        Addon.fMain.deathTimer:SetText("-00:15 [3]")
-        Addon.fMain.deathTimer:Show()
-        Addon.fMain.progress:SetText("57.32%")
-        Addon.fMain.progress:SetTextColor(1,1,0)
-        Addon.fMain.prognosis:SetText("63.46%")
-        Addon.fMain.prognosis:SetTextColor(1,0,0)
-        Addon.fMain.prognosis:Show()
-        Addon.fMain.bosses:SetText("3/5")
+        for frame, info in pairs(Addon.frameInfo) do
+            if info.text ~= nil then
+                Addon.fMain[frame].text:SetText(info.text.content)
+                if info.text.color then
+                    Addon.fMain[frame].text:SetTextColor(info.text.color[0], info.text.color[1], info.text.color[2])
+                end
+            end
+        end
 
         local name, description, filedataid = C_ChallengeMode.GetAffixInfo(117)
         for i = 1,4 do
@@ -89,6 +233,7 @@ function Addon:ShowOptions()
             Addon.fMain.affix[i]:Show()
         end
     end
+    SelectFont(IPMTOptions.font)
 end
 
 function Addon:CloseOptions()
@@ -98,6 +243,8 @@ function Addon:CloseOptions()
     if not Addon.keyActive then
         Addon.fMain:Hide()
     end
+    Addon:ToggleCustomize(false)
+    Addon.fOptions.customize:SetChecked(false)
 end
 
 function Addon:RestoreOptions()
@@ -111,6 +258,38 @@ function Addon:RestoreOptions()
     IPMTOptions.position.options.point = Addon.defaultOptions.position.options.point
     IPMTOptions.position.options.x = Addon.defaultOptions.position.options.x
     IPMTOptions.position.options.y = Addon.defaultOptions.position.options.y
+
+    IPMTOptions.font = Addon.FONT_ROBOTO
+    SelectFont(IPMTOptions.font)
+    IPMTOptions.size = {
+        [0] = Addon.defaultSize[0],
+        [1] = Addon.defaultSize[1],
+    }
+    Addon.fMain:SetSize(IPMTOptions.size[0], IPMTOptions.size[1])
+    for frame, info in pairs(Addon.frameInfo) do
+        IPMTOptions.frame[frame] = {
+            x      = info.position.x,
+            y      = info.position.y,
+            point  = info.position.point,
+            rPoint = info.position.rPoint,
+        }
+        if IPMTOptions.frame[frame].point == nil then
+            IPMTOptions.frame[frame].point = 'LEFT'
+        end
+        if IPMTOptions.frame[frame].rPoint == nil then
+            IPMTOptions.frame[frame].rPoint = 'TOPLEFT'
+        end
+        if info.text ~= nil then
+            IPMTOptions.frame[frame].fontSize = info.text.fontSize
+            Addon.fMain[frame].text:SetFont(Addon.FONT_ROBOTO, IPMTOptions.frame[frame].fontSize)
+            local width = Addon.fMain[frame].text:GetStringWidth()
+            local height = Addon.fMain[frame].text:GetStringHeight()
+            print(frame .. " = " .. width .. " : " .. height)
+            Addon.fMain[frame]:SetSize(width, height) 
+        end
+        Addon.fMain[frame]:ClearAllPoints()
+        Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
+    end
 
     Addon:OnShow()
 end

@@ -1,4 +1,5 @@
 ﻿local AddonName, Addon = ...
+Addon.version = 108
 
 local REAPING = 117
 
@@ -131,14 +132,14 @@ local function UpdateCriteria()
             progress = math.min(100, progress)
             if dungeon.isReaping then
                 if (progress % 20 > 18) then
-                    Addon.fMain.progress:SetTextColor(1,0,0)
+                    Addon.fMain.progress.text:SetTextColor(1,0,0)
                 elseif (progress % 20 > 15) then
-                    Addon.fMain.progress:SetTextColor(1,1,0)
+                    Addon.fMain.progress.text:SetTextColor(1,1,0)
                 else
-                    Addon.fMain.progress:SetTextColor(1,1,1)
+                    Addon.fMain.progress.text:SetTextColor(1,1,1)
                 end
             end
-            Addon.fMain.progress:SetFormattedText("%.2f%%", progress)
+            Addon.fMain.progress.text:SetFormattedText("%.2f%%", progress)
 
         else
             dungeon.bosses.count = dungeon.bosses.count + 1
@@ -148,7 +149,7 @@ local function UpdateCriteria()
         end
     end
 
-    Addon.fMain.bosses:SetText(dungeon.bosses.killed .. "/" .. dungeon.bosses.count)
+    Addon.fMain.bosses.text:SetText(dungeon.bosses.killed .. "/" .. dungeon.bosses.count)
 end
 
 local function CombatLogEvent()
@@ -173,6 +174,9 @@ local function CombatLogEvent()
 end
 
 local function UpdateTime(block, elapsedTime)
+    if Addon.keyActive == false then
+        return
+    end
     local plusLevel = 0
     local plusTimer = 0
     local r, g, b = 0, 0, 0
@@ -185,10 +189,10 @@ local function UpdateTime(block, elapsedTime)
                 break
             end
         end
-        Addon.fMain.timer:SetText(GetTimeStringFromSeconds(block.timeLimit - elapsedTime, false, true))
-        Addon.fMain.timer:SetTextColor(0, 1, 0)
+        Addon.fMain.timer.text:SetText(GetTimeStringFromSeconds(block.timeLimit - elapsedTime, false, true))
+        Addon.fMain.timer.text:SetTextColor(0, 1, 0)
         if plusTimer > 0 then
-            Addon.fMain.plusTimer:SetText(GetTimeStringFromSeconds(plusTimer, false, true))
+            Addon.fMain.plusTimer.text:SetText(GetTimeStringFromSeconds(plusTimer, false, true))
             Addon.fMain.plusTimer:Show()
             g = 1
             if (plusLevel < 2) then
@@ -201,18 +205,18 @@ local function UpdateTime(block, elapsedTime)
         plusLevel = "+" .. plusLevel+1
     else
         plusLevel = "-1"
-        Addon.fMain.timer:SetText(GetTimeStringFromSeconds(elapsedTime - block.timeLimit, false, true))
+        Addon.fMain.timer.text:SetText(GetTimeStringFromSeconds(elapsedTime - block.timeLimit, false, true))
         Addon.fMain.plusTimer:Hide()
         r = 1
     end
-    Addon.fMain.timer:SetTextColor(r, g, b)
-    Addon.fMain.plusLevel:SetText(plusLevel)
+    Addon.fMain.timer.text:SetTextColor(r, g, b)
+    Addon.fMain.plusLevel.text:SetText(plusLevel)
 end
 
 local function UpdateDeath()
     local deathes, timeLost = C_ChallengeMode.GetDeathCount()
     if deathes > 0 then
-        Addon.fMain.deathTimer:SetText("-" .. GetTimeStringFromSeconds(timeLost, false, true) .. " [" .. deathes .. "]")
+        Addon.fMain.deathTimer.text:SetText("-" .. GetTimeStringFromSeconds(timeLost, false, true) .. " [" .. deathes .. "]")
         Addon.fMain.deathTimer:Show()
     else
         Addon.fMain.deathTimer:Hide()
@@ -240,7 +244,7 @@ local function ShowFrame()
     dungeon.affixes = {}
     dungeon.isReaping = false
 
-    Addon.fMain.level:SetText(dungeon.level)
+    Addon.fMain.level.text:SetText(dungeon.level)
     local count = #affixes
     for i,affix in pairs(affixes) do
         local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix)
@@ -262,15 +266,15 @@ local function ShowFrame()
     UpdateDeath()
     UpdateCriteria()
     Addon.fMain:Show()
-    Addon.fMain.progress:SetTextColor(1,1,1)
-    Addon.fMain.prognosis:SetTextColor(1,1,1)
+    Addon.fMain.progress.text:SetTextColor(1,1,1)
+    Addon.fMain.prognosis.text:SetTextColor(1,1,1)
     ObjectiveTrackerFrame:Hide()
 
     Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.keyActive = true
 end
 
-local function StopTimer()
+local function HideTimer()
     if not Addon.fOptions:IsShown() then
         Addon.fMain:Hide()
     end
@@ -306,14 +310,14 @@ local function ShowPrognosis()
             local currentWave = math.floor(currentProgress / 20)
             local prognosisWave = math.floor(progress / 20)
             if (progress % 20 > 18 or currentWave < prognosisWave) then
-                Addon.fMain.prognosis:SetTextColor(1,0,0)
+                Addon.fMain.prognosis.text:SetTextColor(1,0,0)
             elseif (progress % 20 > 15) then
-                Addon.fMain.prognosis:SetTextColor(1,1,0)
+                Addon.fMain.prognosis.text:SetTextColor(1,1,0)
             else
-                Addon.fMain.prognosis:SetTextColor(1,1,1)
+                Addon.fMain.prognosis.text:SetTextColor(1,1,1)
             end
         end
-        Addon.fMain.prognosis:SetFormattedText("%.2f%%", progress)
+        Addon.fMain.prognosis.text:SetFormattedText("%.2f%%", progress)
         Addon.fMain.prognosis:Show()
     else
         Addon.fMain.prognosis:Hide()
@@ -387,12 +391,13 @@ function Addon:OnEvent(self, event, ...)
     elseif (event == "SCENARIO_CRITERIA_UPDATE") then
         UpdateCriteria()
     elseif (event == "CHALLENGE_MODE_COMPLETED") then
-        StopTimer()
+        Addon.keyActive = false
     elseif (event == "PLAYER_ENTERING_WORLD") then
-        UpdateCriteria()
         local inInstance, instanceType = IsInInstance()
         if not (inInstance and instanceType == "party") then
-            StopTimer()
+            HideTimer()
+        else
+            UpdateCriteria()
         end
     elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
         CombatLogEvent()

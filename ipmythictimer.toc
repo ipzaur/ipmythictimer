@@ -3,9 +3,12 @@
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Мификов
 ## Author: iP
-## Version: 8.1.5
+## Version: 1.0.8
+## OptionalDeps: LibSharedMedia-3.0
 ## SavedVariables: IPMTDB, IPMTOptions
 ## X-eMail: ipzaur@gmail.com
+
+libs.xml
 
 localization.lua
 localization_ru.lua
