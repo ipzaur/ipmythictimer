@@ -1,9 +1,9 @@
-## Interface: 80100
+## Interface: 80200
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Мификов
 ## Author: iP
-## Version: 1.0.8
+## Version: 1.1.1
 ## OptionalDeps: LibSharedMedia-3.0
 ## SavedVariables: IPMTDB, IPMTOptions
 ## X-eMail: ipzaur@gmail.com

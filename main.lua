@@ -189,10 +189,10 @@ local function UpdateTime(block, elapsedTime)
                 break
             end
         end
-        Addon.fMain.timer.text:SetText(GetTimeStringFromSeconds(block.timeLimit - elapsedTime, false, true))
+        Addon.fMain.timer.text:SetText(SecondsToClock(block.timeLimit - elapsedTime))
         Addon.fMain.timer.text:SetTextColor(0, 1, 0)
         if plusTimer > 0 then
-            Addon.fMain.plusTimer.text:SetText(GetTimeStringFromSeconds(plusTimer, false, true))
+            Addon.fMain.plusTimer.text:SetText(SecondsToClock(plusTimer))
             Addon.fMain.plusTimer:Show()
             g = 1
             if (plusLevel < 2) then
@@ -205,7 +205,7 @@ local function UpdateTime(block, elapsedTime)
         plusLevel = "+" .. plusLevel+1
     else
         plusLevel = "-1"
-        Addon.fMain.timer.text:SetText(GetTimeStringFromSeconds(elapsedTime - block.timeLimit, false, true))
+        Addon.fMain.timer.text:SetText(SecondsToClock(elapsedTime - block.timeLimit))
         Addon.fMain.plusTimer:Hide()
         r = 1
     end
@@ -216,7 +216,7 @@ end
 local function UpdateDeath()
     local deathes, timeLost = C_ChallengeMode.GetDeathCount()
     if deathes > 0 then
-        Addon.fMain.deathTimer.text:SetText("-" .. GetTimeStringFromSeconds(timeLost, false, true) .. " [" .. deathes .. "]")
+        Addon.fMain.deathTimer.text:SetText("-" .. SecondsToClock(timeLost) .. " [" .. deathes .. "]")
         Addon.fMain.deathTimer:Show()
     else
         Addon.fMain.deathTimer:Hide()
@@ -356,8 +356,15 @@ function Addon:OnUpdate(elapsed)
 end
 
 function Addon:Init()
-    if (IPMTDB == nil) then
+    if IPMTDB == nil then
         IPMTDB = {}
+    end
+    if MethodDungeonTools then
+        local MDTversion = GetAddOnMetadata('MethodDungeonTools', 'Version')
+        if not IPMTOptions.MDTversion or (IPMTOptions.MDTversion ~= MDTversion) then
+            IPMTOptions.MDTversion = MDTversion
+            IPMTDB = {}
+        end
     end
     Addon.keyActive = false
     Addon:LoadOptions()
