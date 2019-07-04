@@ -2,6 +2,8 @@ if GetLocale() ~= "zhTW" then return end
 
 local AddonName, Addon = ...
 
+Addon.localization.CLEANDBBT = "清理数据库"
+Addon.localization.CLEANDBTT = "Clear the addon internal base with the percent of monsters.\nHelps if the percent counter is buggy"
 Addon.localization.CLOSE     = "關閉"
 Addon.localization.CUSTOMIZE = "自定义框架"
 Addon.localization.CCAPTION  = "主框架: LMB - 移动, RMB - 调整\n元素: LMB - 移动, RMB - 字体大小"

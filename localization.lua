@@ -1,6 +1,8 @@
 local AddonName, Addon = ...
 
 Addon.localization = {
+    CLEANDBBT = "Clean database",
+    CLEANDBTT = "Clear the addon internal base with the percent of monsters.\nHelps if the percent counter is buggy",
     CLOSE     = "Close",
     CUSTOMIZE = "Customize frame",
     CCAPTION  = "Main frame: LMB - move, RMB - resize\nElement: LMB - move, RMB - font size",

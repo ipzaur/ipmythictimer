@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 108
+Addon.version = 112
 
 local REAPING = 117
 

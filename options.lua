@@ -20,6 +20,19 @@ Addon.defaultOptions = {
     font = Addon.FONT_ROBOTO,
 }
 
+function Addon:CleanDB()
+    IPMTDB = {}
+end
+function Addon:ToggleDBTooltip(self, show)
+    if show then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.CLEANDBTT, 1, 1, 1, 1, true)
+        GameTooltip:Show()
+    else
+        GameTooltip:Hide()
+    end
+end
+
 function Addon:SetOpacity(value, initialize)
     Addon.fMain:SetBackdropColor(0,0,0, value / 100)
     if initialize then
