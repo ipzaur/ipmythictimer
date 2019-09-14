@@ -16,9 +16,11 @@ localization_zhtw.lua
 utility.lua
 
 main.lua
-frame.lua
+mainFrame.lua
 
 options.lua
 optionsFrame.lua
+
+mapbutFrame.lua
 
 ipmythictimer.lua

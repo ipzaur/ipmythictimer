@@ -368,6 +368,8 @@ function Addon:Init()
     end
     Addon.keyActive = false
     Addon:LoadOptions()
+
+    Addon:InitIcon()
 end
 
 local function toggleOptions()

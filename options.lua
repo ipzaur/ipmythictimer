@@ -225,6 +225,14 @@ function Addon:ToggleCustomize(enable)
     end
 end
 
+function Addon:ToggleOptions()
+    if Addon.fOptions:IsShown() then
+        Addon:CloseOptions()
+    else
+        Addon:ShowOptions()
+    end
+end
+
 function Addon:ShowOptions()
     Addon.fOptions:Show()
     Addon.fMain:Show()

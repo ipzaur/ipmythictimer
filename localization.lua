@@ -8,6 +8,7 @@ Addon.localization = {
     CCAPTION  = "Main frame: LMB - move, RMB - resize\nElement: LMB - move, RMB - font size",
     FONT      = "Font",
     FONTSIZE  = "Font size",
+    MAPBUT    = "LMB (click) - toggle options\nLMB (drag) - move button",
     OPTIONS   = "Options",
     OPACITY   = "Background opacity",
     RESTORE   = "Restore",
