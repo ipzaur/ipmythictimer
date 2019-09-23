@@ -34,6 +34,9 @@ function Addon:ToggleDBTooltip(self, show)
 end
 
 function Addon:SetOpacity(value, initialize)
+    if (type(value) ~= 'number') then
+        value = Addon.defaultOptions.opacity
+    end
     Addon.fMain:SetBackdropColor(0,0,0, value / 100)
     if initialize then
         Addon.fOptions.opacity:SetValue(IPMTOptions.opacity)
@@ -42,6 +45,9 @@ function Addon:SetOpacity(value, initialize)
 end
 
 function Addon:SetScale(value, initialize)
+    if (type(value) ~= 'number') then
+        value = Addon.defaultOptions.scale
+    end
     Addon.fMain:SetScale(1 + value / 100)
     if initialize then
         Addon.fOptions.scale:SetValue(IPMTOptions.scale)
@@ -305,7 +311,6 @@ function Addon:RestoreOptions()
             Addon.fMain[frame].text:SetFont(Addon.FONT_ROBOTO, IPMTOptions.frame[frame].fontSize)
             local width = Addon.fMain[frame].text:GetStringWidth()
             local height = Addon.fMain[frame].text:GetStringHeight()
-            print(frame .. " = " .. width .. " : " .. height)
             Addon.fMain[frame]:SetSize(width, height) 
         end
         Addon.fMain[frame]:ClearAllPoints()

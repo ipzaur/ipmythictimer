@@ -10,7 +10,8 @@ Addon.defaultSize = {
 }
 
 -- Main Frame
-Addon.fMain = CreateFrame("Frame", "IPMTMain")
+Addon.fMain = CreateFrame("Frame", "IPMTMain", UIParent)
+Addon.fMain:SetFrameStrata("MEDIUM")
 Addon.fMain:SetSize(Addon.defaultSize[0], Addon.defaultSize[1])
 Addon.fMain:SetPoint("CENTER", UIParent)
 Addon.fMain:SetBackdrop(Addon.backdrop)

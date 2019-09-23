@@ -3,7 +3,8 @@ local AddonName, Addon = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
 -- Options Frame
-Addon.fOptions = CreateFrame("Frame", "IPMTSettings")
+Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent)
+Addon.fOptions:SetFrameStrata("MEDIUM")
 Addon.fOptions:SetSize(270, 330)
 Addon.fOptions:SetPoint("CENTER", UIParent)
 Addon.fOptions:SetBackdrop(Addon.backdrop)
