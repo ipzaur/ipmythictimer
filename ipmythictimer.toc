@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 80205
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Мификов

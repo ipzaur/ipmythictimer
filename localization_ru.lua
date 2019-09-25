@@ -10,6 +10,7 @@ Addon.localization.CCAPTION  = "Фрейм: ЛКМ - переместить, П�
 Addon.localization.FONT      = "Шрифт"
 Addon.localization.FONTSIZE  = "Размер шрифта"
 Addon.localization.MAPBUT    = "ЛКМ (клик) - открыть настройки\nЛКМ (зажать) - передвинуть иконку"
+Addon.localization.MAPBUTOPT = "Показать/Скрыть кнопку у миникарты"
 Addon.localization.OPTIONS   = "Настройки"
 Addon.localization.OPACITY   = "Непрозрачность фона"
 Addon.localization.RESTORE   = "Сбросить"

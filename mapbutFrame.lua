@@ -1,7 +1,7 @@
 local AddonName, Addon = ...
 
 function Addon:InitIcon()
-    Addon.DB = LibStub("AceDB-3.0"):New("IPMythicTimerDB", {
+    Addon.DB = LibStub("AceDB-3.0"):New("IPMTOptions", {
         profile = {
             minimap = {
                 hide = false,
@@ -29,7 +29,4 @@ function Addon:InitIcon()
     })
 
     icon:Register("IPMythicTimer", LDB, Addon.DB.profile.minimap)
-    if not Addon.DB.profile.minimap.hide then
-        icon:Show("IPMythicTimer")
-    end
 end

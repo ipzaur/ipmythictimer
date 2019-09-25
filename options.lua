@@ -238,12 +238,22 @@ function Addon:ToggleOptions()
         Addon:ShowOptions()
     end
 end
+function Addon:toggleMapbutton(show)
+    local icon = LibStub("LibDBIcon-1.0")
+    Addon.DB.profile.minimap.hide = not show
+    if not Addon.DB.profile.minimap.hide then
+        icon:Show("IPMythicTimer")
+    else
+        icon:Hide("IPMythicTimer")
+    end
+end
 
 function Addon:ShowOptions()
     Addon.fOptions:Show()
     Addon.fMain:Show()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
+    Addon.fOptions.Mapbut:SetChecked(not Addon.DB.profile.minimap.hide)
     if not Addon.keyActive then
         for frame, info in pairs(Addon.frameInfo) do
             if info.text ~= nil then

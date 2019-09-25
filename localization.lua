@@ -9,6 +9,7 @@ Addon.localization = {
     FONT      = "Font",
     FONTSIZE  = "Font size",
     MAPBUT    = "LMB (click) - toggle options\nLMB (drag) - move button",
+    MAPBUTOPT = "Show/Hide minimap button",
     OPTIONS   = "Options",
     OPACITY   = "Background opacity",
     RESTORE   = "Restore",
