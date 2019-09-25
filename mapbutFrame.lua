@@ -1,14 +1,6 @@
 local AddonName, Addon = ...
 
 function Addon:InitIcon()
-    Addon.DB = LibStub("AceDB-3.0"):New("IPMTOptions", {
-        profile = {
-            minimap = {
-                hide = false,
-            },
-        },
-    })
-    
     local icon = LibStub("LibDBIcon-1.0")
     local LDB = LibStub("LibDataBroker-1.1"):NewDataObject("IPMythicTimer", {
         type = "data source",

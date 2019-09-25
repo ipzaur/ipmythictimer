@@ -366,6 +366,14 @@ function Addon:Init()
             IPMTDB = {}
         end
     end
+    Addon.DB = LibStub("AceDB-3.0"):New("IPMTOptions", {
+        profile = {
+            minimap = {
+                hide = false,
+            },
+        },
+    })
+
     Addon.keyActive = false
     Addon:LoadOptions()
 
