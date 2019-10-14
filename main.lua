@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 112
+Addon.version = 115
 
 local REAPING = 117
 
@@ -17,6 +17,7 @@ local dungeon = {
     affixes = {},
     isReaping = false,
     level   = 0,
+    deathes = {},
 }
 local timeCoef = {0.8, 0.6}
 
@@ -170,6 +171,13 @@ local function CombatLogEvent()
                 clearKillInfo()
             end
         end
+        if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and (not UnitIsFeignDeath(destName)) then
+            if Addon.DB.profile.dungeon.deathes.list[destName] then
+                Addon.DB.profile.dungeon.deathes.list[destName] = Addon.DB.profile.dungeon.deathes.list[destName] + 1
+            else 
+                Addon.DB.profile.dungeon.deathes.list[destName] = 1
+            end
+        end
     end
 end
 
@@ -233,6 +241,39 @@ function Addon:OnAffixEnter(self, iconNum)
         GameTooltip:AddLine(dungeon.affixes[affixNum].text, nil, nil, nil, true)
         GameTooltip:Show()
     end
+end
+
+function Addon:OnDeathTimerEnter(self)
+    local deathes, timeLost = C_ChallengeMode.GetDeathCount()
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetText(Addon.localization.DEATHCOUNT .. " : " .. deathes, 1, 1, 1)
+    GameTooltip:AddLine(Addon.localization.DEATHTIME .. " : " .. SecondsToClock(timeLost), .8, 0, 0)
+    GameTooltip:AddLine(" ")
+
+    local list = {}
+    local deathsCount = 0
+    for playerName, count in pairs(Addon.DB.profile.dungeon.deathes.list) do
+        local _, class = UnitClass(playerName)
+        table.insert(list, {
+            count      = count,
+            playerName = playerName,
+            class      = class,
+        })
+    end
+    table.sort(list, function(a, b)
+        if a.count ~= b.count then
+            return a.count > b.count
+        else
+            return a.playerName < b.playerName
+        end
+    end)
+
+    for _, item in ipairs(list) do
+        local color = RAID_CLASS_COLORS[item.class] or HIGHLIGHT_FONT_COLOR
+        GameTooltip:AddDoubleLine(item.playerName, item.count, color.r, color.g, color.b, HIGHLIGHT_FONT_COLOR:GetRGB())
+    end
+
+    GameTooltip:Show()
 end
 
 
@@ -371,6 +412,11 @@ function Addon:Init()
             minimap = {
                 hide = false,
             },
+            dungeon = {
+                deathes = {
+                    list  = {},
+                },
+            },
         },
     })
 
@@ -391,6 +437,8 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("ADDON_LOADED")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_DEATH_COUNT_UPDATED")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+    Addon.fMain:RegisterEvent("CHALLENGE_MODE_START")
+    Addon.fMain:RegisterEvent("CHALLENGE_MODE_RESET")
     Addon.fMain:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
     Addon.fMain:RegisterEvent("PLAYER_ENTERING_WORLD")
 
@@ -407,6 +455,8 @@ function Addon:OnEvent(self, event, ...)
         UpdateDeath()
     elseif (event == "SCENARIO_CRITERIA_UPDATE") then
         UpdateCriteria()
+    elseif (event == "CHALLENGE_MODE_RESET") then
+        wipe(Addon.DB.profile.dungeon.deathes.list)
     elseif (event == "CHALLENGE_MODE_COMPLETED") then
         Addon.keyActive = false
     elseif (event == "PLAYER_ENTERING_WORLD") then

@@ -221,7 +221,9 @@ function Addon:ToggleCustomize(enable)
     else
         for frame, info in pairs(Addon.frameInfo) do
             Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
-            Addon.fMain[frame]:EnableMouse(false)
+            if (frame ~= "deathTimer") then
+                Addon.fMain[frame]:EnableMouse(false)
+            end
             Addon.fMain[frame]:SetMovable(false)
         end
         Addon.fMain:SetResizable(false)

@@ -284,6 +284,14 @@ for frame, info in pairs(Addon.frameInfo) do
             Addon:StartFontSize(frame)
         end
     end)
+    if (frame == 'deathTimer') then
+        Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
+            Addon:OnDeathTimerEnter(self)
+        end)
+        Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
+            GameTooltip:Hide()
+        end)
+    end
 end
 
 Addon.fMain.affix = {}
@@ -295,5 +303,8 @@ for f = 1,4 do
     Addon.fMain.affix[f]:SetPoint("RIGHT", Addon.fMain.affixes, "TOPRIGHT", right - 4, -16)
     Addon.fMain.affix[f]:SetScript("OnEnter", function(self, event, ...)
         Addon:OnAffixEnter(self, f)
+    end)
+    Addon.fMain.affix[f]:SetScript("OnLeave", function(self, event, ...)
+        GameTooltip:Hide()
     end)
 end
