@@ -1,23 +1,25 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 115
+Addon.version = 116
 
 local REAPING = 117
 
 local dungeon = {
-    id = 0,
-    bosses  = {
+    id        = 0,
+    bosses    = {
         count  = 0,
         killed = 0,
     },
-    trash = {
+    time      = 0,
+    affixes   = {},
+    isReaping = false,
+    level     = 0,
+    deathes   = {},
+    trash     = {
         total = 0,
         current = 0,
         killed = 0,
     },
-    affixes = {},
-    isReaping = false,
-    level   = 0,
-    deathes = {},
+    players = {},
 }
 local timeCoef = {0.8, 0.6}
 
@@ -154,7 +156,7 @@ local function UpdateCriteria()
 end
 
 local function CombatLogEvent()
-    local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, spellID, spellName, spellSchool, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 = CombatLogGetCurrentEventInfo()
+    local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, x12, x13, x14, x15 = CombatLogGetCurrentEventInfo()
 
     if event == "UNIT_DIED" then
         if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_NPC) > 0
@@ -172,11 +174,42 @@ local function CombatLogEvent()
             end
         end
         if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and (not UnitIsFeignDeath(destName)) then
-            if Addon.DB.profile.dungeon.deathes.list[destName] then
-                Addon.DB.profile.dungeon.deathes.list[destName] = Addon.DB.profile.dungeon.deathes.list[destName] + 1
-            else 
-                Addon.DB.profile.dungeon.deathes.list[destName] = 1
+            local spellName, spellIcon, spellDescription
+            if dungeon.players[destName].spellId > 0 then
+                spellName, _, spellIcon = GetSpellInfo(dungeon.players[destName].spellId)
+                spellDescription = GetSpellDescription(dungeon.players[destName].spellId)
+            else
+                spellName = Addon.localization.MELEEATACK
+                spellDescription = nil
+                spellIcon = 130730 -- Melee Attack Icon
             end
+            table.insert(Addon.DB.profile.dungeon.deathes.list, {
+                playerName = destName,
+                time       = dungeon.time,
+                enemy      = dungeon.players[destName].enemy,
+                damage     = dungeon.players[destName].damage,
+                spell      = {
+                    id          = dungeon.players[destName].spellId,
+                    name        = spellName,
+                    icon        = spellIcon,
+                    description = spellDescription,
+                },
+            })
+
+        end
+    elseif bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
+        if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
+            dungeon.players[destName] = {
+                spellId   = x12,
+                enemy     = sourceName,
+                damage    = x15,
+            }
+        elseif event == "SWING_DAMAGE" then
+            dungeon.players[destName] = {
+                spellId   = 0,
+                enemy     = sourceName,
+                damage    = x12,
+            }
         end
     end
 end
@@ -214,9 +247,11 @@ local function UpdateTime(block, elapsedTime)
     else
         plusLevel = "-1"
         Addon.fMain.timer.text:SetText(SecondsToClock(elapsedTime - block.timeLimit))
-        Addon.fMain.plusTimer:Hide()
+        Addon.fMain.plusTimer.text:SetText(SecondsToClock(elapsedTime))
+        Addon.fMain.plusTimer:Show()
         r = 1
     end
+    dungeon.time = elapsedTime
     Addon.fMain.timer.text:SetTextColor(r, g, b)
     Addon.fMain.plusLevel.text:SetText(plusLevel)
 end
@@ -234,8 +269,6 @@ end
 function Addon:OnAffixEnter(self, iconNum)
     if Addon.keyActive then
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         local affixNum = #dungeon.affixes - iconNum + 1
         GameTooltip:SetText(dungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
         GameTooltip:AddLine(dungeon.affixes[affixNum].text, nil, nil, nil, true)
@@ -244,36 +277,47 @@ function Addon:OnAffixEnter(self, iconNum)
 end
 
 function Addon:OnDeathTimerEnter(self)
-    local deathes, timeLost = C_ChallengeMode.GetDeathCount()
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-    GameTooltip:SetText(Addon.localization.DEATHCOUNT .. " : " .. deathes, 1, 1, 1)
-    GameTooltip:AddLine(Addon.localization.DEATHTIME .. " : " .. SecondsToClock(timeLost), .8, 0, 0)
-    GameTooltip:AddLine(" ")
+    if Addon.keyActive then
+        local deathes, timeLost = C_ChallengeMode.GetDeathCount()
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.DEATHCOUNT .. " : " .. deathes, 1, 1, 1)
+        GameTooltip:AddLine(Addon.localization.DEATHTIME .. " : " .. SecondsToClock(timeLost), .8, 0, 0)
+        GameTooltip:AddLine(" ")
 
-    local list = {}
-    local deathsCount = 0
-    for playerName, count in pairs(Addon.DB.profile.dungeon.deathes.list) do
-        local _, class = UnitClass(playerName)
-        table.insert(list, {
-            count      = count,
-            playerName = playerName,
-            class      = class,
-        })
-    end
-    table.sort(list, function(a, b)
-        if a.count ~= b.count then
-            return a.count > b.count
-        else
-            return a.playerName < b.playerName
+        local counts = {}
+        for i, death in ipairs(Addon.DB.profile.dungeon.deathes.list) do
+            if counts[death.playerName] then
+                counts[death.playerName] = counts[death.playerName] + 1
+            else
+                counts[death.playerName] = 1
+            end
         end
-    end)
+        local list = {}
+        for playerName, count in pairs(counts) do
+            local _, class = UnitClass(playerName)
+            table.insert(list, {
+                count      = count,
+                playerName = playerName,
+                class      = class,
+            })
+        end
+        table.sort(list, function(a, b)
+            if a.count ~= b.count then
+                return a.count > b.count
+            else
+                return a.playerName < b.playerName
+            end
+        end)
+        for i, item in ipairs(list) do
+            local color = RAID_CLASS_COLORS[item.class] or HIGHLIGHT_FONT_COLOR
+            GameTooltip:AddDoubleLine(item.playerName, item.count, color.r, color.g, color.b, HIGHLIGHT_FONT_COLOR:GetRGB())
+        end
 
-    for _, item in ipairs(list) do
-        local color = RAID_CLASS_COLORS[item.class] or HIGHLIGHT_FONT_COLOR
-        GameTooltip:AddDoubleLine(item.playerName, item.count, color.r, color.g, color.b, HIGHLIGHT_FONT_COLOR:GetRGB())
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddLine(Addon.localization.DEATHSHOW)
+
+        GameTooltip:Show()
     end
-
-    GameTooltip:Show()
 end
 
 
@@ -315,13 +359,19 @@ local function ShowFrame()
     Addon.keyActive = true
 end
 
+local function WipeDungeon()
+    dungeon.trash.total = 0
+    dungeon.trash.current = 0
+    dungeon.trash.killed = 0
+    wipe(Addon.DB.profile.dungeon.deathes.list)
+    dungeon.time = 0
+    wipe(dungeon.players)
+end
+
 local function HideTimer()
     if not Addon.fOptions:IsShown() then
         Addon.fMain:Hide()
     end
-    dungeon.trash.total = 0
-    dungeon.trash.current = 0
-    dungeon.trash.killed = 0
     ObjectiveTrackerFrame:Show()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.keyActive = false
@@ -364,7 +414,6 @@ local function ShowPrognosis()
         Addon.fMain.prognosis:Hide()
     end
 end
-
 
 local function OnTooltipSetUnit(tooltip)
     if dungeon.trash.total > 0 then
@@ -414,7 +463,7 @@ function Addon:Init()
             },
             dungeon = {
                 deathes = {
-                    list  = {},
+                    list = {},
                 },
             },
         },
@@ -437,7 +486,6 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("ADDON_LOADED")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_DEATH_COUNT_UPDATED")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-    Addon.fMain:RegisterEvent("CHALLENGE_MODE_START")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_RESET")
     Addon.fMain:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
     Addon.fMain:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -456,7 +504,7 @@ function Addon:OnEvent(self, event, ...)
     elseif (event == "SCENARIO_CRITERIA_UPDATE") then
         UpdateCriteria()
     elseif (event == "CHALLENGE_MODE_RESET") then
-        wipe(Addon.DB.profile.dungeon.deathes.list)
+        WipeDungeon()
     elseif (event == "CHALLENGE_MODE_COMPLETED") then
         Addon.keyActive = false
     elseif (event == "PLAYER_ENTERING_WORLD") then

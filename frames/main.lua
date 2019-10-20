@@ -285,10 +285,17 @@ for frame, info in pairs(Addon.frameInfo) do
         end
     end)
     if (frame == 'deathTimer') then
-        Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
+        Addon.fMain[frame].button = CreateFrame("Button", nil, Addon.fMain[frame])
+        Addon.fMain[frame].button:SetAllPoints(Addon.fMain[frame])
+        Addon.fMain[frame].button:SetBackdrop(Addon.backdrop)
+        Addon.fMain[frame].button:SetBackdropColor(0,0,0, 0)
+        Addon.fMain[frame].button:SetScript("OnClick", function(self)
+            Addon:ToggleDeaths()
+        end)
+        Addon.fMain[frame].button:SetScript("OnEnter", function(self, event, ...)
             Addon:OnDeathTimerEnter(self)
         end)
-        Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
+        Addon.fMain[frame].button:SetScript("OnLeave", function(self, event, ...)
             GameTooltip:Hide()
         end)
     end

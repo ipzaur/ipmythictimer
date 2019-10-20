@@ -10,17 +10,21 @@
 
 libs.xml
 
-localization.lua
-localization_ru.lua
-localization_zhtw.lua
+Localization\localization.lua
+Localization\localization_ru.lua
+Localization\localization_zhtw.lua
+
 utility.lua
 
 main.lua
-mainFrame.lua
+frames\main.lua
 
 options.lua
-optionsFrame.lua
+frames\options.lua
 
-mapbutFrame.lua
+frames\mapbut.lua
+
+deaths.lua
+frames\deaths.lua
 
 ipmythictimer.lua

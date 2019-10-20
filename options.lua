@@ -16,6 +16,11 @@ Addon.defaultOptions = {
             x = 0,
             y = -50,
         },
+        deaths = {
+            point = 'CENTER',
+            x = 0,
+            y = -50,
+        },
     },
     font = Addon.FONT_ROBOTO,
 }
@@ -113,8 +118,12 @@ function Addon:LoadOptions()
                 point = Addon.defaultOptions.position.options.point,
                 x = Addon.defaultOptions.position.options.x,
                 y = Addon.defaultOptions.position.options.y,
-            }
-            
+            },
+            deaths = {
+                point = Addon.defaultOptions.position.deaths.point,
+                x = Addon.defaultOptions.position.deaths.x,
+                y = Addon.defaultOptions.position.deaths.y,
+            },
         }
     end
 
@@ -215,15 +224,19 @@ function Addon:ToggleCustomize(enable)
             Addon.fMain[frame]:SetBackdropColor(1,1,1, 0.1)
             Addon.fMain[frame]:EnableMouse(true)
             Addon.fMain[frame]:SetMovable(true)
+            if (frame == "deathTimer") then
+                Addon.fMain[frame].button:EnableMouse(false)
+            end
         end
         Addon.fMain:SetResizable(true)
         Addon.fMain.cCaption:Show()
     else
         for frame, info in pairs(Addon.frameInfo) do
             Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
-            if (frame ~= "deathTimer") then
-                Addon.fMain[frame]:EnableMouse(false)
+            if (frame == "deathTimer") then
+                Addon.fMain[frame].button:EnableMouse(true)
             end
+            Addon.fMain[frame]:EnableMouse(false)
             Addon.fMain[frame]:SetMovable(false)
         end
         Addon.fMain:SetResizable(false)
@@ -297,6 +310,10 @@ function Addon:RestoreOptions()
     IPMTOptions.position.options.point = Addon.defaultOptions.position.options.point
     IPMTOptions.position.options.x = Addon.defaultOptions.position.options.x
     IPMTOptions.position.options.y = Addon.defaultOptions.position.options.y
+
+    IPMTOptions.position.deaths.point = Addon.defaultOptions.position.deaths.point
+    IPMTOptions.position.deaths.x = Addon.defaultOptions.position.deaths.x
+    IPMTOptions.position.deaths.y = Addon.defaultOptions.position.deaths.y
 
     IPMTOptions.font = Addon.FONT_ROBOTO
     SelectFont(IPMTOptions.font)
