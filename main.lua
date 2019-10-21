@@ -200,15 +200,15 @@ local function CombatLogEvent()
     elseif bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
         if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
             dungeon.players[destName] = {
-                spellId   = x12,
-                enemy     = sourceName,
-                damage    = x15,
+                spellId = x12,
+                enemy   = sourceName,
+                damage  = x15,
             }
         elseif event == "SWING_DAMAGE" then
             dungeon.players[destName] = {
-                spellId   = 0,
-                enemy     = sourceName,
-                damage    = x12,
+                spellId = 0,
+                enemy   = sourceName,
+                damage  = x12,
             }
         end
     end
@@ -267,7 +267,7 @@ local function UpdateDeath()
 end
 
 function Addon:OnAffixEnter(self, iconNum)
-    if Addon.keyActive then
+    if not Addon.fOptions:IsShown() then
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         local affixNum = #dungeon.affixes - iconNum + 1
         GameTooltip:SetText(dungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
@@ -277,7 +277,7 @@ function Addon:OnAffixEnter(self, iconNum)
 end
 
 function Addon:OnDeathTimerEnter(self)
-    if Addon.keyActive then
+    if not Addon.fOptions:IsShown() then
         local deathes, timeLost = C_ChallengeMode.GetDeathCount()
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(Addon.localization.DEATHCOUNT .. " : " .. deathes, 1, 1, 1)
