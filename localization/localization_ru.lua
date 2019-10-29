@@ -3,10 +3,17 @@ if GetLocale() ~= "ruRU" then return end
 local AddonName, Addon = ...
 
 Addon.localization.CLEANDBBT  = "Очистить базу мобов"
-Addon.localization.CLEANDBTT  = "Очистить внутреннюю базу с процентами монстров.\nПомогает, если счётчик процентов глючит"
+Addon.localization.CLEANDBTT  = "Очистить внутреннюю базу с процентами монстров.\n" ..
+                                "Помогает, если счётчик процентов глючит"
 Addon.localization.CLOSE      = "Закрыть"
 Addon.localization.CUSTOMIZE  = "Настроить фрейм"
-Addon.localization.CCAPTION   = "Фрейм: ЛКМ - переместить, ПКМ - растянуть\nЭлемент: ЛКМ - переместить, ПКМ - размер шрифта"
+Addon.localization.CCAPTION   = "Фрейм:\n" ..
+                                "    ЛКМ (тянуть) - переместить\n" ..
+                                "    ПКМ (тянуть) - растянуть\n" ..
+                                "Элемент:\n" ..
+                                "    ЛКМ (тянуть) - переместить\n" ..
+                                "    ПКМ (щелчок) - размер шрифта\n" ..
+                                "    СКМ (щелчок) - скрыть/показать элемент\n"
 Addon.localization.DAMAGE     = "Урон"
 Addon.localization.DEATHCOUNT = "Смертей"
 Addon.localization.DEATHSHOW  = "Нажмите для подробной информации"
@@ -14,11 +21,17 @@ Addon.localization.DEATHTIME  = "Потеряно времени"
 Addon.localization.DTHCAPTION = "Журнал смертей"
 Addon.localization.FONT       = "Шрифт"
 Addon.localization.FONTSIZE   = "Размер шрифта"
-Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\nЛКМ (зажать) - передвинуть иконку"
+Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\n" ..
+                                "ЛКМ (зажать) - передвинуть иконку"
 Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку у миникарты"
 Addon.localization.MELEEATACK = "Ближний бой"
 Addon.localization.OPTIONS    = "Настройки"
 Addon.localization.OPACITY    = "Непрозрачность фона"
+Addon.localization.PROGFORMAT = {
+    [1] = "Проценты (100.00%)",
+    [2] = "Вес мобов (300)",
+}
+Addon.localization.PROGRESS   = "Формат прогресса"
 Addon.localization.RESTORE    = "Сбросить"
 Addon.localization.SCALE      = "Масштаб"
 Addon.localization.SOURCE     = "Источник"

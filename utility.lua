@@ -1,8 +1,10 @@
 local AddonName, Addon = ...
 
-Addon.FONT_ROBOTO = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Light.ttf"
+Addon.FONT_ROBOTO_LIGHT = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Light.ttf"
+Addon.FONT_ROBOTO = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Regular.ttf"
 local LSM = LibStub("LibSharedMedia-3.0")
-LSM:Register('font', 'Roboto Light', Addon.FONT_ROBOTO, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_koKR + LSM.LOCALE_BIT_zhCN + LSM.LOCALE_BIT_zhTW)
+LSM:Register('font', 'Roboto Light', Addon.FONT_ROBOTO_LIGHT, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_koKR + LSM.LOCALE_BIT_zhCN + LSM.LOCALE_BIT_zhTW)
+LSM:Register('font', 'Roboto', Addon.FONT_ROBOTO, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western + LSM.LOCALE_BIT_koKR + LSM.LOCALE_BIT_zhCN + LSM.LOCALE_BIT_zhTW)
 Addon.backdrop = {
     bgFile   = "Interface\\Buttons\\WHITE8X8",
     edgeFile = nil,
