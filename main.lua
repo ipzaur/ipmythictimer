@@ -191,28 +191,33 @@ local function CombatLogEvent()
             end
         end
         if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and (not UnitIsFeignDeath(destName)) then
-            local spellName, spellIcon, spellDescription
-            if dungeon.players[destName].spellId > 0 then
-                spellName, _, spellIcon = GetSpellInfo(dungeon.players[destName].spellId)
-                spellDescription = GetSpellDescription(dungeon.players[destName].spellId)
+            local spellId, spellIcon, enemy, damage
+            if dungeon.players[destName] == nil then
+                spellId = nil
+                spellIcon = nil
+                enemy = Addon.localization.UNKNOWN
+                damage = ''
             else
-                spellName = Addon.localization.MELEEATACK
-                spellDescription = nil
-                spellIcon = 130730 -- Melee Attack Icon
+                spellId = dungeon.players[destName].spellId
+                enemy   = dungeon.players[destName].enemy
+                damage  = dungeon.players[destName].damage
+                if spellId > 1 then
+                    spellIcon = select(3, GetSpellInfo(spellId))
+                else
+                    spellIcon = 130730 -- Melee Attack Icon
+                end
             end
             table.insert(Addon.DB.profile.dungeon.deathes.list, {
                 playerName = destName,
                 time       = dungeon.time,
-                enemy      = dungeon.players[destName].enemy,
-                damage     = dungeon.players[destName].damage,
+                enemy      = enemy,
+                damage     = damage,
                 spell      = {
-                    id          = dungeon.players[destName].spellId,
-                    name        = spellName,
-                    icon        = spellIcon,
-                    description = spellDescription,
+                    id   = spellId,
+                    icon = spellIcon,
                 },
             })
-
+            dungeon.players[destName] = nil
         end
     elseif bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
         if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
@@ -223,7 +228,13 @@ local function CombatLogEvent()
             }
         elseif event == "SWING_DAMAGE" then
             dungeon.players[destName] = {
-                spellId = 0,
+                spellId = 1,
+                enemy   = sourceName,
+                damage  = x12,
+            }
+        elseif event == "RANGE_DAMAGE" then
+            dungeon.players[destName] = {
+                spellId = 75,
                 enemy   = sourceName,
                 damage  = x12,
             }

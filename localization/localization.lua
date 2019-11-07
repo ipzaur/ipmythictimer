@@ -37,5 +37,6 @@ Addon.localization.SCALE      = "Scale"
 Addon.localization.SOURCE     = "Source"
 Addon.localization.STARTINFO  = "iP Mythic Timer loaded. Type /ipmt for options."
 Addon.localization.TIME       = "Time"
+Addon.localization.UNKNOWN    = "Unknown"
 Addon.localization.WHODIED    = "Who died"
 
