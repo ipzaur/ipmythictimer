@@ -1,6 +1,7 @@
 local AddonName, Addon = ...
 
 local LSM = LibStub("LibSharedMedia-3.0")
+local helpShown = false
 
 Addon.defaultOptions = {
     opacity     = 100,
@@ -314,6 +315,7 @@ function Addon:ToggleCustomize(enable)
         Addon.fMain.cCaption:Hide()
         Addon.fOptions.FS:Hide()
     end
+    Addon:HideHelp()
 end
 
 function Addon:ToggleOptions()
@@ -434,3 +436,4 @@ function Addon:RestoreOptions()
 
     Addon:OnShow()
 end
+

@@ -237,3 +237,16 @@ Addon.fOptions.FS.slider:SetScript('OnMouseUp', function(self, button)
         Addon:RecalcElem(Addon.fontSizeFrame)
     end
 end)
+
+-- Help button
+Addon.fOptions.help = CreateFrame("Button", nil, Addon.fOptions)
+Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
+Addon.fOptions.help:SetSize(30, 30)
+
+Addon.fOptions.help.icon = Addon.fOptions.help:CreateTexture(nil, "BACKGROUND")
+Addon.fOptions.help.icon:SetAllPoints(Addon.fOptions.help)
+Addon.fOptions.help.icon:SetTexture("Interface\\common\\help-i")
+
+Addon.fOptions.help:SetScript("OnClick", function(self)
+    Addon:ToggleHelp()
+end)
