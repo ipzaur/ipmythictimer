@@ -1,7 +1,6 @@
 local AddonName, Addon = ...
 
 local LSM = LibStub("LibSharedMedia-3.0")
-local helpShown = false
 
 Addon.defaultOptions = {
     opacity     = 100,

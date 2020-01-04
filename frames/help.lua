@@ -204,13 +204,14 @@ local helpInfo = {
 }
 
 function Addon:HideHelp()
-    Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
-    Addon.fOptions.help:SetSize(30, 30)
-    Addon.fOptions.help.glow:Hide()
-    helpShown = false
+    if Addon.fOptions.help.glow:IsShown() then
+        Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
+        Addon.fOptions.help:SetSize(30, 30)
+        Addon.fOptions.help.glow:Hide()
 
-    for frame, info in pairs(helpInfo) do
-        Addon.fHelp[frame]:Hide()
+        for frame, info in pairs(helpInfo) do
+            Addon.fHelp[frame]:Hide()
+        end
     end
 end
 
@@ -218,13 +219,12 @@ function Addon:ShowHelp()
     Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, 0)
     Addon.fOptions.help:SetSize(40, 40)
     Addon.fOptions.help.glow:Show()
-    helpShown = true
 
-    if (Addon.fHelp == nil) then
+    if Addon.fHelp == nil then
         Addon.fHelp = {}
         for frame, info in pairs(helpInfo) do
             local point = info.position.point
-            if (point == nil) then
+            if point == nil then
                 point = 'LEFT'
             end
             Addon.fHelp[frame] = CreateFrame("Frame", nil, Addon.fMain[frame])
@@ -243,7 +243,7 @@ function Addon:ShowHelp()
             Addon.fHelp[frame].text:SetTextColor(.9, .9, 0)
             Addon.fHelp[frame].text:SetText(info.text)
 
-            if (info.line ~= nil) then
+            if info.line ~= nil then
                 Addon.fHelp[frame].line = Addon.fHelp[frame]:CreateTexture()
                 Addon.fHelp[frame].line:SetColorTexture(.9,.9,0, 0.9)
                 Addon.fHelp[frame].line:SetSize(info.line.size[0], info.line.size[1])

@@ -1,7 +1,7 @@
 local AddonName, Addon = ...
 
 function Addon:ToggleHelp()
-    if helpShown then
+    if Addon.fOptions.help.glow:IsShown() then
         Addon:HideHelp()
     else
         Addon:ShowHelp()
