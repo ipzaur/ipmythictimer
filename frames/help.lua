@@ -10,7 +10,7 @@ local helpInfo = {
             x = -180,
             y = 10,
         },
-        text = "Уровень активного ключа",
+        text = Addon.localization.HELP.LEVEL,
         line = {
             size = {
                 [0] = 178,
@@ -25,14 +25,14 @@ local helpInfo = {
     },
     plusLevel = {
         size = {
-            [0] = 230,
+            [0] = 240,
             [1] = 20,
         },
         position = {
-            x = -220,
+            x = -230,
             y = 40,
         },
-        text = "Улучшение ключа при текущем таймере",
+        text = Addon.localization.HELP.PLUSLEVEL,
         line = {
             size = {
                 [0] = 1,
@@ -54,7 +54,7 @@ local helpInfo = {
             x = -140,
             y = -10,
         },
-        text = "Оставшееся время",
+        text = Addon.localization.HELP.TIMER,
         line = {
             size = {
                 [0] = 138,
@@ -69,14 +69,14 @@ local helpInfo = {
     },
     plusTimer = {
         size = {
-            [0] = 180,
+            [0] = 200,
             [1] = 20,
         },
         position = {
-            x = -160,
+            x = -180,
             y = 90,
         },
-        text = "Время до ухудшения прогресса",
+        text = Addon.localization.HELP.PLUSTIMER,
         line = {
             size = {
                 [0] = 1,
@@ -91,14 +91,14 @@ local helpInfo = {
     },
     deathTimer = {
         size = {
-            [0] = 200,
+            [0] = 210,
             [1] = 20,
         },
         position = {
-            x = -190,
+            x = -200,
             y = -114,
         },
-        text = "Потраченное время из-за смертей",
+        text = Addon.localization.HELP.DEATHTIMER,
         line = {
             size = {
                 [0] = 1,
@@ -120,7 +120,7 @@ local helpInfo = {
             x = -140,
             y = -10,
         },
-        text = "Убито противников",
+        text = Addon.localization.HELP.PROGRESS,
         line = {
             size = {
                 [0] = 138,
@@ -142,7 +142,7 @@ local helpInfo = {
             x = -160,
             y = -50,
         },
-        text = "Прогресс, который дадут вошедшие в бой противники",
+        text = Addon.localization.HELP.PROGNOSIS,
         line = {
             size = {
                 [0] = 1,
@@ -165,7 +165,7 @@ local helpInfo = {
             y = -120,
             point = "TOPRIGHT",
         },
-        text = "Убито боссов",
+        text = Addon.localization.HELP.BOSSES,
         line = {
             size = {
                 [0] = 1,
@@ -188,7 +188,7 @@ local helpInfo = {
             y = 60,
             point = 'TOPRIGHT',
         },
-        text = "Активные аффиксы",
+        text = Addon.localization.HELP.AFFIXES,
         line = {
             size = {
                 [0] = 1,
@@ -206,6 +206,7 @@ local helpInfo = {
 function Addon:HideHelp()
     Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
     Addon.fOptions.help:SetSize(30, 30)
+    Addon.fOptions.help.glow:Hide()
     helpShown = false
 
     for frame, info in pairs(helpInfo) do
@@ -216,6 +217,7 @@ end
 function Addon:ShowHelp()
     Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, 0)
     Addon.fOptions.help:SetSize(40, 40)
+    Addon.fOptions.help.glow:Show()
     helpShown = true
 
     if (Addon.fHelp == nil) then

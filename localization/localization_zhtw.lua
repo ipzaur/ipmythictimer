@@ -3,8 +3,8 @@ if GetLocale() ~= "zhTW" then return end
 local AddonName, Addon = ...
 
 Addon.localization.CLEANDBBT  = "清理数据库"
-Addon.localization.CLEANDBTT  = "Clear the addon internal base with the percent of monsters.\n" ..
-                                "Helps if the percent counter is buggy"
+Addon.localization.CLEANDBTT  = "清除怪物内部百分比的插件内部基础.\n" ..
+                                "帮助百分比计数器是否有错误"
 Addon.localization.CLOSE      = "關閉"
 Addon.localization.CUSTOMIZE  = "自定义框架"
 Addon.localization.CCAPTION   = "主框架:\n" ..
@@ -39,3 +39,15 @@ Addon.localization.STARTINFO  = "iP Mythic Timer已載入。輸入 /ipmt 開啟�
 Addon.localization.TIME       = "时间"
 Addon.localization.UNKNOWN    = "未知"
 Addon.localization.WHODIED    = "谁死了"
+
+Addon.localization.HELP = {
+    LEVEL      = "活动密钥级别",
+    PLUSLEVEL  = "密钥将如何随着当前时间升级",
+    TIMER      = "剩下的时间",
+    PLUSTIMER  = "是时候降级关键进度了",
+    DEATHTIMER = "由于死亡而浪费时间",
+    PROGRESS   = "垃圾被杀死",
+    PROGNOSIS  = "杀死小怪后的进展",
+    BOSSES     = "老板被杀",
+    AFFIXES    = "主动词缀",
+}

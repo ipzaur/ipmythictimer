@@ -40,3 +40,14 @@ Addon.localization.TIME       = "Time"
 Addon.localization.UNKNOWN    = "Unknown"
 Addon.localization.WHODIED    = "Who died"
 
+Addon.localization.HELP = {
+    LEVEL      = "Active key Level",
+    PLUSLEVEL  = "How key will upgrade with current time",
+    TIMER      = "Time left",
+    PLUSTIMER  = "Time to downgrade key progress",
+    DEATHTIMER = "Time wasted due to deaths",
+    PROGRESS   = "Trash killed",
+    PROGNOSIS  = "Progress after kill pulled mobs",
+    BOSSES     = "Bosses killed",
+    AFFIXES    = "Active affixes",
+}

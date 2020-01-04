@@ -10,7 +10,7 @@ Addon.defaultOptions = {
         main = {
             point = 'TOPRIGHT',
             x = -30,
-            y = -220,
+            y = -320,
         },
         options = {
             point = 'CENTER',
@@ -111,8 +111,12 @@ function Addon:MoveElement(self, frame)
 end
 
 function Addon:LoadOptions()
+    local needHelp = false
     if IPMTOptions == nil then
         IPMTOptions = {}
+    end
+    if IPMTOptions.version == nil then
+        needHelp = true
     end
 
     if IPMTOptions.opacity == nil then
@@ -197,6 +201,9 @@ function Addon:LoadOptions()
 
     if not IPMTOptions.version or IPMTOptions.version ~= Addon.version then
         Addon:ShowOptions()
+        if needHelp then
+            Addon:ShowHelp()
+        end
         IPMTOptions.version = Addon.version
     end
 end

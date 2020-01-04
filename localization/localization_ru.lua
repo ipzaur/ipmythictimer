@@ -39,3 +39,15 @@ Addon.localization.STARTINFO  = "iP Mythic Timer загружен. Для выз
 Addon.localization.TIME       = "Время"
 Addon.localization.UNKNOWN    = "Неизвестно"
 Addon.localization.WHODIED    = "Кто умер"
+
+Addon.localization.HELP = {
+    LEVEL      = "Уровень активного ключа",
+    PLUSLEVEL  = "Улучшение ключа при текущем таймере",
+    TIMER      = "Оставшееся время",
+    PLUSTIMER  = "Время до ухудшения прогресса",
+    DEATHTIMER = "Потраченное время из-за смертей",
+    PROGRESS   = "Убито противников",
+    PROGNOSIS  = "Прогресс, который дадут вошедшие в бой противники",
+    BOSSES     = "Убито боссов",
+    AFFIXES    = "Активные аффиксы",
+}
