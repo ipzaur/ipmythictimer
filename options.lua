@@ -9,7 +9,7 @@ Addon.defaultOptions = {
         main = {
             point = 'TOPRIGHT',
             x = -30,
-            y = -220,
+            y = -320,
         },
         options = {
             point = 'CENTER',
@@ -22,6 +22,8 @@ Addon.defaultOptions = {
             y = -50,
         },
     },
+    direction = 1,
+    progress = 1,
     font = Addon.FONT_ROBOTO,
 }
 
@@ -72,6 +74,29 @@ function Addon:SetFont(filepath)
     end
 end
 
+function Addon:SetProgressFormat(value)
+    if IPMTOptions.progress ~= value then
+        IPMTOptions.progress = value
+        if not Addon.keyActive then
+            Addon.fMain.progress.text:SetText(Addon.frameInfo.progress.text.content[IPMTOptions.progress])
+            Addon.fMain.prognosis.text:SetText(Addon.frameInfo.prognosis.text.content[IPMTOptions.progress])
+        else
+            Addon:UpdateCriteria()
+        end
+        Addon:RecalcElem()
+    end
+end
+
+function Addon:SetProgressDirection(value)
+    if IPMTOptions.direction ~= value then
+        IPMTOptions.direction = value
+        if Addon.keyActive then
+            Addon:UpdateCriteria()
+        end
+        Addon:RecalcElem()
+    end
+end
+
 function Addon:MoveElement(self, frame)
     local x = self:GetLeft() - Addon.fMain:GetLeft()
     local y = self:GetTop() - Addon.fMain:GetTop() - self:GetHeight() / 2
@@ -96,8 +121,12 @@ function Addon:MoveElement(self, frame)
 end
 
 function Addon:LoadOptions()
+    local needHelp = false
     if IPMTOptions == nil then
         IPMTOptions = {}
+    end
+    if IPMTOptions.version == nil then
+        needHelp = true
     end
 
     if IPMTOptions.opacity == nil then
@@ -144,6 +173,7 @@ function Addon:LoadOptions()
                 y      = info.position.y,
                 point  = info.position.point,
                 rPoint = info.position.rPoint,
+                hidden = info.position.hidden,
             }
             if IPMTOptions.frame[frame].point == nil then
                 IPMTOptions.frame[frame].point = 'LEFT'
@@ -159,6 +189,9 @@ function Addon:LoadOptions()
         for frame, info in pairs(Addon.frameInfo) do
             Addon.fMain[frame]:ClearAllPoints()
             Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
+            if IPMTOptions.frame[frame].hidden then
+                Addon.fMain[frame]:Hide()
+            end
         end
     end
 
@@ -167,12 +200,25 @@ function Addon:LoadOptions()
     end
     Addon:SetFont(IPMTOptions.font)
 
+    if IPMTOptions.progress == nil then
+        IPMTOptions.progress = Addon.defaultOptions.progress
+    end
+    Addon:SetProgressFormat(IPMTOptions.progress)
+
+    if IPMTOptions.direction == nil then
+        IPMTOptions.direction = Addon.defaultOptions.direction
+    end
+    Addon:SetProgressDirection(IPMTOptions.direction)
+
     Addon:SetOpacity(IPMTOptions.opacity, true)
     Addon:SetScale(IPMTOptions.scale, true)
     Addon:OnShow()
 
     if not IPMTOptions.version or IPMTOptions.version ~= Addon.version then
         Addon:ShowOptions()
+        if needHelp then
+            Addon:ShowHelp()
+        end
         IPMTOptions.version = Addon.version
     end
 end
@@ -187,63 +233,116 @@ local function SelectFont(font)
     end
 end
 
-local fontSizeFrame = nil
+local function SelectProgress(value)
+    Addon:SetProgressFormat(value)
+    UIDropDownMenu_SetText(Addon.fOptions.progress, Addon.localization.PROGFORMAT[value])
+end
 
-function Addon:SetFontSize(value)
-    if fontSizeFrame ~= nil then
-        IPMTOptions.frame[fontSizeFrame].fontSize = value
-        Addon.fMain[fontSizeFrame].text:SetFont(IPMTOptions.font, IPMTOptions.frame[fontSizeFrame].fontSize)
-        local width = Addon.fMain[fontSizeFrame].text:GetStringWidth()
-        local height = Addon.fMain[fontSizeFrame].text:GetStringHeight()
-        Addon.fMain[fontSizeFrame]:SetSize(width, height)
-        local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[fontSizeFrame].fontSize .. ']'
+local function SelectDirection(value)
+    Addon:SetProgressDirection(value)
+    UIDropDownMenu_SetText(Addon.fOptions.direction, Addon.localization.DIRECTIONS[value])
+end
+
+
+function Addon:RecalcElem(frame)
+    if frame ~= nil then
+        local width = Addon.fMain[frame].text:GetStringWidth()
+        local height = Addon.fMain[frame].text:GetStringHeight()
+        Addon.fMain[frame]:SetSize(width, height)
+    else
+        for frame, info in pairs(Addon.frameInfo) do
+            if Addon.fMain[frame].text ~= nil then
+                local width = Addon.fMain[frame].text:GetStringWidth()
+                local height = Addon.fMain[frame].text:GetStringHeight()
+                Addon.fMain[frame]:SetSize(width, height)
+            end
+        end
+    end
+end
+
+Addon.fontSizeFrame = nil
+function Addon:SetFontSize(value, frameRecalc)
+    if Addon.fontSizeFrame ~= nil then
+        IPMTOptions.frame[Addon.fontSizeFrame].fontSize = value
+        Addon.fMain[Addon.fontSizeFrame].text:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
+        local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[Addon.fontSizeFrame].fontSize .. ']'
         getglobal(Addon.fOptions.FS.slider:GetName() .. 'Text'):SetText(FStext)
     end
 end
 
 function Addon:StartFontSize(frame)
     if Addon.fMain[frame].text ~= nil then
-        if fontSizeFrame ~= frame then
-            fontSizeFrame = frame
+        if Addon.fontSizeFrame ~= frame and Addon.isCustomizing then
+            Addon.fontSizeFrame = frame
             Addon.fOptions.FS:ClearAllPoints()
             Addon.fOptions.FS:SetPoint('TOP', Addon.fMain[frame], 'BOTTOM', 0, -4)
-            Addon.fOptions.FS.slider:SetValue(IPMTOptions.frame[fontSizeFrame].fontSize)
-            local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[fontSizeFrame].fontSize .. ']'
+            Addon.fOptions.FS.slider:SetValue(IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
+            local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[Addon.fontSizeFrame].fontSize .. ']'
             getglobal(Addon.fOptions.FS.slider:GetName() .. 'Text'):SetText(FStext)
             Addon.fOptions.FS:Show()
         else
-            fontSizeFrame = nil
+            Addon.fontSizeFrame = nil
             Addon.fOptions.FS:Hide()
         end
     end
 end
 
+function Addon:ToggleVisible(frame)
+    IPMTOptions.frame[frame].hidden = not IPMTOptions.frame[frame].hidden
+    if IPMTOptions.frame[frame].hidden then
+        Addon.fMain[frame]:SetBackdropColor(.85,0,0, .15)
+    else
+        Addon.fMain[frame]:SetBackdropColor(1,1,1, .1)
+    end
+end
+
 function Addon:ToggleCustomize(enable)
-    if enable then
+    Addon.isCustomizing = enable
+    if Addon.isCustomizing then
         for frame, info in pairs(Addon.frameInfo) do
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0.1)
+            Addon.fMain[frame]:Show()
+            if IPMTOptions.frame[frame].hidden then
+                Addon.fMain[frame]:SetBackdropColor(.8,0,0, .15)
+            else
+                Addon.fMain[frame]:SetBackdropColor(1,1,1, .1)
+            end
             Addon.fMain[frame]:EnableMouse(true)
             Addon.fMain[frame]:SetMovable(true)
             if (frame == "deathTimer") then
                 Addon.fMain[frame].button:EnableMouse(false)
+            elseif frame == "affixes" then
+                for f = 1,4 do
+                    Addon.fMain.affix[f]:EnableMouse(false)
+                end
             end
         end
         Addon.fMain:SetResizable(true)
         Addon.fMain.cCaption:Show()
+        Addon:RecalcElem()
     else
         for frame, info in pairs(Addon.frameInfo) do
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
-            if (frame == "deathTimer") then
-                Addon.fMain[frame].button:EnableMouse(true)
+            if IPMTOptions.frame[frame].hidden then
+                Addon.fMain[frame]:Hide()
+            else
+                Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
             end
-            Addon.fMain[frame]:EnableMouse(false)
+            if frame == "deathTimer" then
+                Addon.fMain[frame].button:EnableMouse(true)
+            elseif frame == "affixes" then
+                for f = 1,4 do
+                    Addon.fMain.affix[f]:EnableMouse(true)
+                end
+            end
+            if frame ~= "bosses" then
+                Addon.fMain[frame]:EnableMouse(false)
+            end
             Addon.fMain[frame]:SetMovable(false)
         end
         Addon.fMain:SetResizable(false)
         Addon.fMain.cCaption:Hide()
-        Addon.fOptions.FS:SetPoint("CENTER", UIParent)
         Addon.fOptions.FS:Hide()
     end
+    Addon:HideHelp()
 end
 
 function Addon:ToggleOptions()
@@ -272,7 +371,11 @@ function Addon:ShowOptions()
     if not Addon.keyActive then
         for frame, info in pairs(Addon.frameInfo) do
             if info.text ~= nil then
-                Addon.fMain[frame].text:SetText(info.text.content)
+                local content = info.text.content
+                if frame == "progress" or frame == "prognosis" then
+                    content = content[IPMTOptions.progress]
+                end
+                Addon.fMain[frame].text:SetText(content)
                 if info.text.color then
                     Addon.fMain[frame].text:SetTextColor(info.text.color[0], info.text.color[1], info.text.color[2])
                 end
@@ -286,6 +389,8 @@ function Addon:ShowOptions()
         end
     end
     SelectFont(IPMTOptions.font)
+    SelectProgress(IPMTOptions.progress)
+    SelectDirection(IPMTOptions.direction)
 end
 
 function Addon:CloseOptions()
@@ -296,6 +401,9 @@ function Addon:CloseOptions()
         Addon.fMain:Hide()
     end
     Addon:ToggleCustomize(false)
+    if #Addon.DB.profile.dungeon.deathes.list == 0 then
+        Addon.fMain.deathTimer:Hide()
+    end
     Addon.fOptions.customize:SetChecked(false)
 end
 
@@ -317,6 +425,13 @@ function Addon:RestoreOptions()
 
     IPMTOptions.font = Addon.FONT_ROBOTO
     SelectFont(IPMTOptions.font)
+
+    IPMTOptions.progress = Addon.defaultOptions.progress
+    SelectProgress(IPMTOptions.progress)
+
+    IPMTOptions.direction = Addon.defaultOptions.direction
+    SelectDirection(IPMTOptions.direction)
+
     IPMTOptions.size = {
         [0] = Addon.defaultSize[0],
         [1] = Addon.defaultSize[1],
@@ -328,6 +443,7 @@ function Addon:RestoreOptions()
             y      = info.position.y,
             point  = info.position.point,
             rPoint = info.position.rPoint,
+            hidden = info.hidden,
         }
         if IPMTOptions.frame[frame].point == nil then
             IPMTOptions.frame[frame].point = 'LEFT'
@@ -342,9 +458,13 @@ function Addon:RestoreOptions()
             local height = Addon.fMain[frame].text:GetStringHeight()
             Addon.fMain[frame]:SetSize(width, height) 
         end
+        if Addon.isCustomizing then
+            Addon.fMain[frame]:SetBackdropColor(1,1,1, .1)
+        end
         Addon.fMain[frame]:ClearAllPoints()
         Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
     end
 
     Addon:OnShow()
 end
+

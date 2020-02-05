@@ -5,7 +5,7 @@ local affixSize = {
     height = 20,
 }
 Addon.defaultSize = {
-    [0] = 170,
+    [0] = 180,
     [1] = 80,
 }
 
@@ -21,7 +21,7 @@ Addon.fMain:SetMovable(false)
 Addon.fMain:SetResizable(false)
 Addon.fMain:RegisterForDrag("LeftButton", "RightButton")
 Addon.fMain:SetScript("OnDragStart", function(self, button)
-    if button == "RightButton" and Addon.fOptions.customize:GetChecked() then
+    if button == "RightButton" and Addon.isCustomizing then
         self:StartSizing()
     end
     Addon:StartDragging(self, button)
@@ -53,7 +53,7 @@ Addon.fMain:Hide()
 
 Addon.fMain.cCaption = Addon.fMain:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fMain.cCaption:ClearAllPoints()
-Addon.fMain.cCaption:SetPoint('TOPLEFT', 0, 32)
+Addon.fMain.cCaption:SetPoint('TOPLEFT', 0, 100)
 Addon.fMain.cCaption:SetJustifyH('LEFT')
 Addon.fMain.cCaption:SetFont(Addon.FONT_ROBOTO, 12)
 Addon.fMain.cCaption:SetTextColor(1, 1, 1)
@@ -74,6 +74,7 @@ Addon.frameInfo = {
             fontSize = 20,
             content  = "24",
         },
+        hidden = false,
     },
     plusLevel = {
         size = {
@@ -93,6 +94,7 @@ Addon.frameInfo = {
                 [2] = 0.8,
             },
         },
+        hidden = false,
     },
     timer = {
         size = {
@@ -112,6 +114,7 @@ Addon.frameInfo = {
                 [2] = 0,
             },
         },
+        hidden = false,
     },
     plusTimer = {
         size = {
@@ -131,6 +134,7 @@ Addon.frameInfo = {
                 [2] = 0.8,
             },
         },
+        hidden = false,
     },
     deathTimer = {
         size = {
@@ -153,6 +157,7 @@ Addon.frameInfo = {
                 [2] = 0.2,
             },
         },
+        hidden = false,
     },
     progress = {
         size = {
@@ -167,13 +172,14 @@ Addon.frameInfo = {
         },
         text = {
             fontSize = 22,
-            content  = "57.32%",
+            content  = {"57.32%", "134/286"},
             color    = {
                 [0] = 1,
                 [1] = 1,
                 [2] = 0,
             },
         },
+        hidden = false,
     },
     prognosis = {
         size = {
@@ -181,20 +187,21 @@ Addon.frameInfo = {
             [1] = 20,
         },
         position = {
-            x = 80,
+            x = 86,
             y = 14,
             point = 'LEFT',
             rPoint = 'BOTTOMLEFT',
         },
         text = {
             fontSize = 15,
-            content  = "63.46%",
+            content  = {"63.46%", "148"},
             color    = {
                 [0] = 1,
                 [1] = 0,
                 [2] = 0,
             },
         },
+        hidden = false,
     },
     bosses = {
         size = {
@@ -217,6 +224,7 @@ Addon.frameInfo = {
                 [2] = 0.8,
             },
         },
+        hidden = false,
     },
     affixes = {
         size = {
@@ -229,6 +237,7 @@ Addon.frameInfo = {
             point = 'RIGHT',
             rPoint = 'TOPRIGHT',
         },
+        hidden = false,
     },
 }
 
@@ -260,31 +269,41 @@ for frame, info in pairs(Addon.frameInfo) do
                 [2] = 1,
             }
         end
+        local content = info.text.content
+        if frame == "progress" or frame == "prognosis" then
+            content = content[1]
+        end
         Addon.fMain[frame].text = Addon.fMain[frame]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
         Addon.fMain[frame].text:ClearAllPoints()
         Addon.fMain[frame].text:SetPoint(justify, 0, 0)
         Addon.fMain[frame].text:SetJustifyH(justify)
         Addon.fMain[frame].text:SetFont(Addon.FONT_ROBOTO, info.text.fontSize)
         Addon.fMain[frame].text:SetTextColor(color[0], color[1], color[2])
-        Addon.fMain[frame].text:SetText(info.text.content)
+        Addon.fMain[frame].text:SetText(content)
     end
 
     Addon.fMain[frame]:EnableMouse(false)
     Addon.fMain[frame]:SetMovable(false)
     Addon.fMain[frame]:RegisterForDrag("LeftButton")
     Addon.fMain[frame]:SetScript("OnDragStart", function(self, button)
-        Addon:StartDragging(self, button)
+        if Addon.isCustomizing then
+            Addon:StartDragging(self, button)
+        end
     end)
     Addon.fMain[frame]:SetScript("OnDragStop", function(self, button)
-        Addon:StopDragging(self, button)
-        Addon:MoveElement(self, frame)
+        if Addon.isCustomizing then
+            Addon:StopDragging(self, button)
+            Addon:MoveElement(self, frame)
+        end
     end)
     Addon.fMain[frame]:SetScript("OnMouseUp", function (self, button)
         if button == 'RightButton' then 
             Addon:StartFontSize(frame)
+        elseif button == 'MiddleButton' then 
+            Addon:ToggleVisible(frame)
         end
     end)
-    if (frame == 'deathTimer') then
+    if frame == 'deathTimer' then
         Addon.fMain[frame].button = CreateFrame("Button", nil, Addon.fMain[frame])
         Addon.fMain[frame].button:SetAllPoints(Addon.fMain[frame])
         Addon.fMain[frame].button:SetBackdrop(Addon.backdrop)
@@ -296,6 +315,13 @@ for frame, info in pairs(Addon.frameInfo) do
             Addon:OnDeathTimerEnter(self)
         end)
         Addon.fMain[frame].button:SetScript("OnLeave", function(self, event, ...)
+            GameTooltip:Hide()
+        end)
+    elseif frame == 'bosses' then
+        Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
+            Addon:OnBossesEnter(self)
+        end)
+        Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
             GameTooltip:Hide()
         end)
     end

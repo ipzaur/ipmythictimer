@@ -5,7 +5,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 -- Options Frame
 Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent)
 Addon.fOptions:SetFrameStrata("MEDIUM")
-Addon.fOptions:SetSize(270, 360)
+Addon.fOptions:SetSize(270, 480)
 Addon.fOptions:SetPoint("CENTER", UIParent)
 Addon.fOptions:SetBackdrop(Addon.backdrop)
 Addon.fOptions:SetBackdropColor(0,0,0, 1)
@@ -113,10 +113,76 @@ Addon.fOptions.fonts:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -160)
 UIDropDownMenu_SetWidth(Addon.fOptions.fonts, 210)
 UIDropDownMenu_Initialize(Addon.fOptions.fonts, fontsDropDown_Init)
 
+
+-- ProgressFormat caption
+Addon.fOptions.progressCaption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+Addon.fOptions.progressCaption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -194)
+Addon.fOptions.progressCaption:SetJustifyH("CENTER")
+Addon.fOptions.progressCaption:SetSize(120, 20)
+Addon.fOptions.progressCaption:SetTextColor(1, 1, 1)
+Addon.fOptions.progressCaption:SetText(Addon.localization.PROGRESS)
+
+-- ProgressFormat selector
+local function progressDropDown_OnClick(self, value, name, checked)
+    UIDropDownMenu_SetText(Addon.fOptions.progress, name)
+    Addon:SetProgressFormat(value)
+end
+local function progressDropDown_Init(frame, level, menuList)
+    for value, name in pairs(Addon.localization.PROGFORMAT) do
+        local info = UIDropDownMenu_CreateInfo()
+        info.func = progressDropDown_OnClick
+        info.text, info.arg1, info.arg2 = name, value, name
+        info.fontObject = CreateFont(Addon.FONT_ROBOTO)
+        info.fontObject:CopyFontObject('GameFontNormal')
+        info.fontObject:SetFont(Addon.FONT_ROBOTO, 12)
+        info.fontObject:SetTextColor(1, 1, 1)
+        info.notCheckable = true
+        UIDropDownMenu_AddButton(info)
+    end
+end
+
+Addon.fOptions.progress = CreateFrame("Frame", "IPMTProgress", Addon.fOptions, "UIDropDownMenuTemplate")
+Addon.fOptions.progress:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -218)
+UIDropDownMenu_SetWidth(Addon.fOptions.progress, 210)
+UIDropDownMenu_Initialize(Addon.fOptions.progress, progressDropDown_Init)
+
+
+-- Progress direction caption
+Addon.fOptions.directionCaption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+Addon.fOptions.directionCaption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -252)
+Addon.fOptions.directionCaption:SetJustifyH("CENTER")
+Addon.fOptions.directionCaption:SetSize(180, 20)
+Addon.fOptions.directionCaption:SetTextColor(1, 1, 1)
+Addon.fOptions.directionCaption:SetText(Addon.localization.DIRECTION)
+
+-- Progress direction selector
+local function directionDropDown_OnClick(self, value, name, checked)
+    UIDropDownMenu_SetText(Addon.fOptions.direction, name)
+    Addon:SetProgressDirection(value)
+end
+local function directionDropDown_Init(frame, level, menuList)
+    for value, name in pairs(Addon.localization.DIRECTIONS) do
+        local info = UIDropDownMenu_CreateInfo()
+        info.func = directionDropDown_OnClick
+        info.text, info.arg1, info.arg2 = name, value, name
+        info.fontObject = CreateFont(Addon.FONT_ROBOTO)
+        info.fontObject:CopyFontObject('GameFontNormal')
+        info.fontObject:SetFont(Addon.FONT_ROBOTO, 12)
+        info.fontObject:SetTextColor(1, 1, 1)
+        info.notCheckable = true
+        UIDropDownMenu_AddButton(info)
+    end
+end
+
+Addon.fOptions.direction = CreateFrame("Frame", "IPMTProgress", Addon.fOptions, "UIDropDownMenuTemplate")
+Addon.fOptions.direction:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -276)
+UIDropDownMenu_SetWidth(Addon.fOptions.direction, 210)
+UIDropDownMenu_Initialize(Addon.fOptions.direction, directionDropDown_Init)
+
 -- Customize checkbox
 Addon.fOptions.customize = CreateFrame("CheckButton", nil, Addon.fOptions, "InterfaceOptionsCheckButtonTemplate")
 Addon.fOptions.customize:SetSize(22, 22)
-Addon.fOptions.customize:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -196)
+Addon.fOptions.customize:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -308)
 Addon.fOptions.customize.label = Addon.fOptions.customize:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fOptions.customize.label:SetJustifyH("LEFT")
 Addon.fOptions.customize.label:SetPoint("LEFT", Addon.fOptions.customize, "CENTER", 20, 0)
@@ -130,7 +196,7 @@ end)
 -- Minimap Button checkbox
 Addon.fOptions.Mapbut = CreateFrame("CheckButton", nil, Addon.fOptions, "InterfaceOptionsCheckButtonTemplate")
 Addon.fOptions.Mapbut:SetSize(22, 22)
-Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -224)
+Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -340)
 Addon.fOptions.Mapbut.label = Addon.fOptions.Mapbut:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fOptions.Mapbut.label:SetJustifyH("LEFT")
 Addon.fOptions.Mapbut.label:SetPoint("LEFT", Addon.fOptions.Mapbut, "CENTER", 20, 0)
@@ -175,6 +241,7 @@ end)
 
 -- Element font size slider
 Addon.fOptions.FS = CreateFrame("Frame")
+Addon.fOptions.FS:SetFrameStrata("HIGH")
 Addon.fOptions.FS:SetSize(150, 50)
 Addon.fOptions.FS:SetPoint("CENTER", UIParent)
 Addon.fOptions.FS:SetBackdrop(Addon.backdrop)
@@ -198,3 +265,25 @@ getglobal(Addon.fOptions.FS.slider:GetName() .. 'Text'):SetText(Addon.localizati
 Addon.fOptions.FS.slider:SetScript('OnValueChanged', function(self)
     Addon:SetFontSize(self:GetValue())
 end)
+Addon.fOptions.FS.slider:SetScript('OnMouseUp', function(self, button)
+    if button == "LeftButton" and Addon.fontSizeFrame ~= nil then
+        Addon:RecalcElem(Addon.fontSizeFrame)
+    end
+end)
+
+-- Help button
+Addon.fOptions.help = CreateFrame("Button", nil, Addon.fOptions)
+Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
+Addon.fOptions.help:SetSize(30, 30)
+Addon.fOptions.help:SetScript("OnClick", function(self)
+    Addon:ToggleHelp()
+end)
+
+Addon.fOptions.help.icon = Addon.fOptions.help:CreateTexture()
+Addon.fOptions.help.icon:SetAllPoints(Addon.fOptions.help)
+Addon.fOptions.help.icon:SetTexture("Interface\\common\\help-i")
+Addon.fOptions.help.glow = Addon.fOptions.help:CreateTexture(nil, "BACKGROUND")
+Addon.fOptions.help.glow:SetAllPoints(Addon.fOptions.help)
+Addon.fOptions.help.glow:SetTexture(167062)
+Addon.fOptions.help.glow:SetVertexColor(.9, .9, 0)
+Addon.fOptions.help.glow:Hide()

@@ -134,12 +134,16 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].spell:ClearAllPoints()
         Addon.fDeaths.line[num].spell:SetPoint("LEFT", 168, 0)
         Addon.fDeaths.line[num].spell:SetScript("OnEnter", function(self, event, ...)
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText(Addon.DB.profile.dungeon.deathes.list[num].spell.name, 1, 1, 1)
-            if Addon.DB.profile.dungeon.deathes.list[num].spell.description ~= nil then
-                GameTooltip:AddLine(Addon.DB.profile.dungeon.deathes.list[num].spell.description)
+            if Addon.DB.profile.dungeon.deathes.list[num].spell.id ~= nil then
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                local spellId = Addon.DB.profile.dungeon.deathes.list[num].spell.id
+                if (spellId == 1) then
+                    GameTooltip:SetText(Addon.localization.MELEEATACK, 1, 1, 1)
+                else
+                    GameTooltip:SetSpellByID(spellId)
+                end
+                GameTooltip:Show()
             end
-            GameTooltip:Show()
         end)
         Addon.fDeaths.line[num].spell:SetScript("OnLeave", function(self, event, ...)
             GameTooltip:Hide()
