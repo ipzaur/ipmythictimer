@@ -31,6 +31,11 @@ local MDTdungeon = {
     [1041] = 22, -- The Underrot
     [1162] = 19, -- Siege of Bolarus
     [1169] = 23, -- Tol Dagor
+    [1490] = 25, -- Mechagon Island (Junkyard)
+
+    [1491] = 26, -- Mechagon City (Workshop)
+    [1494] = 26, -- Mechagon City (Workshop)
+    [1497] = 26, -- Mechagon City (Workshop)
 }
 
 local killInfo = {
