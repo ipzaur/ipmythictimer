@@ -502,11 +502,6 @@ local function OnTooltipSetUnit(tooltip)
                 if IPMTOptions.progress == 1 then
                     percent = percent .. "%"
                 end
-                if IPMTOptions.direction == 1 then
-                    percent = "+" .. percent
-                else 
-                    percent = "-" .. percent
-                end
                 tooltip:AddDoubleLine("|cFFEEDE70" .. percent)
             end
         end
