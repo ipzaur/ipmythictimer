@@ -239,7 +239,7 @@ function Addon:ShowHelp()
             Addon.fHelp[frame].text:SetSize(info.size[0]-12, info.size[1]-8)
             Addon.fHelp[frame].text:SetPoint("TOPLEFT", 6, -4)
             Addon.fHelp[frame].text:SetJustifyH("LEFT")
-            Addon.fHelp[frame].text:SetFont(Addon.FONT_ROBOTO, 12)
+            Addon.fHelp[frame].text:SetFont(Addon.DECOR_FONT, 12 + Addon.DECOR_FONTSIZE_DELTA)
             Addon.fHelp[frame].text:SetTextColor(.9, .9, 0)
             Addon.fHelp[frame].text:SetText(info.text)
 

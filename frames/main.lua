@@ -55,7 +55,7 @@ Addon.fMain.cCaption = Addon.fMain:CreateFontString(nil, "BACKGROUND", "GameFont
 Addon.fMain.cCaption:ClearAllPoints()
 Addon.fMain.cCaption:SetPoint('TOPLEFT', 0, 100)
 Addon.fMain.cCaption:SetJustifyH('LEFT')
-Addon.fMain.cCaption:SetFont(Addon.FONT_ROBOTO, 12)
+Addon.fMain.cCaption:SetFont(Addon.DECOR_FONT, 12 + Addon.DECOR_FONTSIZE_DELTA)
 Addon.fMain.cCaption:SetTextColor(1, 1, 1)
 Addon.fMain.cCaption:SetText(Addon.localization.CCAPTION)
 Addon.fMain.cCaption:Hide()

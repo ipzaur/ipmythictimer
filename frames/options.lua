@@ -31,7 +31,7 @@ Addon.fOptions.caption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "Gam
 Addon.fOptions.caption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -20)
 Addon.fOptions.caption:SetJustifyH("CENTER")
 Addon.fOptions.caption:SetSize(200, 20)
-Addon.fOptions.caption:SetFont(Addon.FONT_ROBOTO, 20)
+Addon.fOptions.caption:SetFont(Addon.DECOR_FONT, 20)
 Addon.fOptions.caption:SetTextColor(1, 1, 1)
 Addon.fOptions.caption:SetText(Addon.localization.OPTIONS)
 
@@ -132,9 +132,9 @@ local function progressDropDown_Init(frame, level, menuList)
         local info = UIDropDownMenu_CreateInfo()
         info.func = progressDropDown_OnClick
         info.text, info.arg1, info.arg2 = name, value, name
-        info.fontObject = CreateFont(Addon.FONT_ROBOTO)
+        info.fontObject = CreateFont(Addon.DECOR_FONT)
         info.fontObject:CopyFontObject('GameFontNormal')
-        info.fontObject:SetFont(Addon.FONT_ROBOTO, 12)
+        info.fontObject:SetFont(Addon.DECOR_FONT, 12)
         info.fontObject:SetTextColor(1, 1, 1)
         info.notCheckable = true
         UIDropDownMenu_AddButton(info)
@@ -165,9 +165,9 @@ local function directionDropDown_Init(frame, level, menuList)
         local info = UIDropDownMenu_CreateInfo()
         info.func = directionDropDown_OnClick
         info.text, info.arg1, info.arg2 = name, value, name
-        info.fontObject = CreateFont(Addon.FONT_ROBOTO)
+        info.fontObject = CreateFont(Addon.DECOR_FONT)
         info.fontObject:CopyFontObject('GameFontNormal')
-        info.fontObject:SetFont(Addon.FONT_ROBOTO, 12)
+        info.fontObject:SetFont(Addon.DECOR_FONT, 12)
         info.fontObject:SetTextColor(1, 1, 1)
         info.notCheckable = true
         UIDropDownMenu_AddButton(info)
