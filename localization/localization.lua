@@ -18,6 +18,11 @@ Addon.localization.DAMAGE     = "Damage"
 Addon.localization.DEATHCOUNT = "Deaths"
 Addon.localization.DEATHSHOW  = "Click for detail information"
 Addon.localization.DEATHTIME  = "Time lost"
+Addon.localization.DIRECTION  = "Progress changing"
+Addon.localization.DIRECTIONS = {
+    [1] = "ascending (0% -> 100%)",
+    [2] = "descending (100% -> 0%)",
+}
 Addon.localization.DTHCAPTION = "Deaths history"
 Addon.localization.FONT       = "Font"
 Addon.localization.FONTSIZE   = "Font size"

@@ -18,6 +18,11 @@ Addon.localization.DAMAGE     = "损伤"
 Addon.localization.DEATHCOUNT = "死亡人数"
 Addon.localization.DEATHSHOW  = "点击查看详细信息"
 Addon.localization.DEATHTIME  = "浪费时间"
+Addon.localization.DIRECTION  = "进度变化"
+Addon.localization.DIRECTIONS = {
+    [1] = "上升 (0% -> 100%)",
+    [2] = "降序 (100% -> 0%)",
+}
 Addon.localization.DTHCAPTION = "死亡史"
 Addon.localization.FONT       = "字形"
 Addon.localization.FONTSIZE   = "字体大小"

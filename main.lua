@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 118
+Addon.version = 1114
 
 local REAPING = 117
 
@@ -146,9 +146,17 @@ function Addon:UpdateCriteria()
                         Addon.fMain.progress.text:SetTextColor(1,1,1)
                     end
                 end
+                if IPMTOptions.direction == 2 then
+                    progress = 100 - progress
+                end
                 Addon.fMain.progress.text:SetFormattedText("%.2f%%", progress)
             else
-                Addon.fMain.progress.text:SetText(dungeon.trash.current .. "/" .. dungeon.trash.total)
+                local progress = math.min(dungeon.trash.current, dungeon.trash.total)
+                if IPMTOptions.direction == 1 then
+                    Addon.fMain.progress.text:SetText(progress .. "/" .. dungeon.trash.total)
+                else
+                    Addon.fMain.progress.text:SetText(dungeon.trash.total - progress)
+                end
             end
         else
             if not dungeon.bosses[c] then
@@ -462,10 +470,17 @@ local function ShowPrognosis()
                     Addon.fMain.prognosis.text:SetTextColor(1,1,1)
                 end
             end
+            if IPMTOptions.direction == 2 then
+                progress = 100 - progress
+            end
             Addon.fMain.prognosis.text:SetFormattedText("%.2f%%", progress)
         else
-            local currentProgress = dungeon.trash.current
-            local progress = currentProgress + prognosis
+            local progress = dungeon.trash.current + prognosis
+            if IPMTOptions.direction == 1 then
+                progress = math.min(progress, dungeon.trash.total)
+            else
+                progress = math.max(dungeon.trash.total - progress, 0)
+            end
             Addon.fMain.prognosis.text:SetText(progress)
         end
         Addon.fMain.prognosis:Show()
@@ -485,10 +500,14 @@ local function OnTooltipSetUnit(tooltip)
             local percent = GetEnemyPercent(npcID, IPMTOptions.progress)
             if (percent ~= nil) then
                 if IPMTOptions.progress == 1 then
-                    tooltip:AddDoubleLine("|cFFEEDE70+" .. percent .. "%")
-                else
-                    tooltip:AddDoubleLine("|cFFEEDE70+" .. percent)
+                    percent = percent .. "%"
                 end
+                if IPMTOptions.direction == 1 then
+                    percent = "+" .. percent
+                else 
+                    percent = "-" .. percent
+                end
+                tooltip:AddDoubleLine("|cFFEEDE70" .. percent)
             end
         end
     end

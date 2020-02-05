@@ -18,6 +18,11 @@ Addon.localization.DAMAGE     = "Урон"
 Addon.localization.DEATHCOUNT = "Смертей"
 Addon.localization.DEATHSHOW  = "Нажмите для подробной информации"
 Addon.localization.DEATHTIME  = "Потеряно времени"
+Addon.localization.DIRECTION  = "Изменение прогресса"
+Addon.localization.DIRECTIONS = {
+    [1] = "по возрастанию (0% -> 100%)",
+    [2] = "по убыванию (100% -> 0%)",
+}
 Addon.localization.DTHCAPTION = "Журнал смертей"
 Addon.localization.FONT       = "Шрифт"
 Addon.localization.FONTSIZE   = "Размер шрифта"

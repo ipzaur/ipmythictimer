@@ -22,6 +22,7 @@ Addon.defaultOptions = {
             y = -50,
         },
     },
+    direction = 1,
     progress = 1,
     font = Addon.FONT_ROBOTO,
 }
@@ -80,6 +81,16 @@ function Addon:SetProgressFormat(value)
             Addon.fMain.progress.text:SetText(Addon.frameInfo.progress.text.content[IPMTOptions.progress])
             Addon.fMain.prognosis.text:SetText(Addon.frameInfo.prognosis.text.content[IPMTOptions.progress])
         else
+            Addon:UpdateCriteria()
+        end
+        Addon:RecalcElem()
+    end
+end
+
+function Addon:SetProgressDirection(value)
+    if IPMTOptions.direction ~= value then
+        IPMTOptions.direction = value
+        if Addon.keyActive then
             Addon:UpdateCriteria()
         end
         Addon:RecalcElem()
@@ -194,6 +205,11 @@ function Addon:LoadOptions()
     end
     Addon:SetProgressFormat(IPMTOptions.progress)
 
+    if IPMTOptions.direction == nil then
+        IPMTOptions.direction = Addon.defaultOptions.direction
+    end
+    Addon:SetProgressDirection(IPMTOptions.direction)
+
     Addon:SetOpacity(IPMTOptions.opacity, true)
     Addon:SetScale(IPMTOptions.scale, true)
     Addon:OnShow()
@@ -220,6 +236,11 @@ end
 local function SelectProgress(value)
     Addon:SetProgressFormat(value)
     UIDropDownMenu_SetText(Addon.fOptions.progress, Addon.localization.PROGFORMAT[value])
+end
+
+local function SelectDirection(value)
+    Addon:SetProgressDirection(value)
+    UIDropDownMenu_SetText(Addon.fOptions.direction, Addon.localization.DIRECTIONS[value])
 end
 
 
@@ -369,6 +390,7 @@ function Addon:ShowOptions()
     end
     SelectFont(IPMTOptions.font)
     SelectProgress(IPMTOptions.progress)
+    SelectDirection(IPMTOptions.direction)
 end
 
 function Addon:CloseOptions()
@@ -406,6 +428,9 @@ function Addon:RestoreOptions()
 
     IPMTOptions.progress = Addon.defaultOptions.progress
     SelectProgress(IPMTOptions.progress)
+
+    IPMTOptions.direction = Addon.defaultOptions.direction
+    SelectDirection(IPMTOptions.direction)
 
     IPMTOptions.size = {
         [0] = Addon.defaultSize[0],

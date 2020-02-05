@@ -5,7 +5,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 -- Options Frame
 Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent)
 Addon.fOptions:SetFrameStrata("MEDIUM")
-Addon.fOptions:SetSize(270, 420)
+Addon.fOptions:SetSize(270, 480)
 Addon.fOptions:SetPoint("CENTER", UIParent)
 Addon.fOptions:SetBackdrop(Addon.backdrop)
 Addon.fOptions:SetBackdropColor(0,0,0, 1)
@@ -146,10 +146,43 @@ Addon.fOptions.progress:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -218)
 UIDropDownMenu_SetWidth(Addon.fOptions.progress, 210)
 UIDropDownMenu_Initialize(Addon.fOptions.progress, progressDropDown_Init)
 
+
+-- Progress direction caption
+Addon.fOptions.directionCaption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+Addon.fOptions.directionCaption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -252)
+Addon.fOptions.directionCaption:SetJustifyH("CENTER")
+Addon.fOptions.directionCaption:SetSize(180, 20)
+Addon.fOptions.directionCaption:SetTextColor(1, 1, 1)
+Addon.fOptions.directionCaption:SetText(Addon.localization.DIRECTION)
+
+-- Progress direction selector
+local function directionDropDown_OnClick(self, value, name, checked)
+    UIDropDownMenu_SetText(Addon.fOptions.direction, name)
+    Addon:SetProgressDirection(value)
+end
+local function directionDropDown_Init(frame, level, menuList)
+    for value, name in pairs(Addon.localization.DIRECTIONS) do
+        local info = UIDropDownMenu_CreateInfo()
+        info.func = directionDropDown_OnClick
+        info.text, info.arg1, info.arg2 = name, value, name
+        info.fontObject = CreateFont(Addon.FONT_ROBOTO)
+        info.fontObject:CopyFontObject('GameFontNormal')
+        info.fontObject:SetFont(Addon.FONT_ROBOTO, 12)
+        info.fontObject:SetTextColor(1, 1, 1)
+        info.notCheckable = true
+        UIDropDownMenu_AddButton(info)
+    end
+end
+
+Addon.fOptions.direction = CreateFrame("Frame", "IPMTProgress", Addon.fOptions, "UIDropDownMenuTemplate")
+Addon.fOptions.direction:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -276)
+UIDropDownMenu_SetWidth(Addon.fOptions.direction, 210)
+UIDropDownMenu_Initialize(Addon.fOptions.direction, directionDropDown_Init)
+
 -- Customize checkbox
 Addon.fOptions.customize = CreateFrame("CheckButton", nil, Addon.fOptions, "InterfaceOptionsCheckButtonTemplate")
 Addon.fOptions.customize:SetSize(22, 22)
-Addon.fOptions.customize:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -250)
+Addon.fOptions.customize:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -308)
 Addon.fOptions.customize.label = Addon.fOptions.customize:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fOptions.customize.label:SetJustifyH("LEFT")
 Addon.fOptions.customize.label:SetPoint("LEFT", Addon.fOptions.customize, "CENTER", 20, 0)
@@ -163,7 +196,7 @@ end)
 -- Minimap Button checkbox
 Addon.fOptions.Mapbut = CreateFrame("CheckButton", nil, Addon.fOptions, "InterfaceOptionsCheckButtonTemplate")
 Addon.fOptions.Mapbut:SetSize(22, 22)
-Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -276)
+Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions, "TOPLEFT", 20, -340)
 Addon.fOptions.Mapbut.label = Addon.fOptions.Mapbut:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fOptions.Mapbut.label:SetJustifyH("LEFT")
 Addon.fOptions.Mapbut.label:SetPoint("LEFT", Addon.fOptions.Mapbut, "CENTER", 20, 0)
