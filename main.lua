@@ -9,6 +9,7 @@ if GetLocale() == "zhTW" then
 end
 
 local REAPING = 117
+local TEEMING = 5
 
 local dungeon = {
     id        = 0,
@@ -16,6 +17,7 @@ local dungeon = {
     time      = 0,
     affixes   = {},
     isReaping = false,
+    isTeeming = false,
     level     = 0,
     deathes   = {},
     trash     = {
@@ -69,7 +71,14 @@ local function getFromMDT(npcID, wsave)
         for i,npcInfo in pairs(npcInfos) do
             if npcInfo.id == npcID then
                 if wsave then
-                    IPMTDB[npcID] = npcInfo.count
+                    if IPMTDB[npcID] == nil or type(IPMTDB[npcID]) == 'number' then
+                        IPMTDB[npcID] = {}
+                    end
+                    if dungeon.isTeeming and npcInfo.teemingCount then
+                        IPMTDB[npcID][dungeon.isTeeming] = npcInfo.teemingCount
+                    else
+                        IPMTDB[npcID][dungeon.isTeeming] = npcInfo.count
+                    end
                 end
                 return npcInfo.count
             end
@@ -84,8 +93,11 @@ local function GetEnemyPercent(npcID, formatType)
     if npcID == 148716 or npcID == 148893 or npcID == 148894 then
         return percent
     end
-    if IPMTDB and IPMTDB[npcID] then
-        percent = IPMTDB[npcID]
+    -- Corrupted has different "enemy force" on teeming
+    if Addon.isCorrupted[npcID] then
+        percent = Addon:GetCorruptedForce(dungeon.isTeeming)
+    elseif IPMTDB and IPMTDB[npcID] and type(IPMTDB[npcID]) ~= 'number' and IPMTDB[npcID][dungeon.isTeeming] then
+        percent = IPMTDB[npcID][dungeon.isTeeming]
     else
         percent = getFromMDT(npcID, true)
     end
@@ -112,8 +124,11 @@ local function GrabMobInfo()
             if not IPMTDB then
                 IPMTDB = {}
             end
-            if not IPMTDB[killInfo.npcID] then
-                IPMTDB[killInfo.npcID] = killInfo.progress
+            if IPMTDB[killInfo.npcID] == nil or type(IPMTDB[killInfo.npcID]) == 'number' then
+                IPMTDB[killInfo.npcID] = {}
+            end
+            if IPMTDB[killInfo.npcID][dungeon.isTeeming] == nil then
+                IPMTDB[killInfo.npcID][dungeon.isTeeming] = killInfo.progress
             end
             clearKillInfo()
         end
@@ -199,10 +214,10 @@ local function CombatLogEvent()
         if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_NPC) > 0
                 and bit.band(destFlags, COMBATLOG_OBJECT_CONTROL_NPC) > 0
                 and (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) > 0 or bit.band(destFlags, COMBATLOG_OBJECT_REACTION_NEUTRAL) > 0) then
-            local type, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-", destGUID)
+            local _, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-", destGUID)
             local npcID = select(6, strsplit("-", destGUID))
             npcID = tonumber(npcID)
-            if (not (IPMTDB and IPMTDB[npcID])) and (getFromMDT(npcID, true) == nil) then
+            if not Addon.isCorrupted[npcID] and not (IPMTDB and IPMTDB[npcID] and (type(IPMTDB[npcID]) ~= 'number') and IPMTDB[npcID][dungeon.isTeeming]) and (getFromMDT(npcID, true) == nil) then
                 killInfo.npcID = npcID
                 killInfo.diedTime = GetTime()
                 GrabMobInfo()
@@ -387,12 +402,13 @@ end
 
 local function ShowFrame()
     local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
-    local name, type, difficulty, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
+    local name, _, difficulty, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
 
     if difficulty == 8 then
         dungeon.level = level
         dungeon.affixes = {}
         dungeon.isReaping = false
+        dungeon.isTeeming = false
 
         Addon.fMain.level.text:SetText(dungeon.level)
         local count = #affixes
@@ -408,6 +424,9 @@ local function ShowFrame()
 
             if affix == REAPING then
                 dungeon.isReaping = true
+            end
+            if affix == TEEMING then
+                dungeon.isTeeming = true
             end
         end
         for a = count+1,4 do
