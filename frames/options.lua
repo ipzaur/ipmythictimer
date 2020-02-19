@@ -79,6 +79,7 @@ Addon.fOptions.scale:SetScript('OnMouseWheel', function(self)
     Addon:SetScale(self:GetValue())
 end)
 
+
 -- Fonts caption
 Addon.fOptions.fontsCaption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fOptions.fontsCaption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -136)
@@ -88,30 +89,26 @@ Addon.fOptions.fontsCaption:SetTextColor(1, 1, 1)
 Addon.fOptions.fontsCaption:SetText(Addon.localization.FONT)
 
 -- Fonts selector
-local function fontsDropDown_OnClick(self, fontFilepath, fontName, checked)
-    UIDropDownMenu_SetText(Addon.fOptions.fonts, fontName)
-    Addon:SetFont(fontFilepath)
-end
-local function fontsDropDown_Init(frame, level, menuList)
+local function getFontList()
     local fontList = LSM:List('font')
+    local list = {}
     for i,font in pairs(fontList) do
         local filepath = LSM:Fetch('font', font)
-        local info = UIDropDownMenu_CreateInfo()
-        info.func = fontsDropDown_OnClick
-        info.text, info.arg1, info.arg2 = font, filepath, font
-        info.fontObject = CreateFont(font)
-        info.fontObject:CopyFontObject('GameFontNormal')
-        info.fontObject:SetFont(filepath, 12)
-        info.fontObject:SetTextColor(1, 1, 1)
-        info.notCheckable = true
-        UIDropDownMenu_AddButton(info)
+        list[filepath] = font
     end
+    return list
 end
-
-Addon.fOptions.fonts = CreateFrame("Frame", "IPMTFonts", Addon.fOptions, "UIDropDownMenuTemplate")
-Addon.fOptions.fonts:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -160)
-UIDropDownMenu_SetWidth(Addon.fOptions.fonts, 210)
-UIDropDownMenu_Initialize(Addon.fOptions.fonts, fontsDropDown_Init)
+Addon.fOptions.fFonts = iPElemsCreateListBox(nil, Addon.fOptions, getFontList, {
+    onRenderItem = function(fItem, key, text)
+        fItem.fText:SetFont(key, 12)
+    end,
+    onSelect = function(key, text)
+        Addon.fOptions.fFonts.fText:SetFont(key, 12)
+        Addon:SetFont(key)
+    end,
+})
+Addon.fOptions.fFonts:SetSize(220, 30)
+Addon.fOptions.fFonts:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -160)
 
 
 -- ProgressFormat caption
@@ -123,28 +120,13 @@ Addon.fOptions.progressCaption:SetTextColor(1, 1, 1)
 Addon.fOptions.progressCaption:SetText(Addon.localization.PROGRESS)
 
 -- ProgressFormat selector
-local function progressDropDown_OnClick(self, value, name, checked)
-    UIDropDownMenu_SetText(Addon.fOptions.progress, name)
-    Addon:SetProgressFormat(value)
-end
-local function progressDropDown_Init(frame, level, menuList)
-    for value, name in pairs(Addon.localization.PROGFORMAT) do
-        local info = UIDropDownMenu_CreateInfo()
-        info.func = progressDropDown_OnClick
-        info.text, info.arg1, info.arg2 = name, value, name
-        info.fontObject = CreateFont(Addon.DECOR_FONT)
-        info.fontObject:CopyFontObject('GameFontNormal')
-        info.fontObject:SetFont(Addon.DECOR_FONT, 12)
-        info.fontObject:SetTextColor(1, 1, 1)
-        info.notCheckable = true
-        UIDropDownMenu_AddButton(info)
-    end
-end
-
-Addon.fOptions.progress = CreateFrame("Frame", "IPMTProgress", Addon.fOptions, "UIDropDownMenuTemplate")
-Addon.fOptions.progress:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -218)
-UIDropDownMenu_SetWidth(Addon.fOptions.progress, 210)
-UIDropDownMenu_Initialize(Addon.fOptions.progress, progressDropDown_Init)
+Addon.fOptions.fProgress = iPElemsCreateListBox(nil, Addon.fOptions, Addon.localization.PROGFORMAT, {
+    onSelect = function(key)
+        Addon:SetProgressFormat(key)
+    end,
+})
+Addon.fOptions.fProgress:SetSize(220, 30)
+Addon.fOptions.fProgress:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -218)
 
 
 -- Progress direction caption
@@ -156,28 +138,14 @@ Addon.fOptions.directionCaption:SetTextColor(1, 1, 1)
 Addon.fOptions.directionCaption:SetText(Addon.localization.DIRECTION)
 
 -- Progress direction selector
-local function directionDropDown_OnClick(self, value, name, checked)
-    UIDropDownMenu_SetText(Addon.fOptions.direction, name)
-    Addon:SetProgressDirection(value)
-end
-local function directionDropDown_Init(frame, level, menuList)
-    for value, name in pairs(Addon.localization.DIRECTIONS) do
-        local info = UIDropDownMenu_CreateInfo()
-        info.func = directionDropDown_OnClick
-        info.text, info.arg1, info.arg2 = name, value, name
-        info.fontObject = CreateFont(Addon.DECOR_FONT)
-        info.fontObject:CopyFontObject('GameFontNormal')
-        info.fontObject:SetFont(Addon.DECOR_FONT, 12)
-        info.fontObject:SetTextColor(1, 1, 1)
-        info.notCheckable = true
-        UIDropDownMenu_AddButton(info)
-    end
-end
+Addon.fOptions.fProgressDirection = iPElemsCreateListBox(nil, Addon.fOptions, Addon.localization.DIRECTIONS, {
+    onSelect = function(key)
+        Addon:SetProgressDirection(key)
+    end,
+})
+Addon.fOptions.fProgressDirection:SetSize(220, 30)
+Addon.fOptions.fProgressDirection:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -276)
 
-Addon.fOptions.direction = CreateFrame("Frame", "IPMTProgress", Addon.fOptions, "UIDropDownMenuTemplate")
-Addon.fOptions.direction:SetPoint("CENTER", Addon.fOptions, "TOP", 0, -276)
-UIDropDownMenu_SetWidth(Addon.fOptions.direction, 210)
-UIDropDownMenu_Initialize(Addon.fOptions.direction, directionDropDown_Init)
 
 -- Customize checkbox
 Addon.fOptions.customize = CreateFrame("CheckButton", nil, Addon.fOptions, "InterfaceOptionsCheckButtonTemplate")

@@ -228,21 +228,10 @@ local function SelectFont(font)
     for i,fontName in pairs(fontList) do
         local filepath = LSM:Fetch('font', fontName)
         if (font == filepath) then
-            UIDropDownMenu_SetText(Addon.fOptions.fonts, fontName)
+            Addon.fOptions.fFonts:SelectItem(font)
         end
     end
 end
-
-local function SelectProgress(value)
-    Addon:SetProgressFormat(value)
-    UIDropDownMenu_SetText(Addon.fOptions.progress, Addon.localization.PROGFORMAT[value])
-end
-
-local function SelectDirection(value)
-    Addon:SetProgressDirection(value)
-    UIDropDownMenu_SetText(Addon.fOptions.direction, Addon.localization.DIRECTIONS[value])
-end
-
 
 function Addon:RecalcElem(frame)
     if frame ~= nil then
@@ -286,6 +275,12 @@ function Addon:StartFontSize(frame)
         end
     end
 end
+WorldFrame:HookScript("OnMouseDown", function(self, button)
+    if button == 'LeftButton' and Addon.fontSizeFrame ~= nil then
+        Addon.fontSizeFrame = nil
+        Addon.fOptions.FS:Hide()
+    end
+end)
 
 function Addon:ToggleVisible(frame)
     IPMTOptions.frame[frame].hidden = not IPMTOptions.frame[frame].hidden
@@ -389,8 +384,8 @@ function Addon:ShowOptions()
         end
     end
     SelectFont(IPMTOptions.font)
-    SelectProgress(IPMTOptions.progress)
-    SelectDirection(IPMTOptions.direction)
+    Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
+    Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
 end
 
 function Addon:CloseOptions()
@@ -427,10 +422,10 @@ function Addon:RestoreOptions()
     SelectFont(IPMTOptions.font)
 
     IPMTOptions.progress = Addon.defaultOptions.progress
-    SelectProgress(IPMTOptions.progress)
+    Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
 
     IPMTOptions.direction = Addon.defaultOptions.direction
-    SelectDirection(IPMTOptions.direction)
+    Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
 
     IPMTOptions.size = {
         [0] = Addon.defaultSize[0],

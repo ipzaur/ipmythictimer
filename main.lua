@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 1114
+Addon.version = 1116
 
 Addon.DECOR_FONT = Addon.FONT_ROBOTO
 Addon.DECOR_FONTSIZE_DELTA = 0
