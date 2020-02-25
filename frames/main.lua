@@ -53,7 +53,7 @@ Addon.fMain:Hide()
 
 Addon.fMain.cCaption = Addon.fMain:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fMain.cCaption:ClearAllPoints()
-Addon.fMain.cCaption:SetPoint('TOPLEFT', 0, 100)
+Addon.fMain.cCaption:SetPoint('BOTTOMLEFT', -20, -100)
 Addon.fMain.cCaption:SetJustifyH('LEFT')
 Addon.fMain.cCaption:SetFont(Addon.DECOR_FONT, 12 + Addon.DECOR_FONTSIZE_DELTA)
 Addon.fMain.cCaption:SetTextColor(1, 1, 1)
@@ -217,7 +217,7 @@ Addon.frameInfo = {
         text = {
             fontSize = 22,
             content  = "3/5",
-            justify = 'RIGHT',
+            justify  = 'RIGHT',
             color    = {
                 [0] = 0.8,
                 [1] = 0.8,
@@ -239,15 +239,37 @@ Addon.frameInfo = {
         },
         hidden = false,
     },
+    dungeonname = {
+        size = {
+            [0] = 180,
+            [1] = 60,
+        },
+        position = {
+            x = 0,
+            y = 64,
+            point = 'TOPLEFT',
+            rPoint = 'TOPLEFT',
+        },
+        text = {
+            fontSize = 13,
+            content  = Addon.localization.DUNGENAME,
+            color    = {
+                [0] = 0.8,
+                [1] = 0.8,
+                [2] = 0.8,
+            },
+        },
+        hidden = false,
+    },
 }
 
 for frame, info in pairs(Addon.frameInfo) do
     local point = info.position.point
-    if (point == nil) then
+    if point == nil then
         point = 'LEFT'
     end
     local rPoint = info.position.rPoint
-    if (rPoint == nil) then
+    if rPoint == nil then
         rPoint = 'TOPLEFT'
     end
 
@@ -256,7 +278,7 @@ for frame, info in pairs(Addon.frameInfo) do
     Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, info.position.x, info.position.y)
     Addon.fMain[frame]:SetBackdrop(Addon.backdrop)
     Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
-    if (info.text ~= nil) then
+    if info.text ~= nil then
         local justify = info.text.justify
         if (justify == nil) then
             justify = 'LEFT'
@@ -277,6 +299,10 @@ for frame, info in pairs(Addon.frameInfo) do
         Addon.fMain[frame].text:ClearAllPoints()
         Addon.fMain[frame].text:SetPoint(justify, 0, 0)
         Addon.fMain[frame].text:SetJustifyH(justify)
+        if frame == "dungeonname" then
+            Addon.fMain[frame].text:SetAllPoints(Addon.fMain[frame])
+            Addon.fMain[frame].text:SetJustifyV("BOTTOM")
+        end
         Addon.fMain[frame].text:SetFont(Addon.FONT_ROBOTO, info.text.fontSize)
         Addon.fMain[frame].text:SetTextColor(color[0], color[1], color[2])
         Addon.fMain[frame].text:SetText(content)

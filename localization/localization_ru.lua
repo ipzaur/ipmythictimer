@@ -24,6 +24,7 @@ Addon.localization.DIRECTIONS = {
     [2] = "по убыванию (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Журнал смертей"
+Addon.localization.DUNGENAME  = "Название подземелья"
 Addon.localization.FONT       = "Шрифт"
 Addon.localization.FONTSIZE   = "Размер шрифта"
 Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\n" ..

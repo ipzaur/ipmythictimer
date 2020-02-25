@@ -24,6 +24,7 @@ Addon.localization.DIRECTIONS = {
     [2] = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡紀錄"
+Addon.localization.DUNGENAME  = "地牢名稱"
 Addon.localization.FONT       = "字型"
 Addon.localization.FONTSIZE   = "字體大小"
 Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..

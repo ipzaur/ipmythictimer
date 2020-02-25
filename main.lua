@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 1116
+Addon.version = 1117
 
 Addon.DECOR_FONT = Addon.FONT_ROBOTO
 Addon.DECOR_FONTSIZE_DELTA = 0
@@ -437,6 +437,8 @@ local function ShowFrame()
         Addon.fMain:Show()
         Addon.fMain.progress.text:SetTextColor(1,1,1)
         Addon.fMain.prognosis.text:SetTextColor(1,1,1)
+        local dungeonName = C_Scenario.GetInfo()
+        Addon.fMain.dungeonname.text:SetText(dungeonName)
         ObjectiveTrackerFrame:Hide()
 
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")

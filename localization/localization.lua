@@ -24,6 +24,7 @@ Addon.localization.DIRECTIONS = {
     [2] = "descending (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Deaths history"
+Addon.localization.DUNGENAME  = "Dungeon name"
 Addon.localization.FONT       = "Font"
 Addon.localization.FONTSIZE   = "Font size"
 Addon.localization.MAPBUT     = "LMB (click) - toggle options\n" ..

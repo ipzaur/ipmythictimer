@@ -65,11 +65,13 @@ end
 function Addon:SetFont(filepath)
     IPMTOptions.font = filepath
     for frame, info in pairs(IPMTOptions.frame) do
-        if (info.fontSize) then
+        if info.fontSize then
             Addon.fMain[frame].text:SetFont(IPMTOptions.font, info.fontSize)
-            local width = Addon.fMain[frame].text:GetStringWidth()
-            local height = Addon.fMain[frame].text:GetStringHeight()
-            Addon.fMain[frame]:SetSize(width, height)
+            if frame ~= "dungeonname" then
+                local width = Addon.fMain[frame].text:GetStringWidth()
+                local height = Addon.fMain[frame].text:GetStringHeight()
+                Addon.fMain[frame]:SetSize(width, height)
+            end
         end
     end
 end
@@ -167,7 +169,9 @@ function Addon:LoadOptions()
 
     if IPMTOptions.frame == nil then
         IPMTOptions.frame = {}
-        for frame, info in pairs(Addon.frameInfo) do
+    end
+    for frame, info in pairs(Addon.frameInfo) do
+        if IPMTOptions.frame[frame] == nil then
             IPMTOptions.frame[frame] = {
                 x      = info.position.x,
                 y      = info.position.y,
@@ -184,9 +188,7 @@ function Addon:LoadOptions()
             if info.text ~= nil then
                 IPMTOptions.frame[frame].fontSize = info.text.fontSize
             end
-        end
-    else
-        for frame, info in pairs(Addon.frameInfo) do
+        else
             Addon.fMain[frame]:ClearAllPoints()
             Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
             if IPMTOptions.frame[frame].hidden then
@@ -235,12 +237,14 @@ end
 
 function Addon:RecalcElem(frame)
     if frame ~= nil then
-        local width = Addon.fMain[frame].text:GetStringWidth()
-        local height = Addon.fMain[frame].text:GetStringHeight()
-        Addon.fMain[frame]:SetSize(width, height)
+        if frame ~= "dungeonname" then
+            local width = Addon.fMain[frame].text:GetStringWidth()
+            local height = Addon.fMain[frame].text:GetStringHeight()
+            Addon.fMain[frame]:SetSize(width, height)
+        end
     else
         for frame, info in pairs(Addon.frameInfo) do
-            if Addon.fMain[frame].text ~= nil then
+            if frame ~= "dungeonname" and Addon.fMain[frame].text ~= nil then
                 local width = Addon.fMain[frame].text:GetStringWidth()
                 local height = Addon.fMain[frame].text:GetStringHeight()
                 Addon.fMain[frame]:SetSize(width, height)
@@ -449,15 +453,23 @@ function Addon:RestoreOptions()
         if info.text ~= nil then
             IPMTOptions.frame[frame].fontSize = info.text.fontSize
             Addon.fMain[frame].text:SetFont(Addon.FONT_ROBOTO, IPMTOptions.frame[frame].fontSize)
-            local width = Addon.fMain[frame].text:GetStringWidth()
-            local height = Addon.fMain[frame].text:GetStringHeight()
-            Addon.fMain[frame]:SetSize(width, height) 
+            if frame ~= "dungeonname" then
+                local width = Addon.fMain[frame].text:GetStringWidth()
+                local height = Addon.fMain[frame].text:GetStringHeight()
+                Addon.fMain[frame]:SetSize(width, height)
+            end
         end
         if Addon.isCustomizing then
             Addon.fMain[frame]:SetBackdropColor(1,1,1, .1)
         end
         Addon.fMain[frame]:ClearAllPoints()
         Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
+        if IPMTOptions.frame[frame].hidden then
+            Addon.fMain[frame]:SetBackdropColor(.8,0,0, .15)
+            if not Addon.isCustomizing then
+                Addon.fMain[frame]:Hide()
+            end
+        end
     end
 
     Addon:OnShow()

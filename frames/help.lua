@@ -8,7 +8,7 @@ local helpInfo = {
         },
         position = {
             x = -180,
-            y = 10,
+            y = 5,
         },
         text = Addon.localization.HELP.LEVEL,
         line = {
@@ -30,13 +30,13 @@ local helpInfo = {
         },
         position = {
             x = -230,
-            y = 40,
+            y = 60,
         },
         text = Addon.localization.HELP.PLUSLEVEL,
         line = {
             size = {
                 [0] = 1,
-                [1] = 40,
+                [1] = 60,
             },
             position = {
                 point = "TOPRIGHT",
@@ -74,13 +74,13 @@ local helpInfo = {
         },
         position = {
             x = -180,
-            y = 90,
+            y = 110,
         },
         text = Addon.localization.HELP.PLUSTIMER,
         line = {
             size = {
                 [0] = 1,
-                [1] = 88,
+                [1] = 108,
             },
             position = {
                 point = "TOPRIGHT",
@@ -201,11 +201,34 @@ local helpInfo = {
             },
         },
     },
+    dungeonname = {
+        size = {
+            [0] = 160,
+            [1] = 20,
+        },
+        position = {
+            x = -180,
+            y = 4,
+            point = "BOTTOMLEFT",
+        },
+        text = Addon.localization.DUNGENAME,
+        line = {
+            size = {
+                [0] = 178,
+                [1] = 1,
+            },
+            position = {
+                point = "BOTTOMLEFT",
+                x = 0,
+                y = 0,
+            },
+        },
+    },
 }
 
 function Addon:HideHelp()
     if Addon.fOptions.help.glow:IsShown() then
-        Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
+        Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPLEFT", 20, -5)
         Addon.fOptions.help:SetSize(30, 30)
         Addon.fOptions.help.glow:Hide()
 
@@ -216,7 +239,7 @@ function Addon:HideHelp()
 end
 
 function Addon:ShowHelp()
-    Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, 0)
+    Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPLEFT", 20, 0)
     Addon.fOptions.help:SetSize(40, 40)
     Addon.fOptions.help.glow:Show()
 

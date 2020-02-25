@@ -1,3 +1,5 @@
+local AddonName, Addon = ...
+
 local openedListBox = nil
 WorldFrame:HookScript("OnMouseDown", function(self, button)
     if button == 'LeftButton' and openedListBox ~= nil then
@@ -20,7 +22,7 @@ function iPElemsCreateListBox(name, parent, list, callback)
     local maxHeight = 264
     local backdrop = {
         bgFile   = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\listbox",
+        edgeFile = "Interface\\AddOns\\" .. AddonName .. "\\Libs\\iPElems\\listbox",
         tile     = true,
         tileSize = 8,
         edgeSize = 8,

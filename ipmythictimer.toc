@@ -3,7 +3,7 @@
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Мификов
 ## Author: iP
-## Version: 1.1.16
+## Version: 1.1.17
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions
 ## X-eMail: ipzaur@gmail.com
