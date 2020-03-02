@@ -586,9 +586,7 @@ local function toggleOptions()
     Addon:ShowOptions()
 end
 
---[[
-    Copypasted from Angry Keystones
-]]
+-- Copypasted from Angry Keystones
 local function InsertKeystone()
     for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
         local slots = GetContainerNumSlots(container)
