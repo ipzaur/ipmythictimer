@@ -443,6 +443,7 @@ local function ShowFrame()
 
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         Addon.keyActive = true
+        Addon:CloseOptions()
     end
 end
 
@@ -585,6 +586,24 @@ local function toggleOptions()
     Addon:ShowOptions()
 end
 
+--[[
+    Copypasted from Angry Keystones
+]]
+local function InsertKeystone()
+    for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+        local slots = GetContainerNumSlots(container)
+        for slot = 1,slots do
+            local slotLink = select(7, GetContainerItemInfo(container, slot))
+            if slotLink and slotLink:match("|Hkeystone:") then
+                PickupContainerItem(container, slot)
+                if (CursorHasItem()) then
+                    C_ChallengeMode.SlotKeystone()
+                end
+            end
+        end
+    end
+end
+
 function Addon:StartAddon()
     SLASH_IPMTOPTS1 = "/ipmt"
     SlashCmdList["IPMTOPTS"] = toggleOptions
@@ -595,6 +614,7 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_RESET")
     Addon.fMain:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
     Addon.fMain:RegisterEvent("PLAYER_ENTERING_WORLD")
+    Addon.fMain:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
 
@@ -620,6 +640,8 @@ function Addon:OnEvent(self, event, ...)
         else
             Addon:UpdateCriteria()
         end
+    elseif (event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN") then
+        InsertKeystone()
     elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
         CombatLogEvent()
     end

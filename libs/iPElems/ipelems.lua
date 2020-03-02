@@ -153,12 +153,6 @@ function iPElemsCreateListBox(name, parent, list, callback)
     element.fItem = {}
     element.fList:Hide()
 
-    parent:HookScript("OnMouseDown", function(self, button)
-        if button == 'LeftButton' then
-            element:ToggleList(false)
-        end
-    end)
-
     function element:ToggleList(show)
         if show == nil then
             show = not element.opened

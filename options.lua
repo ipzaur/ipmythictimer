@@ -49,6 +49,7 @@ function Addon:SetOpacity(value, initialize)
         Addon.fOptions.opacity:SetValue(IPMTOptions.opacity)
     end
     IPMTOptions.opacity = value
+    getglobal(Addon.fOptions.opacity:GetName() .. 'Text'):SetText(Addon.localization.OPACITY .. " (" .. value .. "%)")
 end
 
 function Addon:SetScale(value, initialize)
@@ -60,6 +61,7 @@ function Addon:SetScale(value, initialize)
         Addon.fOptions.scale:SetValue(IPMTOptions.scale)
     end
     IPMTOptions.scale = value
+    getglobal(Addon.fOptions.scale:GetName() .. 'Text'):SetText(Addon.localization.SCALE .. " (" .. (value + 100) .. "%)")
 end
 
 function Addon:SetFont(filepath)
