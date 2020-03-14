@@ -4,10 +4,10 @@ local AddonName, Addon = ...
 -- Grabbed from MDT
 
 Addon.isCorrupted = {
-    [161124] = true,
-    [161241] = true,
-    [161243] = true,
-    [161244] = true,
+    [161124] = 1, -- Urg'roth, Breaker of Heroes (Tank breaker)
+    [161241] = 4, -- Voidweaver Mal'thir (Spider)
+    [161243] = 3, -- Samh'rek, Beckoner of Chaos (Fear)
+    [161244] = 2, -- Blood of the Corruptor (Blob)
 }
 
 function Addon:GetCorruptedForce(isTeeming)

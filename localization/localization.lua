@@ -57,3 +57,10 @@ Addon.localization.HELP = {
     BOSSES     = "Bosses killed",
     AFFIXES    = "Active affixes",
 }
+
+Addon.localization.CORRUPTED = {
+    [161124] = "Urg'roth, Breaker of Heroes (Tank breaker)",
+    [161241] = "Voidweaver Mal'thir (Spider)",
+    [161243] = "Samh'rek, Beckoner of Chaos (Fear)",
+    [161244] = "Blood of the Corruptor (Blob)",
+}

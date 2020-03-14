@@ -15,7 +15,7 @@ end
 
 function Addon:ShowDeaths()
     local counts = {}
-    for i, death in ipairs(Addon.DB.profile.dungeon.deathes.list) do
+    for i, death in ipairs(Addon.DB.global.dungeon.deathes.list) do
         if counts[death.playerName] then
             counts[death.playerName] = counts[death.playerName] + 1
         else
@@ -23,7 +23,7 @@ function Addon:ShowDeaths()
         end
         Addon:FillDeathRow(i, death, counts[death.playerName])
     end
-    local deaths = #Addon.DB.profile.dungeon.deathes.list
+    local deaths = #Addon.DB.global.dungeon.deathes.list
     local rows = #Addon.fDeaths.line
     if deaths < rows then
         for i = deaths+1,rows do

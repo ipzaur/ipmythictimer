@@ -53,7 +53,7 @@ Addon.fMain:Hide()
 
 Addon.fMain.cCaption = Addon.fMain:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
 Addon.fMain.cCaption:ClearAllPoints()
-Addon.fMain.cCaption:SetPoint('BOTTOMLEFT', -20, -100)
+Addon.fMain.cCaption:SetPoint('BOTTOMLEFT', -20, -130)
 Addon.fMain.cCaption:SetJustifyH('LEFT')
 Addon.fMain.cCaption:SetFont(Addon.DECOR_FONT, 12 + Addon.DECOR_FONTSIZE_DELTA)
 Addon.fMain.cCaption:SetTextColor(1, 1, 1)
@@ -239,14 +239,27 @@ Addon.frameInfo = {
         },
         hidden = false,
     },
-    dungeonname = {
+    corruptions = {
         size = {
             [0] = 180,
-            [1] = 60,
+            [1] = 24,
         },
         position = {
             x = 0,
-            y = 64,
+            y = -24,
+            point = 'BOTTOMLEFT',
+            rPoint = 'BOTTOMLEFT',
+        },
+        hidden = false,
+    },
+    dungeonname = {
+        size = {
+            [0] = 180,
+            [1] = 50,
+        },
+        position = {
+            x = 0,
+            y = 54,
             point = 'TOPLEFT',
             rPoint = 'TOPLEFT',
         },
@@ -366,4 +379,35 @@ for f = 1,4 do
     Addon.fMain.affix[f]:SetScript("OnLeave", function(self, event, ...)
         GameTooltip:Hide()
     end)
+end
+
+if Addon.isCorrupted then
+    Addon.fMain.corruption = {}
+    local f = 0
+    for corruptionId, flag in pairs(Addon.isCorrupted) do
+        local left = (affixSize.width + 10) * f
+        Addon.fMain.corruption[corruptionId] = CreateFrame("Frame", nil, Addon.fMain.corruptions)
+        Addon.fMain.corruption[corruptionId]:SetSize(affixSize.width, affixSize.height)
+        Addon.fMain.corruption[corruptionId]:SetPoint("TOPLEFT", Addon.fMain.corruptions, "TOPLEFT", left + 4, -2)
+        Addon.fMain.corruption[corruptionId]:SetScript("OnEnter", function(self, event, ...)
+            Addon:OnCorruptionEnter(self, corruptionId)
+        end)
+        Addon.fMain.corruption[corruptionId]:SetScript("OnLeave", function(self, event, ...)
+            GameTooltip:Hide()
+        end)
+
+        Addon.fMain.corruption[corruptionId].icon = Addon.fMain.corruption[corruptionId]:CreateTexture()
+        Addon.fMain.corruption[corruptionId].icon:SetAllPoints(Addon.fMain.corruption[corruptionId])
+        Addon.fMain.corruption[corruptionId].icon:SetPoint("CENTER", Addon.fMain.corruption[corruptionId], "CENTER", 0, 0)
+        Addon.fMain.corruption[corruptionId].icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\corruptions")
+        local x1 = (Addon.isCorrupted[corruptionId] - 1) * .25
+        local x2 = x1 + .25
+        Addon.fMain.corruption[corruptionId].icon:SetTexCoord(x1, x2, 0, 1)
+        Addon.fMain.corruption[corruptionId].icon:SetVertexColor(1, 1, 1)
+        f = f + 1
+    end
+end
+
+function Addon:SetCorruption(corruptionId, killed)
+    Addon.fMain.corruption[corruptionId]:SetAlpha(1 - 0.75 * killed)
 end

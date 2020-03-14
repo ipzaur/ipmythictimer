@@ -276,3 +276,15 @@ Addon.fOptions.closeX.icon:SetSize(16, 16)
 Addon.fOptions.closeX.icon:ClearAllPoints()
 Addon.fOptions.closeX.icon:SetPoint("CENTER", Addon.fOptions.closeX, "CENTER", 0, 0)
 Addon.fOptions.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\x-close")
+
+-- Frame for settings in global options panel
+Addon.panel = CreateFrame("Frame", "IPMTOptionsPanel", UIParent)
+Addon.panel.name = AddonName
+Addon.panel.fShowOptions = CreateFrame("Button", nil, Addon.panel, "UIPanelButtonTemplate")
+Addon.panel.fShowOptions:SetPoint("CENTER", Addon.panel, "TOP", 0, -140)
+Addon.panel.fShowOptions:SetSize(200, 30)
+Addon.panel.fShowOptions:SetText(Addon.localization.OPTIONS)
+Addon.panel.fShowOptions:SetScript("OnClick", function(self)
+    Addon:OpenSettingsFromPanel()
+end)
+InterfaceOptions_AddCategory(Addon.panel)

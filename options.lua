@@ -219,6 +219,10 @@ function Addon:LoadOptions()
     Addon:OnShow()
 
     if not IPMTOptions.version or IPMTOptions.version ~= Addon.version then
+        if IPMTOptions.profiles ~= nil then
+            IPMTOptions.profiles = nil
+            IPMTOptions.profileKeys = nil
+        end
         Addon:ShowOptions()
         if needHelp then
             Addon:ShowHelp()
@@ -315,6 +319,10 @@ function Addon:ToggleCustomize(enable)
                 for f = 1,4 do
                     Addon.fMain.affix[f]:EnableMouse(false)
                 end
+            elseif frame == "corruptions" then
+                for corruptionId, corruptionFrame in pairs(Addon.fMain.corruption) do
+                    corruptionFrame:EnableMouse(false)
+                end
             end
         end
         Addon.fMain:SetResizable(true)
@@ -333,6 +341,11 @@ function Addon:ToggleCustomize(enable)
                 for f = 1,4 do
                     Addon.fMain.affix[f]:EnableMouse(true)
                 end
+            elseif frame == "corruptions" then 
+                for corruptionId, corruptionFrame in pairs(Addon.fMain.corruption) do
+                    corruptionFrame:EnableMouse(true)
+                end
+                Addon:TryToShowCorruptions()
             end
             if frame ~= "bosses" then
                 Addon.fMain[frame]:EnableMouse(false)
@@ -355,8 +368,8 @@ function Addon:ToggleOptions()
 end
 function Addon:toggleMapbutton(show)
     local icon = LibStub("LibDBIcon-1.0")
-    Addon.DB.profile.minimap.hide = not show
-    if not Addon.DB.profile.minimap.hide then
+    Addon.DB.global.minimap.hide = not show
+    if not Addon.DB.global.minimap.hide then
         icon:Show("IPMythicTimer")
     else
         icon:Hide("IPMythicTimer")
@@ -368,7 +381,7 @@ function Addon:ShowOptions()
     Addon.fMain:Show()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
-    Addon.fOptions.Mapbut:SetChecked(not Addon.DB.profile.minimap.hide)
+    Addon.fOptions.Mapbut:SetChecked(not Addon.DB.global.minimap.hide)
     if not Addon.keyActive then
         for frame, info in pairs(Addon.frameInfo) do
             if info.text ~= nil then
@@ -389,6 +402,7 @@ function Addon:ShowOptions()
             Addon.fMain.affix[i]:Show()
         end
     end
+    Addon:TryToShowCorruptions()
     SelectFont(IPMTOptions.font)
     Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
     Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
@@ -402,7 +416,7 @@ function Addon:CloseOptions()
         Addon.fMain:Hide()
     end
     Addon:ToggleCustomize(false)
-    if #Addon.DB.profile.dungeon.deathes.list == 0 then
+    if #Addon.DB.global.dungeon.deathes.list == 0 then
         Addon.fMain.deathTimer:Hide()
     end
     Addon.fOptions.customize:SetChecked(false)
@@ -473,7 +487,30 @@ function Addon:RestoreOptions()
             end
         end
     end
-
     Addon:OnShow()
 end
 
+local hideMainMenu = false
+local function TryToHideMainMenu()
+    if hideMainMenu then
+        hideMainMenu = false
+        HideUIPanel(GameMenuFrame)
+    end
+end
+hooksecurefunc('GameMenuFrame_UpdateVisibleButtons', TryToHideMainMenu)
+
+local _G = getfenv(0)
+_G.hooksecurefunc("StaticPopup_EscapePressed", function()
+    if Addon.fOptions:IsShown() then
+        if not GameMenuFrame:IsShown() and not InterfaceOptionsFrame:IsShown() then
+            Addon:CloseOptions()
+            hideMainMenu = true
+        end
+    end
+end)
+
+function Addon:OpenSettingsFromPanel()
+    Addon:ShowOptions()
+    hideMainMenu = true
+    InterfaceOptionsFrame:Hide()
+end

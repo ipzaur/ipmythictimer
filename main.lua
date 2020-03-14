@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 1117
+Addon.version = 1119
 
 Addon.DECOR_FONT = Addon.FONT_ROBOTO
 Addon.DECOR_FONTSIZE_DELTA = 0
@@ -9,6 +9,7 @@ if GetLocale() == "zhTW" then
 end
 
 local REAPING = 117
+local CORRUPTED = 120
 local TEEMING = 5
 
 local dungeon = {
@@ -18,6 +19,7 @@ local dungeon = {
     affixes   = {},
     isReaping = false,
     isTeeming = false,
+    isCorrupted = false,
     level     = 0,
     deathes   = {},
     trash     = {
@@ -224,6 +226,16 @@ local function CombatLogEvent()
             else
                 clearKillInfo()
             end
+            if Addon.isCorrupted[npcID] then
+                for i=1, 40 do
+                    local _, _, _, _, _, _, _, _, _, spellId = UnitAura("player", i, "HARMFUL")
+                    if spellId and spellId == 313445 then
+                        Addon.DB.global.dungeon.corrupted[npcID] = 1
+                        Addon:SetCorruption(npcID, 1)
+                        break
+                    end
+                end
+            end
         end
         if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and (not UnitIsFeignDeath(destName)) then
             local spellId, spellIcon, enemy, damage
@@ -242,7 +254,7 @@ local function CombatLogEvent()
                     spellIcon = 130730 -- Melee Attack Icon
                 end
             end
-            table.insert(Addon.DB.profile.dungeon.deathes.list, {
+            table.insert(Addon.DB.global.dungeon.deathes.list, {
                 playerName = destName,
                 time       = dungeon.time,
                 enemy      = enemy,
@@ -355,6 +367,12 @@ function Addon:OnAffixEnter(self, iconNum)
     end
 end
 
+function Addon:OnCorruptionEnter(self, corruptionId)
+    GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+    GameTooltip:SetText(Addon.localization.CORRUPTED[corruptionId], 1, 1, 1, 1, true)
+    GameTooltip:Show()
+end
+
 function Addon:OnDeathTimerEnter(self)
     if not Addon.fOptions:IsShown() then
         local deathes, timeLost = C_ChallengeMode.GetDeathCount()
@@ -364,7 +382,7 @@ function Addon:OnDeathTimerEnter(self)
         GameTooltip:AddLine(" ")
 
         local counts = {}
-        for i, death in ipairs(Addon.DB.profile.dungeon.deathes.list) do
+        for i, death in ipairs(Addon.DB.global.dungeon.deathes.list) do
             if counts[death.playerName] then
                 counts[death.playerName] = counts[death.playerName] + 1
             else
@@ -399,6 +417,23 @@ function Addon:OnDeathTimerEnter(self)
     end
 end
 
+function Addon:TryToShowCorruptions()
+    if not IPMTOptions.frame.corruptions.hidden and ( (Addon.keyActive and dungeon.isCorrupted) or (not Addon.keyActive and Addon.fOptions:IsShown()) ) then
+        if Addon.DB.global.dungeon.corrupted == nil or not Addon.keyActive then
+            Addon.DB.global.dungeon.corrupted = {}
+        end
+        for corruptionId, flag in pairs(Addon.isCorrupted) do
+            local killed = 0
+            if Addon.DB.global.dungeon.corrupted[corruptionId] then
+                killed = 1
+            end
+            Addon:SetCorruption(corruptionId, killed)
+        end
+        Addon.fMain.corruptions:Show()
+    else
+        Addon.fMain.corruptions:Hide()
+    end
+end
 
 local function ShowFrame()
     local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
@@ -428,6 +463,9 @@ local function ShowFrame()
             if affix == TEEMING then
                 dungeon.isTeeming = true
             end
+            if affix == CORRUPTED then
+                dungeon.isCorrupted = true
+            end
         end
         for a = count+1,4 do
             Addon.fMain.affix[a]:Hide()
@@ -443,6 +481,7 @@ local function ShowFrame()
 
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         Addon.keyActive = true
+        Addon:TryToShowCorruptions()
         Addon:CloseOptions()
     end
 end
@@ -452,8 +491,9 @@ local function WipeDungeon()
     dungeon.trash.current = 0
     dungeon.trash.killed = 0
     dungeon.bosses = nil
-    wipe(Addon.DB.profile.dungeon.deathes.list)
-    Addon.DB.profile.dungeon.deathes.count = 0
+    wipe(Addon.DB.global.dungeon.deathes.list)
+    Addon.DB.global.dungeon.deathes.count = 0
+    Addon.DB.global.dungeon.corrupted = {}
     dungeon.time = 0
     wipe(dungeon.players)
 end
@@ -563,7 +603,7 @@ function Addon:Init()
         end
     end
     Addon.DB = LibStub("AceDB-3.0"):New("IPMTOptions", {
-        profile = {
+        global = {
             minimap = {
                 hide = false,
             },

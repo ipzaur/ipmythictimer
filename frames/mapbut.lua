@@ -20,5 +20,5 @@ function Addon:InitIcon()
         end,
     })
 
-    icon:Register("IPMythicTimer", LDB, Addon.DB.profile.minimap)
+    icon:Register("IPMythicTimer", LDB, Addon.DB.global.minimap)
 end
