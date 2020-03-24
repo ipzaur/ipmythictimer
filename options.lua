@@ -231,7 +231,7 @@ function Addon:LoadOptions()
     end
 end
 
-local function SelectFont(font)
+function Addon:SelectFont(font)
     local fontList = LSM:List('font')
     for i,fontName in pairs(fontList) do
         local filepath = LSM:Fetch('font', fontName)
@@ -403,7 +403,7 @@ function Addon:ShowOptions()
         end
     end
     Addon:TryToShowCorruptions()
-    SelectFont(IPMTOptions.font)
+    Addon:SelectFont(IPMTOptions.font)
     Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
     Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
 end
@@ -439,7 +439,7 @@ function Addon:RestoreOptions()
     IPMTOptions.position.deaths.y = Addon.defaultOptions.position.deaths.y
 
     IPMTOptions.font = Addon.FONT_ROBOTO
-    SelectFont(IPMTOptions.font)
+    Addon:SelectFont(IPMTOptions.font)
 
     IPMTOptions.progress = Addon.defaultOptions.progress
     Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)

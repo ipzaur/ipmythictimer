@@ -8,20 +8,20 @@ if GetLocale() == "zhTW" then
     Addon.DECOR_FONTSIZE_DELTA = -2
 end
 
+Addon.problems = {}
+
 local REAPING = 117
 local CORRUPTED = 120
 local TEEMING = 5
 
 local dungeon = {
     id        = 0,
-    bosses    = nil,
     time      = 0,
     affixes   = {},
     isReaping = false,
     isTeeming = false,
     isCorrupted = false,
     level     = 0,
-    deathes   = {},
     trash     = {
         total = 0,
         current = 0,
@@ -140,10 +140,6 @@ end
 function Addon:UpdateCriteria()
     local numCriteria = select(3, C_Scenario.GetStepInfo())
 
-    if dungeon.bosses == nil then
-        dungeon.bosses = {}
-    end
-
     for c = 1, numCriteria do
         local name, _, completed, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(c)
         if isWeightedProgress then
@@ -182,31 +178,8 @@ function Addon:UpdateCriteria()
                     Addon.fMain.progress.text:SetText(dungeon.trash.total - progress)
                 end
             end
-        else
-            if not dungeon.bosses[c] then
-                local locale = GetLocale()
-                if locale == "ruRU" then
-                    name = string.gsub(name, " побеждена", "")
-                    name = string.gsub(name, " побежден", "")
-                else
-                    name = string.gsub(name, " defeated", "")
-                end
-                dungeon.bosses[c] = {
-                    name   = name,
-                    killed = completed,
-                }
-            elseif dungeon.bosses[c].killed ~= completed then
-                dungeon.bosses[c].killed = completed
-            end
         end
     end
-    local killed = 0
-    for num, boss in ipairs(dungeon.bosses) do
-        if boss.killed then
-            killed = killed + 1
-        end
-    end
-    Addon.fMain.bosses.text:SetText(killed .. "/" .. #dungeon.bosses)
 end
 
 local function CombatLogEvent()
@@ -290,7 +263,7 @@ local function CombatLogEvent()
 end
 
 local function UpdateTime(block, elapsedTime)
-    if Addon.keyActive == false then
+    if not Addon.keyActive then
         return
     end
     local plusLevel = 0
@@ -341,12 +314,23 @@ local function UpdateDeath()
     end
 end
 
+local function BossKilled(encounterName)
+    for b, boss in ipairs(Addon.DB.global.dungeon.bosses) do
+        if boss.name == encounterName then
+            boss.killed = true
+            Addon.DB.global.dungeon.bossesKilled = Addon.DB.global.dungeon.bossesKilled + 1
+            Addon.fMain.bosses.text:SetText(Addon.DB.global.dungeon.bossesKilled .. "/" .. #Addon.DB.global.dungeon.bosses)
+            break
+        end
+    end
+end
+
 function Addon:OnBossesEnter(self)
     if not Addon.fOptions:IsShown() then
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
-        GameTooltip:SetText("Убито боссов", 1, 1, 1)
+        GameTooltip:SetText(Addon.localization.HELP.BOSSES, 1, 1, 1)
         GameTooltip:AddLine(" ")
-        for num, boss in ipairs(dungeon.bosses) do
+        for i, boss in ipairs(Addon.DB.global.dungeon.bosses) do
             local color = 1
             if boss.killed then
                 color = .45
@@ -445,6 +429,40 @@ local function ShowFrame()
         dungeon.isReaping = false
         dungeon.isTeeming = false
 
+        Addon.DB.global.dungeon.bossesKilled = 0
+        if Addon.DB.global.dungeon.bosses == nil then 
+            local mapID = C_Map.GetBestMapForUnit("player")
+            local uiMapGroupID = C_Map.GetMapGroupID(mapID)
+            local mapGroup = {}
+            if uiMapGroupID == nil or mapID == 1490 then
+                table.insert(mapGroup, {
+                    mapID = mapID,
+                })
+            else
+                mapGroup = C_Map.GetMapGroupMembersInfo(uiMapGroupID)
+            end
+            Addon.DB.global.dungeon.bosses = {}
+            for g, map in ipairs(mapGroup) do
+                if (mapID ~= 1490 and map.mapID ~= 1490) or (mapID == 1490 and map.mapID == 1490) then
+                    local encounters = C_EncounterJournal.GetEncountersOnMap(map.mapID)
+                    for e, encounter in ipairs(encounters) do
+                        local name = EJ_GetEncounterInfo(encounter.encounterID)
+                        table.insert(Addon.DB.global.dungeon.bosses, {
+                            name   = name,
+                            killed = false,
+                        })
+                    end
+                end
+            end
+        else
+            for b, boss in ipairs(Addon.DB.global.dungeon.bosses) do
+                if boss.killed then
+                    Addon.DB.global.dungeon.bossesKilled = Addon.DB.global.dungeon.bossesKilled + 1
+                end
+            end
+        end
+        Addon.fMain.bosses.text:SetText(Addon.DB.global.dungeon.bossesKilled .. "/" .. #Addon.DB.global.dungeon.bosses)
+
         Addon.fMain.level.text:SetText(dungeon.level)
         local count = #affixes
         for i,affix in pairs(affixes) do
@@ -475,14 +493,17 @@ local function ShowFrame()
         Addon.fMain:Show()
         Addon.fMain.progress.text:SetTextColor(1,1,1)
         Addon.fMain.prognosis.text:SetTextColor(1,1,1)
+
         local dungeonName = C_Scenario.GetInfo()
         Addon.fMain.dungeonname.text:SetText(dungeonName)
-        ObjectiveTrackerFrame:Hide()
-
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+        Addon.fMain:RegisterEvent("BOSS_KILL")
         Addon.keyActive = true
         Addon:TryToShowCorruptions()
+        Addon:RecalcElem()
         Addon:CloseOptions()
+
+        ObjectiveTrackerFrame:Hide()
     end
 end
 
@@ -490,7 +511,11 @@ local function WipeDungeon()
     dungeon.trash.total = 0
     dungeon.trash.current = 0
     dungeon.trash.killed = 0
-    dungeon.bosses = nil
+    if Addon.DB.global.dungeon.bosses ~= nil then
+        wipe(Addon.DB.global.dungeon.bosses)
+    end
+    Addon.DB.global.dungeon.bossesKilled = 0
+    Addon.DB.global.dungeon.bosses = nil
     wipe(Addon.DB.global.dungeon.deathes.list)
     Addon.DB.global.dungeon.deathes.count = 0
     Addon.DB.global.dungeon.corrupted = {}
@@ -502,9 +527,10 @@ local function HideTimer()
     if not Addon.fOptions:IsShown() then
         Addon.fMain:Hide()
     end
+    Addon.keyActive = false
     ObjectiveTrackerFrame:Show()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    Addon.keyActive = false
+    Addon.fMain:UnregisterEvent("BOSS_KILL")
 end
 
 local function ShowPrognosis()
@@ -655,6 +681,11 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
+    hooksecurefunc(ObjectiveTrackerFrame, "Show", function(self)
+        if Addon.keyActive then
+            ObjectiveTrackerFrame:Hide()
+        end
+    end)
 
     DEFAULT_CHAT_FRAME:AddMessage(Addon.localization.STARTINFO)
 end
@@ -682,6 +713,8 @@ function Addon:OnEvent(self, event, ...)
         InsertKeystone()
     elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
         CombatLogEvent()
+    elseif (event == "BOSS_KILL") then
+        BossKilled(arg2)
     end
 end
 
