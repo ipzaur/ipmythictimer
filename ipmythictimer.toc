@@ -3,7 +3,7 @@
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Мификов
 ## Author: iP
-## Version: 1.1.19
+## Version: 1.1.21
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions
 ## X-eMail: ipzaur@gmail.com
@@ -33,5 +33,6 @@ frames\mapbut.lua
 deaths.lua
 frames\deaths.lua
 
+frames\debug.lua
 
 ipmythictimer.lua

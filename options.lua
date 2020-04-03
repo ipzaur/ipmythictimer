@@ -68,11 +68,17 @@ function Addon:SetFont(filepath)
     IPMTOptions.font = filepath
     for frame, info in pairs(IPMTOptions.frame) do
         if info.fontSize then
-            Addon.fMain[frame].text:SetFont(IPMTOptions.font, info.fontSize)
-            if frame ~= "dungeonname" then
-                local width = Addon.fMain[frame].text:GetStringWidth()
-                local height = Addon.fMain[frame].text:GetStringHeight()
-                Addon.fMain[frame]:SetSize(width, height)
+            if frame == "corruptions" then
+                for corruptionId, flag in pairs(Addon.isCorrupted) do
+                    Addon.fMain.corruption[corruptionId].text:SetFont(IPMTOptions.font, info.fontSize)
+                end
+            else
+                Addon.fMain[frame].text:SetFont(IPMTOptions.font, info.fontSize)
+                if frame ~= "dungeonname" then
+                    local width = Addon.fMain[frame].text:GetStringWidth()
+                    local height = Addon.fMain[frame].text:GetStringHeight()
+                    Addon.fMain[frame]:SetSize(width, height)
+                end
             end
         end
     end
@@ -88,6 +94,7 @@ function Addon:SetProgressFormat(value)
             Addon:UpdateCriteria()
         end
         Addon:RecalcElem()
+        Addon:TryToShowCorruptions()
     end
 end
 
@@ -173,7 +180,11 @@ function Addon:LoadOptions()
         IPMTOptions.frame = {}
     end
     for frame, info in pairs(Addon.frameInfo) do
-        if IPMTOptions.frame[frame] == nil then
+        local reset = false
+        if IPMTOptions.version and IPMTOptions.version < 1121 and frame == "corruptions" then
+            reset = true
+        end
+        if IPMTOptions.frame[frame] == nil or reset then
             IPMTOptions.frame[frame] = {
                 x      = info.position.x,
                 y      = info.position.y,
@@ -195,6 +206,9 @@ function Addon:LoadOptions()
             Addon.fMain[frame]:SetPoint(IPMTOptions.frame[frame].point, Addon.fMain, IPMTOptions.frame[frame].rPoint, IPMTOptions.frame[frame].x, IPMTOptions.frame[frame].y)
             if IPMTOptions.frame[frame].hidden then
                 Addon.fMain[frame]:Hide()
+            end
+            if IPMTOptions.frame.corruptions.fontSize == nil then
+                IPMTOptions.frame.corruptions.fontSize = Addon.frameInfo.corruptions.fontSize
             end
         end
     end
@@ -243,7 +257,7 @@ end
 
 function Addon:RecalcElem(frame)
     if frame ~= nil then
-        if frame ~= "dungeonname" then
+        if frame ~= "dungeonname" and frame ~= "corruptions" then
             local width = Addon.fMain[frame].text:GetStringWidth()
             local height = Addon.fMain[frame].text:GetStringHeight()
             Addon.fMain[frame]:SetSize(width, height)
@@ -263,14 +277,20 @@ Addon.fontSizeFrame = nil
 function Addon:SetFontSize(value, frameRecalc)
     if Addon.fontSizeFrame ~= nil then
         IPMTOptions.frame[Addon.fontSizeFrame].fontSize = value
-        Addon.fMain[Addon.fontSizeFrame].text:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
+        if Addon.fontSizeFrame == "corruptions" then
+            for corruptionId, flag in pairs(Addon.isCorrupted) do
+                Addon.fMain.corruption[corruptionId].text:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
+            end
+        else
+            Addon.fMain[Addon.fontSizeFrame].text:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
+        end
         local FStext = Addon.localization.FONTSIZE .. ' [' .. IPMTOptions.frame[Addon.fontSizeFrame].fontSize .. ']'
         getglobal(Addon.fOptions.FS.slider:GetName() .. 'Text'):SetText(FStext)
     end
 end
 
 function Addon:StartFontSize(frame)
-    if Addon.fMain[frame].text ~= nil then
+    if Addon.fMain[frame].text ~= nil or frame == "corruptions" then
         if Addon.fontSizeFrame ~= frame and Addon.isCustomizing then
             Addon.fontSizeFrame = frame
             Addon.fOptions.FS:ClearAllPoints()

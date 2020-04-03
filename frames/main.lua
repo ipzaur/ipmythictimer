@@ -242,15 +242,16 @@ Addon.frameInfo = {
     corruptions = {
         size = {
             [0] = 180,
-            [1] = 24,
+            [1] = 40,
         },
         position = {
             x = 0,
-            y = -24,
+            y = -40,
             point = 'BOTTOMLEFT',
             rPoint = 'BOTTOMLEFT',
         },
         hidden = false,
+        fontSize = 12,
     },
     dungeonname = {
         size = {
@@ -385,10 +386,10 @@ if Addon.isCorrupted then
     Addon.fMain.corruption = {}
     local f = 0
     for corruptionId, flag in pairs(Addon.isCorrupted) do
-        local left = (affixSize.width + 10) * f
+        local left = (affixSize.width + 24) * f
         Addon.fMain.corruption[corruptionId] = CreateFrame("Frame", nil, Addon.fMain.corruptions)
         Addon.fMain.corruption[corruptionId]:SetSize(affixSize.width, affixSize.height)
-        Addon.fMain.corruption[corruptionId]:SetPoint("TOPLEFT", Addon.fMain.corruptions, "TOPLEFT", left + 4, -2)
+        Addon.fMain.corruption[corruptionId]:SetPoint("TOPLEFT", Addon.fMain.corruptions, "TOPLEFT", left + 14, -2)
         Addon.fMain.corruption[corruptionId]:SetScript("OnEnter", function(self, event, ...)
             Addon:OnCorruptionEnter(self, corruptionId)
         end)
@@ -404,10 +405,24 @@ if Addon.isCorrupted then
         local x2 = x1 + .25
         Addon.fMain.corruption[corruptionId].icon:SetTexCoord(x1, x2, 0, 1)
         Addon.fMain.corruption[corruptionId].icon:SetVertexColor(1, 1, 1)
+
+
+        Addon.fMain.corruption[corruptionId].text = Addon.fMain.corruption[corruptionId]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+        Addon.fMain.corruption[corruptionId].text:ClearAllPoints()
+        Addon.fMain.corruption[corruptionId].text:SetPoint("CENTER", Addon.fMain.corruption[corruptionId], "CENTER", 0, -affixSize.height)
+        Addon.fMain.corruption[corruptionId].text:SetJustifyH("CENTER")
+        Addon.fMain.corruption[corruptionId].text:SetFont(Addon.FONT_ROBOTO, Addon.frameInfo.corruptions.fontSize)
+        Addon.fMain.corruption[corruptionId].text:SetTextColor(1, 1, 1)
+        Addon.fMain.corruption[corruptionId].text:SetText("1.25%")
         f = f + 1
     end
 end
 
 function Addon:SetCorruption(corruptionId, killed)
     Addon.fMain.corruption[corruptionId]:SetAlpha(1 - 0.75 * killed)
+    if killed == 1 then
+        Addon.fMain.corruption[corruptionId].text:Hide()
+    else
+        Addon.fMain.corruption[corruptionId].text:Show()
+    end
 end

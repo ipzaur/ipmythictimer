@@ -68,85 +68,9 @@ function iPElemsCreateListBox(name, parent, list, callback)
     element.fTriangle:SetVertexColor(1, 1, 1, .5)
     element.fTriangle:SetSize(8, 8)
 
-    element.fList = CreateFrame("ScrollFrame", nil, element, "UIPanelScrollFrameTemplate")
-    element.fList:SetBackdrop(backdrop)
-    element.fList:SetBackdropColor(.03,.03,.03, 1)
-    element.fList:SetBackdropBorderColor(1,1,1, 1)
-    element.fList:SetSize(220, maxHeight)
+
+    element.fList = iPElemsCreateScrollBox(nil, element, 220, maxHeight)
     element.fList:SetPoint("TOPLEFT", element, "BOTTOMLEFT", 0, 1)
-    element.fList:EnableMouseWheel(true)
-    element.fList:SetScript("OnMouseWheel", function(self, delta)
-        local scrollY = self:GetVerticalScroll() - 36 * delta
-        if scrollY < 0 then
-            scrollY = 0
-        else
-            local maxScroll = self:GetVerticalScrollRange()
-            if scrollY > maxScroll then
-                scrollY = maxScroll
-            end
-        end
-        self:SetVerticalScroll(scrollY)
-    end)
-    element.fList.ScrollBar:ClearAllPoints()
-    element.fList.ScrollBar:SetPoint("TOPLEFT", element.fList, "TOPRIGHT", -12, -18)
-    element.fList.ScrollBar:SetPoint("BOTTOMRIGHT", element.fList, "BOTTOMRIGHT", -7, 18)
--- Up Button
-    element.fList.ScrollBar.ScrollUpButton.Normal:ClearAllPoints()
-    element.fList.ScrollBar.ScrollUpButton.Normal:SetPoint("TOPLEFT", element.fList.ScrollBar.ScrollUpButton, "TOPLEFT", 5, -3)
-    element.fList.ScrollBar.ScrollUpButton.Normal:SetTexCoord(0, 1, 1, 0)
-    element.fList.ScrollBar.ScrollUpButton.Normal:SetSize(8, 8)
-    element.fList.ScrollBar.ScrollUpButton.Normal:SetVertexColor(1, 1, 1, 1)
-    element.fList.ScrollBar.ScrollUpButton.Normal:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
-
-    element.fList.ScrollBar.ScrollUpButton.Disabled:ClearAllPoints()
-    element.fList.ScrollBar.ScrollUpButton.Disabled:SetPoint("TOPLEFT", element.fList.ScrollBar.ScrollUpButton, "TOPLEFT", 5, -3)
-    element.fList.ScrollBar.ScrollUpButton.Disabled:SetTexCoord(0, 1, 1, 0)
-    element.fList.ScrollBar.ScrollUpButton.Disabled:SetSize(8, 8)
-    element.fList.ScrollBar.ScrollUpButton.Disabled:SetVertexColor(.5, .5, .5, 1)
-    element.fList.ScrollBar.ScrollUpButton.Disabled:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
-
-    element.fList.ScrollBar.ScrollUpButton.Pushed:ClearAllPoints()
-    element.fList.ScrollBar.ScrollUpButton.Pushed:SetPoint("TOPLEFT", element.fList.ScrollBar.ScrollUpButton, "TOPLEFT", 5, -3)
-    element.fList.ScrollBar.ScrollUpButton.Pushed:SetTexCoord(0, 1, 1, 0)
-    element.fList.ScrollBar.ScrollUpButton.Pushed:SetSize(8, 8)
-    element.fList.ScrollBar.ScrollUpButton.Pushed:SetVertexColor(.75, .75, .75, 1)
-    element.fList.ScrollBar.ScrollUpButton.Pushed:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
-
-    element.fList.ScrollBar.ScrollUpButton.Highlight:SetTexCoord(0, 1, 0, 1)
-    element.fList.ScrollBar.ScrollUpButton.Highlight:SetVertexColor(1, 1, 1, .1)
-    element.fList.ScrollBar.ScrollUpButton.Highlight:SetTexture("Interface\\Buttons\\WHITE8X8")
--- Down Button
-    element.fList.ScrollBar.ScrollDownButton.Normal:ClearAllPoints()
-    element.fList.ScrollBar.ScrollDownButton.Normal:SetPoint("TOPLEFT", element.fList.ScrollBar.ScrollDownButton, "TOPLEFT", 5, -4)
-    element.fList.ScrollBar.ScrollDownButton.Normal:SetTexCoord(0, 1, 0, 1);
-    element.fList.ScrollBar.ScrollDownButton.Normal:SetSize(8, 8);
-    element.fList.ScrollBar.ScrollDownButton.Normal:SetVertexColor(1, 1, 1, 1)
-    element.fList.ScrollBar.ScrollDownButton.Normal:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
-
-    element.fList.ScrollBar.ScrollDownButton.Disabled:ClearAllPoints()
-    element.fList.ScrollBar.ScrollDownButton.Disabled:SetPoint("TOPLEFT", element.fList.ScrollBar.ScrollDownButton, "TOPLEFT", 5, -4)
-    element.fList.ScrollBar.ScrollDownButton.Disabled:SetTexCoord(0, 1, 0, 1)
-    element.fList.ScrollBar.ScrollDownButton.Disabled:SetSize(8, 8)
-    element.fList.ScrollBar.ScrollDownButton.Disabled:SetVertexColor(.5, .5, .5, 1)
-    element.fList.ScrollBar.ScrollDownButton.Disabled:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
-
-    element.fList.ScrollBar.ScrollDownButton.Pushed:ClearAllPoints()
-    element.fList.ScrollBar.ScrollDownButton.Pushed:SetPoint("TOPLEFT", element.fList.ScrollBar.ScrollDownButton, "TOPLEFT", 5, -4)
-    element.fList.ScrollBar.ScrollDownButton.Pushed:SetTexCoord(0, 1, 0, 1)
-    element.fList.ScrollBar.ScrollDownButton.Pushed:SetSize(8, 8)
-    element.fList.ScrollBar.ScrollDownButton.Pushed:SetVertexColor(.75, .75, .75, 1)
-    element.fList.ScrollBar.ScrollDownButton.Pushed:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
-
-    element.fList.ScrollBar.ScrollDownButton.Highlight:SetTexCoord(0, 1, 0, 1)
-    element.fList.ScrollBar.ScrollDownButton.Highlight:SetVertexColor(1, 1, 1, .1)
-    element.fList.ScrollBar.ScrollDownButton.Highlight:SetTexture("Interface\\Buttons\\WHITE8X8")
-
--- Knob
-    element.fList.ScrollBar.ThumbTexture:SetTexCoord(0, 1, 0, 1)
-    element.fList.ScrollBar.ThumbTexture:SetVertexColor(.5, .5, .5, 1)
-    element.fList.ScrollBar.ThumbTexture:SetTexture("Interface\\Buttons\\WHITE8X8")
-
-
     element.fItems = CreateFrame("Frame", nil, element.fList)
     element.fItems:SetSize(200, 300)
     element.fList:SetScrollChild(element.fItems)
@@ -275,6 +199,95 @@ function iPElemsCreateListBox(name, parent, list, callback)
             element.fList.ScrollBar:Hide()
         end
     end
+
+    return element
+end
+
+
+function iPElemsCreateScrollBox(name, parent, width, height)
+    local backdrop = {
+        bgFile   = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\AddOns\\" .. AddonName .. "\\Libs\\iPElems\\listbox",
+        tile     = true,
+        tileSize = 8,
+        edgeSize = 8,
+    }
+    local element = CreateFrame("ScrollFrame", name, parent, "UIPanelScrollFrameTemplate")
+    element:SetBackdrop(backdrop)
+    element:SetBackdropColor(.03,.03,.03, 1)
+    element:SetBackdropBorderColor(1,1,1, 1)
+    element:SetSize(width, height)
+    element:EnableMouseWheel(true)
+    element:SetScript("OnMouseWheel", function(self, delta)
+        local scrollY = self:GetVerticalScroll() - 36 * delta
+        if scrollY < 0 then
+            scrollY = 0
+        else
+            local maxScroll = self:GetVerticalScrollRange()
+            if scrollY > maxScroll then
+                scrollY = maxScroll
+            end
+        end
+        self:SetVerticalScroll(scrollY)
+    end)
+    element.ScrollBar:ClearAllPoints()
+    element.ScrollBar:SetPoint("TOPLEFT", element, "TOPRIGHT", -12, -18)
+    element.ScrollBar:SetPoint("BOTTOMRIGHT", element, "BOTTOMRIGHT", -7, 18)
+-- Up Button
+    element.ScrollBar.ScrollUpButton.Normal:ClearAllPoints()
+    element.ScrollBar.ScrollUpButton.Normal:SetPoint("TOPLEFT", element.ScrollBar.ScrollUpButton, "TOPLEFT", 5, -3)
+    element.ScrollBar.ScrollUpButton.Normal:SetTexCoord(0, 1, 1, 0)
+    element.ScrollBar.ScrollUpButton.Normal:SetSize(8, 8)
+    element.ScrollBar.ScrollUpButton.Normal:SetVertexColor(1, 1, 1, 1)
+    element.ScrollBar.ScrollUpButton.Normal:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
+
+    element.ScrollBar.ScrollUpButton.Disabled:ClearAllPoints()
+    element.ScrollBar.ScrollUpButton.Disabled:SetPoint("TOPLEFT", element.ScrollBar.ScrollUpButton, "TOPLEFT", 5, -3)
+    element.ScrollBar.ScrollUpButton.Disabled:SetTexCoord(0, 1, 1, 0)
+    element.ScrollBar.ScrollUpButton.Disabled:SetSize(8, 8)
+    element.ScrollBar.ScrollUpButton.Disabled:SetVertexColor(.5, .5, .5, 1)
+    element.ScrollBar.ScrollUpButton.Disabled:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
+
+    element.ScrollBar.ScrollUpButton.Pushed:ClearAllPoints()
+    element.ScrollBar.ScrollUpButton.Pushed:SetPoint("TOPLEFT", element.ScrollBar.ScrollUpButton, "TOPLEFT", 5, -3)
+    element.ScrollBar.ScrollUpButton.Pushed:SetTexCoord(0, 1, 1, 0)
+    element.ScrollBar.ScrollUpButton.Pushed:SetSize(8, 8)
+    element.ScrollBar.ScrollUpButton.Pushed:SetVertexColor(.75, .75, .75, 1)
+    element.ScrollBar.ScrollUpButton.Pushed:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
+
+    element.ScrollBar.ScrollUpButton.Highlight:SetTexCoord(0, 1, 0, 1)
+    element.ScrollBar.ScrollUpButton.Highlight:SetVertexColor(1, 1, 1, .1)
+    element.ScrollBar.ScrollUpButton.Highlight:SetTexture("Interface\\Buttons\\WHITE8X8")
+-- Down Button
+    element.ScrollBar.ScrollDownButton.Normal:ClearAllPoints()
+    element.ScrollBar.ScrollDownButton.Normal:SetPoint("TOPLEFT", element.ScrollBar.ScrollDownButton, "TOPLEFT", 5, -4)
+    element.ScrollBar.ScrollDownButton.Normal:SetTexCoord(0, 1, 0, 1);
+    element.ScrollBar.ScrollDownButton.Normal:SetSize(8, 8);
+    element.ScrollBar.ScrollDownButton.Normal:SetVertexColor(1, 1, 1, 1)
+    element.ScrollBar.ScrollDownButton.Normal:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
+
+    element.ScrollBar.ScrollDownButton.Disabled:ClearAllPoints()
+    element.ScrollBar.ScrollDownButton.Disabled:SetPoint("TOPLEFT", element.ScrollBar.ScrollDownButton, "TOPLEFT", 5, -4)
+    element.ScrollBar.ScrollDownButton.Disabled:SetTexCoord(0, 1, 0, 1)
+    element.ScrollBar.ScrollDownButton.Disabled:SetSize(8, 8)
+    element.ScrollBar.ScrollDownButton.Disabled:SetVertexColor(.5, .5, .5, 1)
+    element.ScrollBar.ScrollDownButton.Disabled:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
+
+    element.ScrollBar.ScrollDownButton.Pushed:ClearAllPoints()
+    element.ScrollBar.ScrollDownButton.Pushed:SetPoint("TOPLEFT", element.ScrollBar.ScrollDownButton, "TOPLEFT", 5, -4)
+    element.ScrollBar.ScrollDownButton.Pushed:SetTexCoord(0, 1, 0, 1)
+    element.ScrollBar.ScrollDownButton.Pushed:SetSize(8, 8)
+    element.ScrollBar.ScrollDownButton.Pushed:SetVertexColor(.75, .75, .75, 1)
+    element.ScrollBar.ScrollDownButton.Pushed:SetTexture("Interface\\AddOns\\IPMythicTimer\\Libs\\iPElems\\triangle")
+
+    element.ScrollBar.ScrollDownButton.Highlight:SetTexCoord(0, 1, 0, 1)
+    element.ScrollBar.ScrollDownButton.Highlight:SetVertexColor(1, 1, 1, .1)
+    element.ScrollBar.ScrollDownButton.Highlight:SetTexture("Interface\\Buttons\\WHITE8X8")
+
+-- Knob
+    element.ScrollBar.ThumbTexture:SetTexCoord(0, 1, 0, 1)
+    element.ScrollBar.ThumbTexture:SetVertexColor(.5, .5, .5, 1)
+    element.ScrollBar.ThumbTexture:SetTexture("Interface\\Buttons\\WHITE8X8")
 
     return element
 end

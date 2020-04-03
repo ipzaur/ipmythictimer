@@ -1,5 +1,5 @@
 ﻿local AddonName, Addon = ...
-Addon.version = 1119
+Addon.version = 1121
 
 Addon.DECOR_FONT = Addon.FONT_ROBOTO
 Addon.DECOR_FONTSIZE_DELTA = 0
@@ -402,7 +402,7 @@ function Addon:OnDeathTimerEnter(self)
 end
 
 function Addon:TryToShowCorruptions()
-    if not IPMTOptions.frame.corruptions.hidden and ( (Addon.keyActive and dungeon.isCorrupted) or (not Addon.keyActive and Addon.fOptions:IsShown()) ) then
+    if not IPMTOptions.frame.corruptions.hidden and ( (Addon.keyActive and dungeon.isCorrupted) or (not Addon.keyActive and Addon.fOptions:IsShown()) or Addon.isCustomizing ) then
         if Addon.DB.global.dungeon.corrupted == nil or not Addon.keyActive then
             Addon.DB.global.dungeon.corrupted = {}
         end
@@ -411,12 +411,43 @@ function Addon:TryToShowCorruptions()
             if Addon.DB.global.dungeon.corrupted[corruptionId] then
                 killed = 1
             end
+            local cost = ""
+            if Addon.keyActive and dungeon.isCorrupted then
+                cost = Addon:GetCorruptedForce(dungeon.isTeeming)
+                if IPMTOptions.progress == 1 then
+                    cost = 100 / dungeon.trash.total * cost
+                    cost = round(cost, 2) .. "%"
+                end
+            else
+                if IPMTOptions.progress == 1 then
+                    cost = "1.25%"
+                else
+                    cost = 12
+                end
+            end
             Addon:SetCorruption(corruptionId, killed)
+            Addon.fMain.corruption[corruptionId].text:SetText(cost)
         end
         Addon.fMain.corruptions:Show()
     else
         Addon.fMain.corruptions:Hide()
     end
+end
+
+local function PrintDebug()
+    local text = Addon:PrintObject(dungeon, 'dungeon.', true)
+    text = text .. "\n\n" .. Addon:PrintObject(IPMTOptions, 'IPMTOptions.', true)
+    text = text .. "\n\n FRAMES \n\n"
+    for frame, info in pairs(Addon.frameInfo) do
+        if info.text ~= nil then
+            text = text .. frame .. ".text = '" .. Addon.fMain[frame].text:GetText() .. "'\n"
+            local fontName, fontSize = Addon.fMain[frame].text:GetFont()
+            text = text .. frame .. ".font = '" .. fontName .. "'\n"
+            text = text .. frame .. ".size = " .. fontSize .. "\n"
+        end
+    end
+    Addon.fDebug:Show()
+    Addon.fDebug.textarea:SetText(text)
 end
 
 local function ShowFrame()
@@ -668,9 +699,12 @@ local function InsertKeystone()
     end
 end
 
+
 function Addon:StartAddon()
     SLASH_IPMTOPTS1 = "/ipmt"
+    SLASH_IPMTDEBUG1 = "/ipmt_debug"
     SlashCmdList["IPMTOPTS"] = toggleOptions
+    SlashCmdList["IPMTDEBUG"] = PrintDebug
 
     Addon.fMain:RegisterEvent("ADDON_LOADED")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_DEATH_COUNT_UPDATED")
@@ -723,4 +757,5 @@ function Addon:OnShow()
     Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
     Addon.fMain:ClearAllPoints()
     Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
+    Addon:SetFont(IPMTOptions.font) -- may be it fix some bug ^_^
 end
