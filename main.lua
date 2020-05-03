@@ -457,8 +457,9 @@ local function ShowFrame()
     if difficulty == 8 then
         dungeon.level = level
         dungeon.affixes = {}
-        dungeon.isReaping = false
-        dungeon.isTeeming = false
+        dungeon.isReaping   = false
+        dungeon.isTeeming   = false
+        dungeon.isCorrupted = false
 
         Addon.DB.global.dungeon.bossesKilled = 0
         if Addon.DB.global.dungeon.bosses == nil then 

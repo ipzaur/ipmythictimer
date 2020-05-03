@@ -207,10 +207,10 @@ function Addon:LoadOptions()
             if IPMTOptions.frame[frame].hidden then
                 Addon.fMain[frame]:Hide()
             end
-            if IPMTOptions.frame.corruptions.fontSize == nil then
-                IPMTOptions.frame.corruptions.fontSize = Addon.frameInfo.corruptions.fontSize
-            end
         end
+    end
+    if IPMTOptions.frame.corruptions.fontSize == nil then
+        IPMTOptions.frame.corruptions.fontSize = Addon.frameInfo.corruptions.fontSize
     end
 
     if IPMTOptions.font == nil then

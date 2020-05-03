@@ -13,6 +13,7 @@ libs.xml
 Localization\localization.lua
 Localization\localization_ru.lua
 Localization\localization_zhtw.lua
+Localization\localization_zhcn.lua
 
 utility.lua
 libs\iPElems\ipelems.lua
