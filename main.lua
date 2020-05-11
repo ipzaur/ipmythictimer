@@ -15,19 +15,24 @@ local CORRUPTED = 120
 local TEEMING = 5
 
 local dungeon = {
-    id        = 0,
-    time      = 0,
-    affixes   = {},
-    isReaping = false,
-    isTeeming = false,
+    id          = 0,
+    time        = 0,
+    affixes     = {},
+    isReaping   = false,
+    isTeeming   = false,
     isCorrupted = false,
-    level     = 0,
-    trash     = {
-        total = 0,
+    level       = 0,
+    players     = {},
+    prognosis   = {},
+    trash       = {
+        total   = 0,
         current = 0,
-        killed = 0,
+        killed  = 0,
     },
-    players = {},
+    combat      = {
+        boss   = false,
+        killed = {},
+    },
 }
 local timeCoef = {0.8, 0.6}
 
@@ -189,9 +194,12 @@ local function CombatLogEvent()
         if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_NPC) > 0
                 and bit.band(destFlags, COMBATLOG_OBJECT_CONTROL_NPC) > 0
                 and (bit.band(destFlags, COMBATLOG_OBJECT_REACTION_HOSTILE) > 0 or bit.band(destFlags, COMBATLOG_OBJECT_REACTION_NEUTRAL) > 0) then
-            local _, zero, server_id, instance_id, zone_uid, npc_id, spawn_uid = strsplit("-", destGUID)
-            local npcID = select(6, strsplit("-", destGUID))
+            local _, zero, server_id, instance_id, zone_uid, npcID, spawnID = strsplit("-", destGUID)
             npcID = tonumber(npcID)
+            local npcUID = spawnID .. "_" .. npcID
+            if dungeon.prognosis[npcUID] then
+                dungeon.prognosis[npcUID] = nil
+            end
             if not Addon.isCorrupted[npcID] and not (IPMTDB and IPMTDB[npcID] and (type(IPMTDB[npcID]) ~= 'number') and IPMTDB[npcID][dungeon.isTeeming]) and (getFromMDT(npcID, true) == nil) then
                 killInfo.npcID = npcID
                 killInfo.diedTime = GetTime()
@@ -200,13 +208,10 @@ local function CombatLogEvent()
                 clearKillInfo()
             end
             if Addon.isCorrupted[npcID] then
-                for i=1, 40 do
-                    local _, _, _, _, _, _, _, _, _, spellId = UnitAura("player", i, "HARMFUL")
-                    if spellId and spellId == 313445 then
-                        Addon.DB.global.dungeon.corrupted[npcID] = 1
-                        Addon:SetCorruption(npcID, 1)
-                        break
-                    end
+                Addon.DB.global.dungeon.corrupted[npcID] = 1
+                Addon:SetCorruption(npcID, 1)
+                if dungeon.combat.boss then
+                    table.insert(dungeon.combat.killed, npcID)
                 end
             end
         end
@@ -314,15 +319,25 @@ local function UpdateDeath()
     end
 end
 
-local function BossKilled(encounterName)
-    for b, boss in ipairs(Addon.DB.global.dungeon.bosses) do
-        if boss.name == encounterName then
-            boss.killed = true
-            Addon.DB.global.dungeon.bossesKilled = Addon.DB.global.dungeon.bossesKilled + 1
-            Addon.fMain.bosses.text:SetText(Addon.DB.global.dungeon.bossesKilled .. "/" .. #Addon.DB.global.dungeon.bosses)
-            break
+local function EncounterEnd(encounterName, success)
+    if success == 1 then
+        for b, boss in ipairs(Addon.DB.global.dungeon.bosses) do
+            if boss.name == encounterName then
+                boss.killed = true
+                Addon.DB.global.dungeon.bossesKilled = Addon.DB.global.dungeon.bossesKilled + 1
+                Addon.fMain.bosses.text:SetText(Addon.DB.global.dungeon.bossesKilled .. "/" .. #Addon.DB.global.dungeon.bosses)
+                break
+            end
         end
     end
+    if #dungeon.combat.killed and (not success) then
+        for npcID in ipairs(dungeon.combat.killed) do
+            Addon.DB.global.dungeon.corrupted[npcID] = 0
+            Addon:SetCorruption(npcID, 0)
+        end
+    end
+    wipe(dungeon.combat.killed)
+    dungeon.combat.boss = false
 end
 
 function Addon:OnBossesEnter(self)
@@ -460,6 +475,9 @@ local function ShowFrame()
         dungeon.isReaping   = false
         dungeon.isTeeming   = false
         dungeon.isCorrupted = false
+        dungeon.prognosis   = {}
+        dungeon.combat.boss   = false
+        wipe(dungeon.combat.killed)
 
         Addon.DB.global.dungeon.bossesKilled = 0
         if Addon.DB.global.dungeon.bosses == nil then 
@@ -529,7 +547,8 @@ local function ShowFrame()
         local dungeonName = C_Scenario.GetInfo()
         Addon.fMain.dungeonname.text:SetText(dungeonName)
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-        Addon.fMain:RegisterEvent("BOSS_KILL")
+        Addon.fMain:RegisterEvent("ENCOUNTER_END")
+        Addon.fMain:RegisterEvent("ENCOUNTER_START")
         Addon.keyActive = true
         Addon:TryToShowCorruptions()
         Addon:RecalcElem()
@@ -562,25 +581,61 @@ local function HideTimer()
     Addon.keyActive = false
     ObjectiveTrackerFrame:Show()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-    Addon.fMain:UnregisterEvent("BOSS_KILL")
+    Addon.fMain:UnregisterEvent("ENCOUNTER_END")
+    Addon.fMain:UnregisterEvent("ENCOUNTER_START")
 end
 
-local function ShowPrognosis()
-    local prognosis = 0
-    for _, nameplate in pairs(C_NamePlate.GetNamePlates()) do
-        if nameplate.UnitFrame.unitExists and UnitCanAttack("player", nameplate.UnitFrame.displayedUnit) and not UnitIsDead(nameplate.UnitFrame.displayedUnit) then
-            local threat = UnitThreatSituation("player", nameplate.UnitFrame.displayedUnit) or -1
-            if threat >= 0 or UnitPlayerControlled(nameplate.UnitFrame.displayedUnit .. "target") then
-                local guID = UnitGUID(nameplate.UnitFrame.displayedUnit)
-                local npcID = select(6, strsplit("-", guID))
-                npcID = tonumber(npcID)
-                local percent = GetEnemyPercent(npcID, IPMTOptions.progress)
-                if percent then
-                    prognosis = prognosis + percent
-                end
+local function grabPrognosis()
+    local inCombat = false
+    if UnitAffectingCombat("player") then
+        inCombat = true
+    else
+        for i=1,4 do
+            if UnitExists("party" .. i) and UnitAffectingCombat("party" .. i) then
+                inCombat = true
+                break
             end
         end
     end
+
+    if inCombat then
+        for _, nameplate in pairs(C_NamePlate.GetNamePlates()) do
+            if nameplate.UnitFrame.unitExists then
+                local unitName = nameplate.UnitFrame.displayedUnit
+                if UnitCanAttack("player", unitName) and not UnitIsDead(unitName) then
+                    local threat = UnitThreatSituation("player", unitName) or -1
+                    if threat >= 0 or UnitPlayerControlled(unitName .. "target") then
+                        local guID = UnitGUID(unitName)
+                        local _, _, _, _, _, npcID, spawnID = strsplit("-", guID)
+                        if spawnID ~= nil and npcID ~= nil then
+                            local npcUID = spawnID .. "_" .. npcID
+                            if not dungeon.prognosis[npcUID] then
+                                npcID = tonumber(npcID)
+                                local percent = GetEnemyPercent(npcID, IPMTOptions.progress)
+                                if percent then
+                                    dungeon.prognosis[npcUID] = percent
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    else
+        dungeon.prognosis = {}
+    end
+end
+
+local function ShowPrognosis()
+    grabPrognosis()
+
+    local prognosis = 0
+    for npcUID, percent in pairs(dungeon.prognosis) do
+        if percent then
+            prognosis = prognosis + percent
+        end
+    end
+
     if prognosis > 0 then
         if IPMTOptions.progress == 1 then
             local currentProgress = dungeon.trash.current / dungeon.trash.total * 100
@@ -726,30 +781,32 @@ function Addon:StartAddon()
 end
 
 function Addon:OnEvent(self, event, ...)
-    local arg1, arg2 = ...
-    if (event == "ADDON_LOADED" and arg1 == AddonName) then
+    local arg1, arg2, arg3, arg4, arg5 = ...
+    if event == "ADDON_LOADED" and arg1 == AddonName then
         Addon:Init()
-    elseif (event == "CHALLENGE_MODE_DEATH_COUNT_UPDATED") then
+    elseif event == "CHALLENGE_MODE_DEATH_COUNT_UPDATED" then
         UpdateDeath()
-    elseif (event == "SCENARIO_CRITERIA_UPDATE") then
+    elseif event == "SCENARIO_CRITERIA_UPDATE" then
         Addon:UpdateCriteria()
-    elseif (event == "CHALLENGE_MODE_RESET") then
+    elseif event == "CHALLENGE_MODE_RESET" then
         WipeDungeon()
-    elseif (event == "CHALLENGE_MODE_COMPLETED") then
+    elseif event == "CHALLENGE_MODE_COMPLETED" then
         Addon.keyActive = false
-    elseif (event == "PLAYER_ENTERING_WORLD") then
+    elseif event == "PLAYER_ENTERING_WORLD" then
         local inInstance, instanceType = IsInInstance()
         if not (inInstance and instanceType == "party") then
             HideTimer()
         else
             Addon:UpdateCriteria()
         end
-    elseif (event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN") then
+    elseif event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN" then
         InsertKeystone()
-    elseif (event == "COMBAT_LOG_EVENT_UNFILTERED") then
+    elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
         CombatLogEvent()
-    elseif (event == "BOSS_KILL") then
-        BossKilled(arg2)
+    elseif event == "ENCOUNTER_START" then
+        dungeon.combat.boss = true
+    elseif event == "ENCOUNTER_END" then
+        EncounterEnd(arg2, arg5)
     end
 end
 
