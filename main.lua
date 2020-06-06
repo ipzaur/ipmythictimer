@@ -36,17 +36,33 @@ local dungeon = {
 }
 local timeCoef = {0.8, 0.6}
 
-local MDTdungeon = {
+Addon.MDTdungeon = {
     [934]  = 15, -- Atal Dazar
     [936]  = 16, -- Freehold
     [942]  = 18, -- Shrine of the Storm
     [1004] = 17, -- Kings Rest
     [1010] = 21, -- The Motherlode
+
     [1015] = 24, -- Waycrest Manor
+    [1016] = 24, -- Waycrest Manor
+    [1017] = 24, -- Waycrest Manor
+    [1018] = 24, -- Waycrest Manor
+    [1029] = 24, -- Waycrest Manor
+
     [1038] = 20, -- Temple of Sethraliss
+    [1043] = 20, -- Temple of Sethraliss
+
     [1041] = 22, -- The Underrot
     [1162] = 19, -- Siege of Bolarus
-    [1169] = 23, -- Tol Dagor
+
+    [974] = 23, -- Tol Dagor
+    [975] = 23, -- Tol Dagor
+    [976] = 23, -- Tol Dagor
+    [977] = 23, -- Tol Dagor
+    [978] = 23, -- Tol Dagor
+    [979] = 23, -- Tol Dagor
+    [980] = 23, -- Tol Dagor
+
     [1490] = 25, -- Mechagon Island (Junkyard)
 
     [1491] = 26, -- Mechagon City (Workshop)
@@ -70,10 +86,10 @@ local function getFromMDT(npcID, wsave)
         return nil
     end
     local mapID = C_Map.GetBestMapForUnit("player")
-    if not MDTdungeon[mapID] then
+    if not Addon.MDTdungeon[mapID] then
         return nil
     end
-    local npcInfos = MethodDungeonTools.dungeonEnemies[MDTdungeon[mapID]]
+    local npcInfos = MethodDungeonTools.dungeonEnemies[Addon.MDTdungeon[mapID]]
     if npcInfos then
         for i,npcInfo in pairs(npcInfos) do
             if npcInfo.id == npcID then
@@ -480,7 +496,7 @@ local function ShowFrame()
         wipe(dungeon.combat.killed)
 
         Addon.DB.global.dungeon.bossesKilled = 0
-        if Addon.DB.global.dungeon.bosses == nil then 
+        if Addon.DB.global.dungeon.bosses == nil then
             local mapID = C_Map.GetBestMapForUnit("player")
             local uiMapGroupID = C_Map.GetMapGroupID(mapID)
             local mapGroup = {}

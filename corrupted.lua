@@ -12,18 +12,19 @@ Addon.isCorrupted = {
 
 function Addon:GetCorruptedForce(isTeeming)
     local mapID = C_Map.GetBestMapForUnit("player")
+    local MDTMapID = Addon.MDTdungeon[mapID]
     if not isTeeming then
-        if mapID == 942 then -- SotS
+        if MDTMapID == 18 then -- SotS
             return 9
-        elseif mapID == 1169 then -- Tol Dagor
+        elseif MDTMapID == 23 then -- Tol Dagor
             return 7
         else
             return 4
         end
     else
-        if mapID == 942 then -- SotS
+        if MDTMapID == 18 then -- SotS
             return 12
-        elseif mapID == 1169 then -- Tol Dagor
+        elseif MDTMapID == 23 then -- Tol Dagor
             return 10
         else
             return 6
