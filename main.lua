@@ -82,14 +82,14 @@ local function round(number, decimals)
 end
 
 local function getFromMDT(npcID, wsave)
-    if not MethodDungeonTools then
+    if not MDT then
         return nil
     end
     local mapID = C_Map.GetBestMapForUnit("player")
     if not Addon.MDTdungeon[mapID] then
         return nil
     end
-    local npcInfos = MethodDungeonTools.dungeonEnemies[Addon.MDTdungeon[mapID]]
+    local npcInfos = MDT.dungeonEnemies[Addon.MDTdungeon[mapID]]
     if npcInfos then
         for i,npcInfo in pairs(npcInfos) do
             if npcInfo.id == npcID then
@@ -111,25 +111,25 @@ local function getFromMDT(npcID, wsave)
 end
 
 local function GetEnemyPercent(npcID, formatType)
-    local percent = nil
+    local forces = nil
     -- Exclude Reaping mobs
     if npcID == 148716 or npcID == 148893 or npcID == 148894 then
-        return percent
+        return forces
     end
     -- Corrupted has different "enemy force" on teeming
     if Addon.isCorrupted[npcID] then
-        percent = Addon:GetCorruptedForce(dungeon.isTeeming)
+        forces = Addon:GetCorruptedForce(dungeon.isTeeming)
     elseif IPMTDB and IPMTDB[npcID] and type(IPMTDB[npcID]) ~= 'number' and IPMTDB[npcID][dungeon.isTeeming] then
-        percent = IPMTDB[npcID][dungeon.isTeeming]
+        forces = IPMTDB[npcID][dungeon.isTeeming]
     else
-        percent = getFromMDT(npcID, true)
+        forces = getFromMDT(npcID, true)
     end
 
-    if percent and formatType == 1 then
-        percent = 100 / dungeon.trash.total * percent
-        percent = round(percent, 2)
+    if forces and formatType == 1 then
+        forces = 100 / dungeon.trash.total * forces
+        forces = round(forces, 2)
     end
-    return percent
+    return forces
 end
 
 local function clearKillInfo()
@@ -570,7 +570,7 @@ local function ShowFrame()
         Addon:RecalcElem()
         Addon:CloseOptions()
 
-        ObjectiveTrackerFrame:Hide()
+        ObjectiveTracker_Collapse()
     end
 end
 
@@ -595,7 +595,7 @@ local function HideTimer()
         Addon.fMain:Hide()
     end
     Addon.keyActive = false
-    ObjectiveTrackerFrame:Show()
+    ObjectiveTracker_Expand()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.fMain:UnregisterEvent("ENCOUNTER_END")
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
@@ -724,8 +724,8 @@ function Addon:Init()
     if IPMTDB == nil then
         IPMTDB = {}
     end
-    if MethodDungeonTools then
-        local MDTversion = GetAddOnMetadata('MethodDungeonTools', 'Version')
+    if MDT then
+        local MDTversion = GetAddOnMetadata('MDT', 'Version')
         if not IPMTOptions.MDTversion or (IPMTOptions.MDTversion ~= MDTversion) then
             IPMTOptions.MDTversion = MDTversion
             IPMTDB = {}
@@ -787,11 +787,6 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
-    hooksecurefunc(ObjectiveTrackerFrame, "Show", function(self)
-        if Addon.keyActive then
-            ObjectiveTrackerFrame:Hide()
-        end
-    end)
 
     DEFAULT_CHAT_FRAME:AddMessage(Addon.localization.STARTINFO)
 end
