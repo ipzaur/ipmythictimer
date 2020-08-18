@@ -590,12 +590,12 @@ local function WipeDungeon()
     wipe(dungeon.players)
 end
 
+
 local function HideTimer()
     if not Addon.fOptions:IsShown() then
         Addon.fMain:Hide()
     end
     Addon.keyActive = false
-    ObjectiveTracker_Expand()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.fMain:UnregisterEvent("ENCOUNTER_END")
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
@@ -771,6 +771,14 @@ local function InsertKeystone()
     end
 end
 
+local OTClicked = false
+local function CheckExpandedOT()
+    local inInstance, instanceType = IsInInstance()
+    local inKey = Addon.keyActive or (inInstance and instanceType == "party")
+    if inKey and not OTClicked then
+        ObjectiveTracker_Collapse()
+    end
+end
 
 function Addon:StartAddon()
     SLASH_IPMTOPTS1 = "/ipmt"
@@ -787,6 +795,13 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
+
+    hooksecurefunc("ObjectiveTracker_Expand", CheckExpandedOT)
+    ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:SetScript("OnClick", function(self)
+        OTClicked = true
+        ObjectiveTracker_MinimizeButton_OnClick()
+        OTClicked = false
+    end)
 
     DEFAULT_CHAT_FRAME:AddMessage(Addon.localization.STARTINFO)
 end
@@ -807,6 +822,7 @@ function Addon:OnEvent(self, event, ...)
         local inInstance, instanceType = IsInInstance()
         if not (inInstance and instanceType == "party") then
             HideTimer()
+            ObjectiveTracker_Expand()
         else
             Addon:UpdateCriteria()
         end
