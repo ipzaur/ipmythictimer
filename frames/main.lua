@@ -10,7 +10,7 @@ Addon.defaultSize = {
 }
 
 -- Main Frame
-Addon.fMain = CreateFrame("Frame", "IPMTMain", UIParent)
+Addon.fMain = CreateFrame("Frame", "IPMTMain", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fMain:SetFrameStrata("MEDIUM")
 Addon.fMain:SetSize(Addon.defaultSize[0], Addon.defaultSize[1])
 Addon.fMain:SetPoint("CENTER", UIParent)
@@ -239,20 +239,6 @@ Addon.frameInfo = {
         },
         hidden = false,
     },
-    corruptions = {
-        size = {
-            [0] = 180,
-            [1] = 40,
-        },
-        position = {
-            x = 0,
-            y = -40,
-            point = 'BOTTOMLEFT',
-            rPoint = 'BOTTOMLEFT',
-        },
-        hidden = false,
-        fontSize = 12,
-    },
     dungeonname = {
         size = {
             [0] = 180,
@@ -277,6 +263,10 @@ Addon.frameInfo = {
     },
 }
 
+if Addon.season.frame then
+    Addon.frameInfo[Addon.season.frameName] = Addon.season.frame
+end
+
 for frame, info in pairs(Addon.frameInfo) do
     local point = info.position.point
     if point == nil then
@@ -287,7 +277,7 @@ for frame, info in pairs(Addon.frameInfo) do
         rPoint = 'TOPLEFT'
     end
 
-    Addon.fMain[frame] = CreateFrame("Frame", nil, Addon.fMain)
+    Addon.fMain[frame] = CreateFrame("Frame", nil, Addon.fMain, BackdropTemplateMixin and "BackdropTemplate")
     Addon.fMain[frame]:SetSize(info.size[0], info.size[1])
     Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, info.position.x, info.position.y)
     Addon.fMain[frame]:SetBackdrop(Addon.backdrop)
@@ -344,15 +334,15 @@ for frame, info in pairs(Addon.frameInfo) do
         end
     end)
     if frame == 'deathTimer' then
-        Addon.fMain[frame].button = CreateFrame("Button", nil, Addon.fMain[frame])
+        Addon.fMain[frame].button = CreateFrame("Button", nil, Addon.fMain[frame], BackdropTemplateMixin and "BackdropTemplate")
         Addon.fMain[frame].button:SetAllPoints(Addon.fMain[frame])
         Addon.fMain[frame].button:SetBackdrop(Addon.backdrop)
         Addon.fMain[frame].button:SetBackdropColor(0,0,0, 0)
         Addon.fMain[frame].button:SetScript("OnClick", function(self)
-            Addon:ToggleDeaths()
+            Addon.deaths:Toggle()
         end)
         Addon.fMain[frame].button:SetScript("OnEnter", function(self, event, ...)
-            Addon:OnDeathTimerEnter(self)
+            Addon.deaths:ShowTooltip(self)
         end)
         Addon.fMain[frame].button:SetScript("OnLeave", function(self, event, ...)
             GameTooltip:Hide()
@@ -382,47 +372,6 @@ for f = 1,4 do
     end)
 end
 
-if Addon.isCorrupted then
-    Addon.fMain.corruption = {}
-    local f = 0
-    for corruptionId, flag in pairs(Addon.isCorrupted) do
-        local left = (affixSize.width + 24) * f
-        Addon.fMain.corruption[corruptionId] = CreateFrame("Frame", nil, Addon.fMain.corruptions)
-        Addon.fMain.corruption[corruptionId]:SetSize(affixSize.width, affixSize.height)
-        Addon.fMain.corruption[corruptionId]:SetPoint("TOPLEFT", Addon.fMain.corruptions, "TOPLEFT", left + 14, -2)
-        Addon.fMain.corruption[corruptionId]:SetScript("OnEnter", function(self, event, ...)
-            Addon:OnCorruptionEnter(self, corruptionId)
-        end)
-        Addon.fMain.corruption[corruptionId]:SetScript("OnLeave", function(self, event, ...)
-            GameTooltip:Hide()
-        end)
-
-        Addon.fMain.corruption[corruptionId].icon = Addon.fMain.corruption[corruptionId]:CreateTexture()
-        Addon.fMain.corruption[corruptionId].icon:SetAllPoints(Addon.fMain.corruption[corruptionId])
-        Addon.fMain.corruption[corruptionId].icon:SetPoint("CENTER", Addon.fMain.corruption[corruptionId], "CENTER", 0, 0)
-        Addon.fMain.corruption[corruptionId].icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\corruptions")
-        local x1 = (Addon.isCorrupted[corruptionId] - 1) * .25
-        local x2 = x1 + .25
-        Addon.fMain.corruption[corruptionId].icon:SetTexCoord(x1, x2, 0, 1)
-        Addon.fMain.corruption[corruptionId].icon:SetVertexColor(1, 1, 1)
-
-
-        Addon.fMain.corruption[corruptionId].text = Addon.fMain.corruption[corruptionId]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-        Addon.fMain.corruption[corruptionId].text:ClearAllPoints()
-        Addon.fMain.corruption[corruptionId].text:SetPoint("CENTER", Addon.fMain.corruption[corruptionId], "CENTER", 0, -affixSize.height)
-        Addon.fMain.corruption[corruptionId].text:SetJustifyH("CENTER")
-        Addon.fMain.corruption[corruptionId].text:SetFont(Addon.FONT_ROBOTO, Addon.frameInfo.corruptions.fontSize)
-        Addon.fMain.corruption[corruptionId].text:SetTextColor(1, 1, 1)
-        Addon.fMain.corruption[corruptionId].text:SetText("1.25%")
-        f = f + 1
-    end
-end
-
-function Addon:SetCorruption(corruptionId, killed)
-    Addon.fMain.corruption[corruptionId]:SetAlpha(1 - 0.75 * killed)
-    if killed == 1 then
-        Addon.fMain.corruption[corruptionId].text:Hide()
-    else
-        Addon.fMain.corruption[corruptionId].text:Show()
-    end
+if Addon.season.RenderMain then
+    Addon.season.RenderMain()
 end

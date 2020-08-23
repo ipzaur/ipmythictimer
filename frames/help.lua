@@ -250,7 +250,7 @@ function Addon:ShowHelp()
             if point == nil then
                 point = 'LEFT'
             end
-            Addon.fHelp[frame] = CreateFrame("Frame", nil, Addon.fMain[frame])
+            Addon.fHelp[frame] = CreateFrame("Frame", nil, Addon.fMain[frame], BackdropTemplateMixin and "BackdropTemplate")
             Addon.fHelp[frame]:ClearAllPoints()
             Addon.fHelp[frame]:SetSize(info.size[0], info.size[1])
             Addon.fHelp[frame]:SetPoint(point, info.position.x, info.position.y)

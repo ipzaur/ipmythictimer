@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "Нажмите для подробной инф
 Addon.localization.DEATHTIME  = "Потеряно времени"
 Addon.localization.DIRECTION  = "Изменение прогресса"
 Addon.localization.DIRECTIONS = {
-    [1] = "по возрастанию (0% -> 100%)",
-    [2] = "по убыванию (100% -> 0%)",
+    [Addon.PROGRESS_DIRECTION_ASC] = "по возрастанию (0% -> 100%)",
+    [Addon.PROGRESS_DIRECTION_DESC] = "по убыванию (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Журнал смертей"
 Addon.localization.DUNGENAME  = "Название подземелья"
@@ -34,8 +34,8 @@ Addon.localization.MELEEATACK = "Ближний бой"
 Addon.localization.OPTIONS    = "Настройки"
 Addon.localization.OPACITY    = "Непрозрачность фона"
 Addon.localization.PROGFORMAT = {
-    [1] = "Проценты (100.00%)",
-    [2] = "Вес мобов (300)",
+    [Addon.PROGRESS_FORMAT_PERCENT] = "Проценты (100.00%)",
+    [Addon.PROGRESS_FORMAT_FORCES]  = "Вес мобов (300)",
 }
 Addon.localization.PROGRESS   = "Формат прогресса"
 Addon.localization.RESTORE    = "Сбросить"

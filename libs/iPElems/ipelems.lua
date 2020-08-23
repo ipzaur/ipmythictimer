@@ -27,7 +27,7 @@ function iPElemsCreateListBox(name, parent, list, callback)
         tileSize = 8,
         edgeSize = 8,
     }
-    local element = CreateFrame("Button", name, parent)
+    local element = CreateFrame("Button", name, parent, BackdropTemplateMixin and "BackdropTemplate")
     element.opened = false
     element.selected = nil
     element.list = nil
@@ -129,7 +129,7 @@ function iPElemsCreateListBox(name, parent, list, callback)
         if element.fItem[num] then
             element.fItem[num]:Show()
         else
-            element.fItem[num] = CreateFrame("Button", nil, element.fItems)
+            element.fItem[num] = CreateFrame("Button", nil, element.fItems, BackdropTemplateMixin and "BackdropTemplate")
             element.fItem[num]:SetSize(100, itemHeight)
             element.fItem[num]:ClearAllPoints()
             element.fItem[num]:SetPoint("TOPLEFT", element.fItems, "TOPLEFT", 0, -1 * (num * itemHeight - itemHeight))
@@ -212,7 +212,7 @@ function iPElemsCreateScrollBox(name, parent, width, height)
         tileSize = 8,
         edgeSize = 8,
     }
-    local element = CreateFrame("ScrollFrame", name, parent, "UIPanelScrollFrameTemplate")
+    local element = CreateFrame("ScrollFrame", name, parent, "UIPanelScrollFrameTemplate, BackdropTemplate")
     element:SetBackdrop(backdrop)
     element:SetBackdropColor(.03,.03,.03, 1)
     element:SetBackdropBorderColor(1,1,1, 1)

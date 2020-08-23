@@ -1,11 +1,16 @@
 local AddonName, Addon = ...
 
-Addon.FONT_ROBOTO_LIGHT = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Light.ttf"
-Addon.FONT_ROBOTO = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Regular.ttf"
+Addon.DECOR_FONT = Addon.FONT_ROBOTO
+Addon.DECOR_FONTSIZE_DELTA = 0
+if GetLocale() == "zhTW" then
+    Addon.DECOR_FONT = "Arial"
+    Addon.DECOR_FONTSIZE_DELTA = -2
+end
 
-local LSM = LibStub("LibSharedMedia-3.0")
-LSM:Register('font', 'Roboto Light', Addon.FONT_ROBOTO_LIGHT, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western)
-LSM:Register('font', 'Roboto', Addon.FONT_ROBOTO, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western)
+function Addon:round(number, decimals)
+    return (("%%.%df"):format(decimals)):format(number)
+end
+
 Addon.backdrop = {
     bgFile   = "Interface\\Buttons\\WHITE8X8",
     edgeFile = nil,
@@ -23,7 +28,7 @@ function Addon:StopDragging(self, button)
     self.isMoving = false
 end
 
-function Addon:PrintObject(data, prefix, toText)
+local function PrintObject(data, prefix, toText)
     local text = ''
     if prefix == nil then
         prefix = ''
@@ -32,7 +37,7 @@ function Addon:PrintObject(data, prefix, toText)
         if value == nil then
             text = text .. prefix .. key .. " = nil\n"
         elseif type(value) == 'table' then
-            text = text .. Addon:PrintObject(value, prefix .. key .. '.', toText) .. "\n"
+            text = text .. PrintObject(value, prefix .. key .. '.', toText) .. "\n"
         elseif type(value) == 'boolean' then
             if value then
                 text = text .. prefix .. key .. " = true\n"
@@ -48,4 +53,20 @@ function Addon:PrintObject(data, prefix, toText)
     else
         print(text)
     end
+end
+
+function Addon:PrintDebug()
+    local text = PrintObject(IPMTDungeon, 'dungeon.', true)
+    text = text .. "\n\n" .. PrintObject(IPMTOptions, 'IPMTOptions.', true)
+    text = text .. "\n\n FRAMES \n\n"
+    for frame, info in pairs(Addon.frameInfo) do
+        if info.text ~= nil then
+            text = text .. frame .. ".text = '" .. Addon.fMain[frame].text:GetText() .. "'\n"
+            local fontName, fontSize = Addon.fMain[frame].text:GetFont()
+            text = text .. frame .. ".font = '" .. fontName .. "'\n"
+            text = text .. frame .. ".size = " .. fontSize .. "\n"
+        end
+    end
+    Addon.fDebug:Show()
+    Addon.fDebug.textarea:SetText(text)
 end

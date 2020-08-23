@@ -5,7 +5,7 @@ local rowWidth = frameWidth - 20
 Addon.deathRowHeight = 24
 
 -- Deaths Frame
-Addon.fDeaths = CreateFrame("Frame", "IPMTDeaths", UIParent)
+Addon.fDeaths = CreateFrame("Frame", "IPMTDeaths", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fDeaths:SetFrameStrata("MEDIUM")
 Addon.fDeaths:SetSize(frameWidth, 400)
 Addon.fDeaths:SetPoint("CENTER", UIParent)
@@ -38,7 +38,7 @@ Addon.fDeaths.caption:SetTextColor(1, 1, 1)
 Addon.fDeaths.caption:SetText(Addon.localization.DTHCAPTION)
 
 -- Deaths table head
-Addon.fDeaths.head = CreateFrame("Frame", nil, Addon.fDeaths)
+Addon.fDeaths.head = CreateFrame("Frame", nil, Addon.fDeaths, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fDeaths.head:SetSize(rowWidth, Addon.deathRowHeight)
 Addon.fDeaths.head:SetPoint("TOP", Addon.fDeaths, "TOP", 0, -40)
 
@@ -96,7 +96,7 @@ Addon.fDeaths.list:SetScript("OnMouseWheel", function(self, delta)
     self:SetVerticalScroll(scrollY)
 end)
 
-Addon.fDeaths.lines = CreateFrame("Frame", nil, Addon.fDeaths.list)
+Addon.fDeaths.lines = CreateFrame("Frame", nil, Addon.fDeaths.list, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fDeaths.lines:SetSize(rowWidth, Addon.deathRowHeight)
 Addon.fDeaths.list:SetScrollChild(Addon.fDeaths.lines)
 
@@ -114,7 +114,7 @@ function Addon:FillDeathRow(num, deathInfo, summary)
     if Addon.fDeaths.line[num] then
         Addon.fDeaths.line[num]:Show()
     else
-        Addon.fDeaths.line[num] = CreateFrame("Frame", nil, Addon.fDeaths.lines)
+        Addon.fDeaths.line[num] = CreateFrame("Frame", nil, Addon.fDeaths.lines, BackdropTemplateMixin and "BackdropTemplate")
         Addon.fDeaths.line[num]:SetSize(rowWidth, Addon.deathRowHeight)
         Addon.fDeaths.line[num]:SetPoint("TOP", Addon.fDeaths.lines, "TOP", 0, -1 * (num * Addon.deathRowHeight - Addon.deathRowHeight))
         if (num % 2 ~= 0) then
@@ -129,7 +129,7 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].name:SetJustifyH("LEFT")
         Addon.fDeaths.line[num].name:SetFont(Addon.DECOR_FONT, 14 + Addon.DECOR_FONTSIZE_DELTA)
 
-        Addon.fDeaths.line[num].spell = CreateFrame("Frame", nil, Addon.fDeaths.line[num])
+        Addon.fDeaths.line[num].spell = CreateFrame("Frame", nil, Addon.fDeaths.line[num], BackdropTemplateMixin and "BackdropTemplate")
         Addon.fDeaths.line[num].spell:SetSize(18, 18)
         Addon.fDeaths.line[num].spell:ClearAllPoints()
         Addon.fDeaths.line[num].spell:SetPoint("LEFT", 168, 0)
