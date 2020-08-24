@@ -7,7 +7,7 @@ if GetLocale() == "zhTW" then
     Addon.DECOR_FONTSIZE_DELTA = -2
 end
 
-function Addon:round(number, decimals)
+function Addon:Round(number, decimals)
     return (("%%.%df"):format(decimals)):format(number)
 end
 
@@ -28,7 +28,7 @@ function Addon:StopDragging(self, button)
     self.isMoving = false
 end
 
-local function PrintObject(data, prefix, toText)
+function Addon:PrintObject(data, prefix, toText)
     local text = ''
     if prefix == nil then
         prefix = ''
@@ -37,7 +37,7 @@ local function PrintObject(data, prefix, toText)
         if value == nil then
             text = text .. prefix .. key .. " = nil\n"
         elseif type(value) == 'table' then
-            text = text .. PrintObject(value, prefix .. key .. '.', toText) .. "\n"
+            text = text .. Addon:PrintObject(value, prefix .. key .. '.', toText) .. "\n"
         elseif type(value) == 'boolean' then
             if value then
                 text = text .. prefix .. key .. " = true\n"
@@ -55,18 +55,3 @@ local function PrintObject(data, prefix, toText)
     end
 end
 
-function Addon:PrintDebug()
-    local text = PrintObject(IPMTDungeon, 'dungeon.', true)
-    text = text .. "\n\n" .. PrintObject(IPMTOptions, 'IPMTOptions.', true)
-    text = text .. "\n\n FRAMES \n\n"
-    for frame, info in pairs(Addon.frameInfo) do
-        if info.text ~= nil then
-            text = text .. frame .. ".text = '" .. Addon.fMain[frame].text:GetText() .. "'\n"
-            local fontName, fontSize = Addon.fMain[frame].text:GetFont()
-            text = text .. frame .. ".font = '" .. fontName .. "'\n"
-            text = text .. frame .. ".size = " .. fontSize .. "\n"
-        end
-    end
-    Addon.fDebug:Show()
-    Addon.fDebug.textarea:SetText(text)
-end

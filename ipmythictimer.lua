@@ -26,6 +26,23 @@ local function OnTooltipSetUnit(tooltip)
     end
 end
 
+local function PrintDebug()
+    local text = Addon:PrintObject(IPMTDungeon, 'dungeon.', true)
+    text = text .. "\n\n" .. Addon:PrintObject(IPMTOptions, 'IPMTOptions.', true)
+    text = text .. "\n\n FRAMES \n\n"
+    for frame, info in pairs(Addon.frameInfo) do
+        if info.text ~= nil then
+            text = text .. frame .. ".text = '" .. Addon.fMain[frame].text:GetText() .. "'\n"
+            local fontName, fontSize = Addon.fMain[frame].text:GetFont()
+            text = text .. frame .. ".font = '" .. fontName .. "'\n"
+            text = text .. frame .. ".size = " .. fontSize .. "\n"
+        end
+    end
+    print('debug')
+    Addon.fDebug:Show()
+    Addon.fDebug.textarea:SetText(text)
+end
+
 function Addon:StartAddon()
     SLASH_IPMTOPTS1 = "/ipmt"
     SLASH_IPMTDEBUG1 = "/ipmt_debug"

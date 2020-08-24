@@ -51,10 +51,10 @@ function Addon:GetForcesFromMDT(npcID, wsave)
                     if IPMTDB[npcID] == nil or type(IPMTDB[npcID]) == 'number' then
                         IPMTDB[npcID] = {}
                     end
-                    if dungeon.isTeeming and npcInfo.teemingCount then
-                        IPMTDB[npcID][dungeon.isTeeming] = npcInfo.teemingCount
+                    if IPMTDungeon.isTeeming and npcInfo.teemingCount then
+                        IPMTDB[npcID][IPMTDungeon.isTeeming] = npcInfo.teemingCount
                     else
-                        IPMTDB[npcID][dungeon.isTeeming] = npcInfo.count
+                        IPMTDB[npcID][IPMTDungeon.isTeeming] = npcInfo.count
                     end
                 end
                 return npcInfo.count

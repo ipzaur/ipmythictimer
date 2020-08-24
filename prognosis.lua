@@ -24,11 +24,11 @@ local function GrabPrognosis()
                         local _, _, _, _, _, npcID, spawnID = strsplit("-", guID)
                         if spawnID ~= nil and npcID ~= nil then
                             local npcUID = spawnID .. "_" .. npcID
-                            if not dungeon.prognosis[npcUID] then
+                            if not IPMTDungeon.prognosis[npcUID] then
                                 npcID = tonumber(npcID)
                                 local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
                                 if forces then
-                                    dungeon.prognosis[npcUID] = forces
+                                    IPMTDungeon.prognosis[npcUID] = forces
                                 end
                             end
                         end
@@ -37,7 +37,7 @@ local function GrabPrognosis()
             end
         end
     else
-        dungeon.prognosis = {}
+        IPMTDungeon.prognosis = {}
     end
 end
 

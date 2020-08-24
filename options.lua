@@ -66,18 +66,19 @@ end
 
 function Addon:SetFont(filepath)
     IPMTOptions.font = filepath
-    for frame, info in pairs(IPMTOptions.frame) do
+    for frameName, defaultInfo in pairs(Addon.frameInfo) do
+        local info = IPMTOptions.frame[frameName]
         if info.fontSize then
-            if frame == Addon.season.frameName then
+            if frameName == Addon.season.frameName then
                 if Addon.season.SetFont then
                     Addon.season:SetFont(IPMTOptions.font, info.fontSize)
                 end
             else
-                Addon.fMain[frame].text:SetFont(IPMTOptions.font, info.fontSize)
-                if frame ~= "dungeonname" then
-                    local width = Addon.fMain[frame].text:GetStringWidth()
-                    local height = Addon.fMain[frame].text:GetStringHeight()
-                    Addon.fMain[frame]:SetSize(width, height)
+                Addon.fMain[frameName].text:SetFont(IPMTOptions.font, info.fontSize)
+                if frameName ~= "dungeonname" then
+                    local width = Addon.fMain[frameName].text:GetStringWidth()
+                    local height = Addon.fMain[frameName].text:GetStringHeight()
+                    Addon.fMain[frameName]:SetSize(width, height)
                 end
             end
         end
@@ -403,7 +404,7 @@ function Addon:ShowOptions()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
     Addon.fOptions.Mapbut:SetChecked(not Addon.DB.global.minimap.hide)
-    if not Addon.keyActive then
+    if not IPMTDungeon.keyActive then
         for frame, info in pairs(Addon.frameInfo) do
             if info.text ~= nil then
                 local content = info.text.content
@@ -435,11 +436,11 @@ function Addon:CloseOptions()
     Addon.fOptions:Hide()
     Addon.fMain:SetMovable(false)
     Addon.fMain:EnableMouse(false)
-    if not Addon.keyActive then
+    if not IPMTDungeon.keyActive then
         Addon.fMain:Hide()
     end
     Addon:ToggleCustomize(false)
-    if IPMTDungeon.deathes and #IPMTDungeon.deathes.list == 0 then
+    if IPMTDungeon.deathes and IPMTDungeon.deathes.list and #IPMTDungeon.deathes.list == 0 then
         Addon.fMain.deathTimer:Hide()
     end
     Addon.fOptions.customize:SetChecked(false)

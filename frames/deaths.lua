@@ -106,7 +106,7 @@ Addon.fDeaths.close:SetPoint("CENTER", Addon.fDeaths, "BOTTOM", 0, 30)
 Addon.fDeaths.close:SetSize(200, 30)
 Addon.fDeaths.close:SetText(Addon.localization.CLOSE)
 Addon.fDeaths.close:SetScript("OnClick", function(self)
-    Addon:ToggleDeaths(false)
+    Addon.deaths:Toggle(false)
 end)
 
 Addon.fDeaths.line = {}

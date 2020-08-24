@@ -9,6 +9,7 @@ function Addon:ResetDungeon()
         level       = 0,
         players     = {},
         prognosis   = {},
+        isTeeming   = false,
         trash       = {
             total   = 0,
             current = 0,
@@ -18,10 +19,11 @@ function Addon:ResetDungeon()
             boss   = false,
             killed = {},
         },
+        deathes     = {},
     }
 end
 
-local function GetEnemyForces(npcID, progressFormat)
+function Addon:GetEnemyForces(npcID, progressFormat)
     local forces = nil
 
     if Addon.season.GetForces then
@@ -41,7 +43,7 @@ local function GetEnemyForces(npcID, progressFormat)
 
     if forces and progressFormat == Addon.PROGRESS_FORMAT_PERCENT then
         forces = 100 / IPMTDungeon.trash.total * forces
-        forces = round(forces, 2)
+        forces = Addon:Round(forces, 2)
     end
     return forces
 end
@@ -87,7 +89,7 @@ function Addon:EnemyDied(npcGUID)
     if IPMTDungeon.prognosis[npcUID] then
         IPMTDungeon.prognosis[npcUID] = nil
     end
-    if GetEnemyForces() == nil then
+    if Addon:GetEnemyForces(npcID) == nil then
         GrabMobInfo(npcID)
     else
         ClearKillInfo()
@@ -109,7 +111,7 @@ function Addon:CombatLogEvent()
             Addon:EnemyDied(destGUID)
         end
         if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and (not UnitIsFeignDeath(destName)) then
-            Addon:PlayerDied(destName)
+            Addon.deaths:Record(destName)
         end
     elseif bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
         if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
@@ -140,7 +142,7 @@ function Addon:UpdateProgress()
     for c = 1, numCriteria do
         local name, _, completed, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(c)
         if isWeightedProgress then
-            if (IPMTDungeon.trash.total == 0) then
+            if IPMTDungeon.trash.total == nil or IPMTDungeon.trash.total == 0 then
                 IPMTDungeon.trash.total = totalQuantity
             end
             local currentTrash = tonumber(strsub(quantityString, 1, -2))
@@ -150,8 +152,7 @@ function Addon:UpdateProgress()
                 GrabMobInfo()
             end
             IPMTDungeon.trash.current = currentTrash
-
-            if IPMTOptions.progress == PROGRESS_FORMAT_PERCENT then
+            if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
                 local progress = IPMTDungeon.trash.current / IPMTDungeon.trash.total * 100
                 progress = math.min(100, progress)
                 if IPMTDungeon.isReaping then
@@ -163,7 +164,7 @@ function Addon:UpdateProgress()
                         Addon.fMain.progress.text:SetTextColor(1,1,1)
                     end
                 end
-                if IPMTOptions.direction == PROGRESS_DIRECTION_DESC then
+                if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_DESC then
                     progress = 100 - progress
                 end
                 Addon.fMain.progress.text:SetFormattedText("%.2f%%", progress)
@@ -254,7 +255,7 @@ local function UpdateTime(block, elapsedTime)
         Addon.fMain.plusTimer:Show()
         r = 1
     end
-    IPMTDungeon.time.current = elapsedTime
+    IPMTDungeon.time = elapsedTime
     Addon.fMain.timer.text:SetTextColor(r, g, b)
     Addon.fMain.plusLevel.text:SetText(plusLevel)
 end
@@ -297,12 +298,14 @@ local function InitBossesInfo()
 end
 
 local function initAffixes()
+    Addon.season.isActive = false
     local level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
     local count = #affixes
     for i,affix in pairs(affixes) do
         local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix)
         local iconNum = count - i + 1
         IPMTDungeon.affixes[i] = {
+            id   = affix,
             name = name,
             text = description,
         }
@@ -322,18 +325,15 @@ local function initAffixes()
 end
 
 local function ShowTimer()
-    local name, _, difficulty, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapId, lfgID = GetInstanceInfo()
-
+    local name, _, difficulty = GetInstanceInfo()
     if difficulty == 8 then
-        Addon:ResetDungeon()
-
         local level = C_ChallengeMode.GetActiveKeystoneInfo()
         IPMTDungeon.level = level
         Addon.fMain.level.text:SetText(IPMTDungeon.level)
 
         InitBossesInfo()
         initAffixes()
-        UpdateDeath()
+        Addon.deaths:Update()
         Addon:UpdateProgress()
         Addon.fMain:Show()
         Addon.fMain.progress.text:SetTextColor(1,1,1)
@@ -365,16 +365,6 @@ local function HideTimer()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.fMain:UnregisterEvent("ENCOUNTER_END")
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
-end
-
-local function UpdateDeath()
-    local deathes, timeLost = C_ChallengeMode.GetDeathCount()
-    if deathes > 0 then
-        Addon.fMain.deathTimer.text:SetText("-" .. SecondsToClock(timeLost) .. " [" .. deathes .. "]")
-        Addon.fMain.deathTimer:Show()
-    else
-        Addon.fMain.deathTimer:Hide()
-    end
 end
 
 local function EncounterEnd(encounterName, success)
@@ -418,7 +408,7 @@ function Addon:OnEvent(self, event, ...)
     if event == "ADDON_LOADED" and arg1 == AddonName then
         Addon:Init()
     elseif event == "CHALLENGE_MODE_DEATH_COUNT_UPDATED" then
-        UpdateDeath()
+        Addon.deaths:Update()
     elseif event == "SCENARIO_CRITERIA_UPDATE" then
         Addon:UpdateProgress()
     elseif event == "CHALLENGE_MODE_RESET" then
@@ -426,9 +416,13 @@ function Addon:OnEvent(self, event, ...)
     elseif event == "CHALLENGE_MODE_COMPLETED" then
         IPMTDungeon.keyActive = false
     elseif event == "PLAYER_ENTERING_WORLD" then
+        if IPMTDungeon == nil then
+            Addon:ResetDungeon()
+        end
         local inInstance, instanceType = IsInInstance()
         if not (inInstance and instanceType == "party") then
             HideTimer()
+            IPMTDungeon.keyActive = false
             ObjectiveTracker_Expand()
         else
             Addon:UpdateProgress()

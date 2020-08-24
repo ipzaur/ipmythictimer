@@ -28,7 +28,7 @@ local corruptedNpc = {
 
 -- Enemy forces for corrupted mobs (season 4)
 -- Grabbed from MDT
-function Addon.season:GetForce(npcID, isTeeming)
+function Addon.season:GetForces(npcID, isTeeming)
     if corruptedNpc[npcID] == nil then
         return nil
     end
@@ -86,7 +86,7 @@ local function SetCorruption(corruptionId, killed)
 end
 
 function Addon.season:ShowTimer()
-    if not IPMTOptions.frame[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and IPMTDungeon.isCorrupted) or (not IPMTDungeon.keyActive and Addon.fOptions:IsShown()) or Addon.isCustomizing ) then
+    if not IPMTOptions.frame[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and Addon.season.isActive) or (not IPMTDungeon.keyActive and Addon.fOptions:IsShown()) or Addon.isCustomizing ) then
 
         if IPMTDungeon.corrupted == nil or not IPMTDungeon.keyActive then
             IPMTDungeon.corrupted = {}
@@ -100,8 +100,8 @@ function Addon.season:ShowTimer()
             if IPMTDungeon.keyActive and Addon.season.isActive then
                 cost = Addon:GetEnemyForces(corruptionId)
                 if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
-                    cost = 100 / dungeon.trash.total * cost
-                    cost = round(cost, 2) .. "%"
+                    cost = 100 / IPMTDungeon.trash.total * cost
+                    cost = Addon:Round(cost, 2) .. "%"
                 end
             else
                 if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then

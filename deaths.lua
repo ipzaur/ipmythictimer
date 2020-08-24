@@ -16,8 +16,11 @@ function Addon.deaths:Toggle(show)
 end
 
 function Addon.deaths:Show()
+    if not IPMTDungeon.deathes or not IPMTDungeon.deathes.list or #IPMTDungeon.deathes.list == 0 then
+        return false
+    end
     local counts = {}
-    for i, death in ipairs(Addon.DB.global.dungeon.deathes.list) do
+    for i, death in ipairs(IPMTDungeon.deathes.list) do
         if counts[death.playerName] then
             counts[death.playerName] = counts[death.playerName] + 1
         else
@@ -25,7 +28,7 @@ function Addon.deaths:Show()
         end
         Addon:FillDeathRow(i, death, counts[death.playerName])
     end
-    local deaths = #Addon.DB.global.dungeon.deathes.list
+    local deaths = #IPMTDungeon.deathes.list
     local rows = #Addon.fDeaths.line
     if deaths < rows then
         for i = deaths+1,rows do
@@ -53,6 +56,12 @@ function Addon.deaths:Record(playerName)
             spellIcon = 130730 -- Melee Attack Icon
         end
     end
+    if IPMTDungeon.deathes == nil then
+        IPMTDungeon.deathes = {}
+    end
+    if IPMTDungeon.deathes.list == nil then
+        IPMTDungeon.deathes.list = {}
+    end
     table.insert(IPMTDungeon.deathes.list, {
         playerName = playerName,
         time       = IPMTDungeon.time,
@@ -67,6 +76,10 @@ function Addon.deaths:Record(playerName)
 end
 
 function Addon.deaths:ShowTooltip(self)
+    if not IPMTDungeon.deathes or not IPMTDungeon.deathes.list or #IPMTDungeon.deathes.list == 0 then
+        return false
+    end
+
     if not Addon.fOptions:IsShown() then
         local deathes, timeLost = C_ChallengeMode.GetDeathCount()
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -107,5 +120,15 @@ function Addon.deaths:ShowTooltip(self)
         GameTooltip:AddLine(Addon.localization.DEATHSHOW)
 
         GameTooltip:Show()
+    end
+end
+
+function Addon.deaths:Update()
+    local deathes, timeLost = C_ChallengeMode.GetDeathCount()
+    if deathes > 0 then
+        Addon.fMain.deathTimer.text:SetText("-" .. SecondsToClock(timeLost) .. " [" .. deathes .. "]")
+        Addon.fMain.deathTimer:Show()
+    else
+        Addon.fMain.deathTimer:Hide()
     end
 end

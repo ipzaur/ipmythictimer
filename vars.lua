@@ -10,8 +10,6 @@ Addon.PROGRESS_DIRECTION_ASC  = 1
 Addon.PROGRESS_DIRECTION_DESC = 2
 
 Addon.season = {
-    number   = 84,
+    number   = 91,
     isActive = false,
 }
-
-IPMTDungeon = {}

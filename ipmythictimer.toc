@@ -19,6 +19,7 @@ Localization\localization_zhcn.lua
 seasons\season82.lua
 seasons\season83.lua
 seasons\season84.lua
+seasons\season91.lua
 
 media.lua
 utility.lua
@@ -27,6 +28,7 @@ libs\iPElems\ipelems.lua
 cooperation\mdt.lua
 cooperation\elvUI.lua
 
+prognosis.lua
 main.lua
 frames\main.lua
 
