@@ -64,3 +64,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "Samh'rek, Beckoner of Chaos (Fear)",
     [161244] = "Blood of the Corruptor (Blob)",
 }
+
+Addon.localization.SEASONOPTS = 'Season options'
+Addon.localization.WAVEALERT  = 'Alert every 20%'

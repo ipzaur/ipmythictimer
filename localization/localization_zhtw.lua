@@ -64,3 +64,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "山姆雷克，混沌召喚者 (恐懼)",
     [161244] = "腐化者之血 (軟泥)",
 }
+
+Addon.localization.SEASONOPTS = 'Season options'
+Addon.localization.WAVEALERT  = 'Alert every 20%'

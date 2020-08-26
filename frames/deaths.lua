@@ -134,9 +134,9 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].spell:ClearAllPoints()
         Addon.fDeaths.line[num].spell:SetPoint("LEFT", 168, 0)
         Addon.fDeaths.line[num].spell:SetScript("OnEnter", function(self, event, ...)
-            if Addon.DB.global.dungeon.deathes.list[num].spell.id ~= nil then
+            if IPMTDungeon.deathes.list[num].spell.id ~= nil then
                 GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                local spellId = Addon.DB.global.dungeon.deathes.list[num].spell.id
+                local spellId = IPMTDungeon.deathes.list[num].spell.id
                 if (spellId == 1) then
                     GameTooltip:SetText(Addon.localization.MELEEATACK, 1, 1, 1)
                 else

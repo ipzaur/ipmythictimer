@@ -26,7 +26,7 @@ end
 function Addon:GetEnemyForces(npcID, progressFormat)
     local forces = nil
 
-    if Addon.season.GetForces then
+    if Addon.season.isActive and Addon.season.GetForces then
         forces = Addon.season:GetForces(npcID, IPMTDungeon.isTeeming)
     end
     if forces == nil then
@@ -95,8 +95,8 @@ function Addon:EnemyDied(npcGUID)
         ClearKillInfo()
     end
 
-    if Addon.season.EnemyDied then
-        Addon.season.EnemyDied(npcID)
+    if Addon.season.isActive and Addon.season.EnemyDied then
+        Addon.season:EnemyDied(npcID)
     end
 end
 
@@ -152,25 +152,19 @@ function Addon:UpdateProgress()
                 GrabMobInfo()
             end
             IPMTDungeon.trash.current = currentTrash
+            if Addon.season.isActive and Addon.season.Progress then
+                Addon.season:Progress(IPMTDungeon.trash.current)
+            end
             if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
                 local progress = IPMTDungeon.trash.current / IPMTDungeon.trash.total * 100
                 progress = math.min(100, progress)
-                if IPMTDungeon.isReaping then
-                    if (progress % 20 > 18) then
-                        Addon.fMain.progress.text:SetTextColor(1,0,0)
-                    elseif (progress % 20 > 15) then
-                        Addon.fMain.progress.text:SetTextColor(1,1,0)
-                    else
-                        Addon.fMain.progress.text:SetTextColor(1,1,1)
-                    end
-                end
                 if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_DESC then
                     progress = 100 - progress
                 end
                 Addon.fMain.progress.text:SetFormattedText("%.2f%%", progress)
             else
                 local progress = math.min(IPMTDungeon.trash.current, IPMTDungeon.trash.total)
-                if IPMTOptions.direction == 1 then
+                if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_ASC then
                     Addon.fMain.progress.text:SetText(progress .. "/" .. IPMTDungeon.trash.total)
                 else
                     Addon.fMain.progress.text:SetText(IPMTDungeon.trash.total - progress)

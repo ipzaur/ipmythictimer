@@ -53,8 +53,8 @@ function Addon:ShowPrognosis()
 
     if prognosis > 0 then
         local progress = IPMTDungeon.trash.current + prognosis
-        if Addon.season.Prognosis then
-            Addon.season.Prognosis(progress)
+        if Addon.season.isActive and Addon.season.Prognosis then
+            Addon.season:Prognosis(progress)
         end
         if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
             progress = progress / IPMTDungeon.trash.total * 100

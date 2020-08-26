@@ -64,3 +64,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "Сам'рек Призыватель Хаоса (Фиряющий)",
     [161244] = "Кровь Заразителя (Капля)",
 }
+
+Addon.localization.SEASONOPTS = 'Настройки для сезона'
+Addon.localization.WAVEALERT  = 'Оповещать перед 20%'

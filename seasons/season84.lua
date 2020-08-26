@@ -26,6 +26,15 @@ local corruptedNpc = {
     [161244] = 2, -- Blood of the Corruptor (Blob)
 }
 
+local function SetCorruption(corruptionId, killed)
+    Addon.fMain.corruption[corruptionId]:SetAlpha(1 - 0.75 * killed)
+    if killed == 1 then
+        Addon.fMain.corruption[corruptionId].text:Hide()
+    else
+        Addon.fMain.corruption[corruptionId].text:Show()
+    end
+end
+
 -- Enemy forces for corrupted mobs (season 4)
 -- Grabbed from MDT
 function Addon.season:GetForces(npcID, isTeeming)
@@ -76,15 +85,6 @@ function Addon.season:BossWipe()
     end
 end
 
-local function SetCorruption(corruptionId, killed)
-    Addon.fMain.corruption[corruptionId]:SetAlpha(1 - 0.75 * killed)
-    if killed == 1 then
-        Addon.fMain.corruption[corruptionId].text:Hide()
-    else
-        Addon.fMain.corruption[corruptionId].text:Show()
-    end
-end
-
 function Addon.season:ShowTimer()
     if not IPMTOptions.frame[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and Addon.season.isActive) or (not IPMTDungeon.keyActive and Addon.fOptions:IsShown()) or Addon.isCustomizing ) then
 
@@ -99,10 +99,6 @@ function Addon.season:ShowTimer()
             local cost = ""
             if IPMTDungeon.keyActive and Addon.season.isActive then
                 cost = Addon:GetEnemyForces(corruptionId)
-                if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
-                    cost = 100 / IPMTDungeon.trash.total * cost
-                    cost = Addon:Round(cost, 2) .. "%"
-                end
             else
                 if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
                     cost = "1.25%"
@@ -118,7 +114,6 @@ function Addon.season:ShowTimer()
         Addon.fMain[Addon.season.frameName]:Hide()
     end
 end
-
 
 local function OnCorruptionEnter(self, corruptionId)
     GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")

@@ -24,3 +24,14 @@ function Addon.season:Prognosis(forces)
         Addon.fMain.prognosis.text:SetTextColor(1,1,1)
     end
 end
+
+function Addon.season:Progress(forces)
+    local percent = IPMTDungeon.trash.current / IPMTDungeon.trash.total * 100
+    if (percent % 20 > 18) then
+        Addon.fMain.progress.text:SetTextColor(1,0,0)
+    elseif (percent % 20 > 15) then
+        Addon.fMain.progress.text:SetTextColor(1,1,0)
+    else
+        Addon.fMain.progress.text:SetTextColor(1,1,1)
+    end
+end

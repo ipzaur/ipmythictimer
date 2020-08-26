@@ -288,3 +288,20 @@ Addon.panel.fShowOptions:SetScript("OnClick", function(self)
     Addon:OpenSettingsFromPanel()
 end)
 InterfaceOptions_AddCategory(Addon.panel)
+
+if Addon.season.options and Addon.season.options.Render then
+    local top = (-400)
+    Addon.fOptions.season = {}
+    -- Options caption
+    Addon.fOptions.season.caption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    Addon.fOptions.season.caption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, top)
+    Addon.fOptions.season.caption:SetJustifyH("CENTER")
+    Addon.fOptions.season.caption:SetSize(200, 20)
+    Addon.fOptions.season.caption:SetFont(Addon.DECOR_FONT, 17)
+    Addon.fOptions.season.caption:SetTextColor(1, 1, 1)
+    Addon.fOptions.season.caption:SetText(Addon.localization.SEASONOPTS)
+
+    local addHeight = Addon.season.options:Render(top - 30)
+    local height = Addon.fOptions:GetHeight()
+    Addon.fOptions:SetHeight(height + addHeight)
+end

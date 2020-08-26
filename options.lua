@@ -209,7 +209,7 @@ function Addon:LoadOptions()
         end
     end
     if Addon.season.LoadOptions then
-        Addon.season.LoadOptions()
+        Addon.season:LoadOptions()
     end
 
     if IPMTOptions.font == nil then
@@ -430,6 +430,10 @@ function Addon:ShowOptions()
     Addon:SelectFont(IPMTOptions.font)
     Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
     Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
+
+    if Addon.season.options.ShowOptions then
+        Addon.season.options:ShowOptions()
+    end
 end
 
 function Addon:CloseOptions()
