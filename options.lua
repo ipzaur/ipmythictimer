@@ -404,7 +404,7 @@ function Addon:ShowOptions()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
     Addon.fOptions.Mapbut:SetChecked(not Addon.DB.global.minimap.hide)
-    if not IPMTDungeon.keyActive then
+    if IPMTDungeon and not IPMTDungeon.keyActive then
         for frame, info in pairs(Addon.frameInfo) do
             if info.text ~= nil then
                 local content = info.text.content
