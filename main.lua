@@ -186,18 +186,23 @@ function Addon:OnTimerEnter(self)
         GameTooltip:AddLine(" ")
         for level = 2,0,-1 do
             local r, g, b = 0, 0, 0
-            local keyText = level
+            local keyText = '+' .. level + 1
             if level > 0 then
-                keyText = '+' .. keyText
                 g = 1
                 if level < 2 then
                     r = 1
                 end
             else
-                keyText = ' '
                 r, g, b = 1, 1, 1
             end
-            local timeText = SecondsToClock(IPMTDungeon.timeLimit[level])
+            local timeText
+            if level == 2 then
+                timeText = SecondsToClock(IPMTDungeon.timeLimit[0]) .. ' - ' .. SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[2])
+            elseif level == 1 then
+                timeText = SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[2]) .. ' - ' .. SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[1])
+            else
+                timeText = SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[1]) .. ' - 0:00'
+            end
             GameTooltip:AddDoubleLine(keyText, timeText, r, g, b, r, g, b)
         end
         GameTooltip:Show()
@@ -250,14 +255,16 @@ local function UpdateTime(block, elapsedTime)
     local plusTimer = 0
     local r, g, b = 0, 0, 0
 
-    if not IPMTDungeon.timeLimit[0] then
-        IPMTDungeon.timeLimit[0] = block.timeLimit
+    if IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[0] == nil then
+        IPMTDungeon.timeLimit = {
+            [0] = block.timeLimit,
+        }
+        for level = 2,1,-1 do
+            IPMTDungeon.timeLimit[level] = timeCoef[level] * block.timeLimit
+        end
     end
     if elapsedTime < block.timeLimit then
         for level = 2,1,-1 do
-            if not IPMTDungeon.timeLimit[level] then
-                IPMTDungeon.timeLimit[level] = timeCoef[level] * block.timeLimit
-            end
             if elapsedTime < IPMTDungeon.timeLimit[level] then
                 plusLevel = level
                 plusTimer = IPMTDungeon.timeLimit[level] - elapsedTime
