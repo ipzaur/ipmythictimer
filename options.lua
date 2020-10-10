@@ -336,7 +336,7 @@ function Addon:ToggleCustomize(enable)
             end
             Addon.fMain[frame]:EnableMouse(true)
             Addon.fMain[frame]:SetMovable(true)
-            if (frame == "deathTimer") then
+            if frame == "deathTimer" then
                 Addon.fMain[frame].button:EnableMouse(false)
             elseif frame == "affixes" then
                 for f = 1,4 do
@@ -369,7 +369,7 @@ function Addon:ToggleCustomize(enable)
                     Addon.season:ToggleCustomize(Addon.isCustomizing)
                 end
             end
-            if frame ~= "bosses" then
+            if frame ~= "bosses" and frame ~= "timer" then
                 Addon.fMain[frame]:EnableMouse(false)
             end
             Addon.fMain[frame]:SetMovable(false)
@@ -431,7 +431,7 @@ function Addon:ShowOptions()
     Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
     Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
 
-    if Addon.season.options.ShowOptions then
+    if Addon.season.options and Addon.season.options.ShowOptions then
         Addon.season.options:ShowOptions()
     end
 end

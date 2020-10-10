@@ -354,6 +354,13 @@ for frame, info in pairs(Addon.frameInfo) do
         Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
             GameTooltip:Hide()
         end)
+    elseif frame == 'timer' then
+        Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
+            Addon:OnTimerEnter(self)
+        end)
+        Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
+            GameTooltip:Hide()
+        end)
     end
 end
 

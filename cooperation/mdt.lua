@@ -3,7 +3,10 @@ local AddonName, Addon = ...
 Addon.MDTdungeon = {
     [934]  = 15, -- Atal Dazar
     [936]  = 16, -- Freehold
+
     [942]  = 18, -- Shrine of the Storm
+    [1039] = 18, -- Shrine of the Storm
+
     [1004] = 17, -- Kings Rest
     [1010] = 21, -- The Motherlode
 

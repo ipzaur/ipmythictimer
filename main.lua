@@ -10,6 +10,11 @@ function Addon:ResetDungeon()
         players     = {},
         prognosis   = {},
         isTeeming   = false,
+        timeLimit   = {
+            [2] = nil,
+            [1] = nil,
+            [0] = nil,
+        },
         trash       = {
             total   = 0,
             current = 0,
@@ -174,6 +179,31 @@ function Addon:UpdateProgress()
     end
 end
 
+function Addon:OnTimerEnter(self)
+    if not Addon.fOptions:IsShown() then
+        GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+        GameTooltip:SetText(Addon.localization.TIMERCHCKP, 1, 1, 1)
+        GameTooltip:AddLine(" ")
+        for level = 2,0,-1 do
+            local r, g, b = 0, 0, 0
+            local keyText = level
+            if level > 0 then
+                keyText = '+' .. keyText
+                g = 1
+                if level < 2 then
+                    r = 1
+                end
+            else
+                keyText = ' '
+                r, g, b = 1, 1, 1
+            end
+            local timeText = SecondsToClock(IPMTDungeon.timeLimit[level])
+            GameTooltip:AddDoubleLine(keyText, timeText, r, g, b, r, g, b)
+        end
+        GameTooltip:Show()
+    end
+end
+
 function Addon:OnBossesEnter(self)
     if not Addon.fOptions:IsShown() then
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
@@ -219,12 +249,18 @@ local function UpdateTime(block, elapsedTime)
     local plusLevel = 0
     local plusTimer = 0
     local r, g, b = 0, 0, 0
+
+    if not IPMTDungeon.timeLimit[0] then
+        IPMTDungeon.timeLimit[0] = block.timeLimit
+    end
     if elapsedTime < block.timeLimit then
         for level = 2,1,-1 do
-            local timeLimit = timeCoef[level]*block.timeLimit
-            if elapsedTime < timeLimit then
+            if not IPMTDungeon.timeLimit[level] then
+                IPMTDungeon.timeLimit[level] = timeCoef[level] * block.timeLimit
+            end
+            if elapsedTime < IPMTDungeon.timeLimit[level] then
                 plusLevel = level
-                plusTimer = timeLimit - elapsedTime
+                plusTimer = IPMTDungeon.timeLimit[level] - elapsedTime
                 break
             end
         end
@@ -234,7 +270,7 @@ local function UpdateTime(block, elapsedTime)
             Addon.fMain.plusTimer.text:SetText(SecondsToClock(plusTimer))
             Addon.fMain.plusTimer:Show()
             g = 1
-            if (plusLevel < 2) then
+            if plusLevel < 2 then
                 r = 1
             end
         else

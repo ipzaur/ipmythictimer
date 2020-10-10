@@ -43,6 +43,7 @@ Addon.localization.SCALE      = "比例"
 Addon.localization.SOURCE     = "资源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已载入。键入 /ipmt 开启选项。"
 Addon.localization.TIME       = "时间"
+Addon.localization.TIMERCHCKP = "Timer checkpoints"
 Addon.localization.UNKNOWN    = "未知"
 Addon.localization.WHODIED    = "谁死了"
 

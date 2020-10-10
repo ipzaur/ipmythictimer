@@ -43,6 +43,7 @@ Addon.localization.SCALE      = "Масштаб"
 Addon.localization.SOURCE     = "Источник"
 Addon.localization.STARTINFO  = "iP Mythic Timer загружен. Для вызова настроек наберите /ipmt."
 Addon.localization.TIME       = "Время"
+Addon.localization.TIMERCHCKP = "Контрольные точки"
 Addon.localization.UNKNOWN    = "Неизвестно"
 Addon.localization.WHODIED    = "Кто умер"
 
