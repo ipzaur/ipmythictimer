@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-Addon.version = 1128
+Addon.version = 1200
 
 Addon.AFFIX_TEEMING = 5
 

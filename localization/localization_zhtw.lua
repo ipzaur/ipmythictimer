@@ -43,7 +43,7 @@ Addon.localization.SCALE      = "縮放"
 Addon.localization.SOURCE     = "資源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已載入。輸入 /ipmt 開啟選項。"
 Addon.localization.TIME       = "時間"
-Addon.localization.TIMERCHCKP = "Timer checkpoints"
+Addon.localization.TIMERCHCKP = "計時器檢查點"
 Addon.localization.UNKNOWN    = "未知"
 Addon.localization.WHODIED    = "誰死了"
 
@@ -66,5 +66,5 @@ Addon.localization.CORRUPTED = {
     [161244] = "腐化者之血 (軟泥)",
 }
 
-Addon.localization.SEASONOPTS = 'Season options'
-Addon.localization.WAVEALERT  = 'Alert every 20%'
+Addon.localization.SEASONOPTS = '賽季選項'
+Addon.localization.WAVEALERT  = '每過20%警告'
