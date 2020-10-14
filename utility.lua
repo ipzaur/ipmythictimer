@@ -1,11 +1,16 @@
 local AddonName, Addon = ...
 
-Addon.FONT_ROBOTO_LIGHT = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Light.ttf"
-Addon.FONT_ROBOTO = "Interface\\AddOns\\" .. AddonName .. "\\RobotoCondensed-Regular.ttf"
+Addon.DECOR_FONT = Addon.FONT_ROBOTO
+Addon.DECOR_FONTSIZE_DELTA = 0
+if GetLocale() == "zhTW" then
+    Addon.DECOR_FONT = "Arial"
+    Addon.DECOR_FONTSIZE_DELTA = -2
+end
 
-local LSM = LibStub("LibSharedMedia-3.0")
-LSM:Register('font', 'Roboto Light', Addon.FONT_ROBOTO_LIGHT, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western)
-LSM:Register('font', 'Roboto', Addon.FONT_ROBOTO, LSM.LOCALE_BIT_ruRU + LSM.LOCALE_BIT_western)
+function Addon:Round(number, decimals)
+    return (("%%.%df"):format(decimals)):format(number)
+end
+
 Addon.backdrop = {
     bgFile   = "Interface\\Buttons\\WHITE8X8",
     edgeFile = nil,
@@ -49,3 +54,4 @@ function Addon:PrintObject(data, prefix, toText)
         print(text)
     end
 end
+

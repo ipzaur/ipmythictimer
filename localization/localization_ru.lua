@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "Нажмите для подробной инф
 Addon.localization.DEATHTIME  = "Потеряно времени"
 Addon.localization.DIRECTION  = "Изменение прогресса"
 Addon.localization.DIRECTIONS = {
-    [1] = "по возрастанию (0% -> 100%)",
-    [2] = "по убыванию (100% -> 0%)",
+    [Addon.PROGRESS_DIRECTION_ASC] = "по возрастанию (0% -> 100%)",
+    [Addon.PROGRESS_DIRECTION_DESC] = "по убыванию (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Журнал смертей"
 Addon.localization.DUNGENAME  = "Название подземелья"
@@ -34,8 +34,8 @@ Addon.localization.MELEEATACK = "Ближний бой"
 Addon.localization.OPTIONS    = "Настройки"
 Addon.localization.OPACITY    = "Непрозрачность фона"
 Addon.localization.PROGFORMAT = {
-    [1] = "Проценты (100.00%)",
-    [2] = "Вес мобов (300)",
+    [Addon.PROGRESS_FORMAT_PERCENT] = "Проценты (100.00%)",
+    [Addon.PROGRESS_FORMAT_FORCES]  = "Вес мобов (300)",
 }
 Addon.localization.PROGRESS   = "Формат прогресса"
 Addon.localization.RESTORE    = "Сбросить"
@@ -43,6 +43,7 @@ Addon.localization.SCALE      = "Масштаб"
 Addon.localization.SOURCE     = "Источник"
 Addon.localization.STARTINFO  = "iP Mythic Timer загружен. Для вызова настроек наберите /ipmt."
 Addon.localization.TIME       = "Время"
+Addon.localization.TIMERCHCKP = "Контрольные точки"
 Addon.localization.UNKNOWN    = "Неизвестно"
 Addon.localization.WHODIED    = "Кто умер"
 
@@ -64,3 +65,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "Сам'рек Призыватель Хаоса (Фиряющий)",
     [161244] = "Кровь Заразителя (Капля)",
 }
+
+Addon.localization.SEASONOPTS = 'Настройки для сезона'
+Addon.localization.WAVEALERT  = 'Оповещать перед 20%'

@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "Click for detail information"
 Addon.localization.DEATHTIME  = "Time lost"
 Addon.localization.DIRECTION  = "Progress changing"
 Addon.localization.DIRECTIONS = {
-    [1] = "ascending (0% -> 100%)",
-    [2] = "descending (100% -> 0%)",
+    [Addon.PROGRESS_DIRECTION_ASC] = "ascending (0% -> 100%)",
+    [Addon.PROGRESS_DIRECTION_DESC] = "descending (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Deaths history"
 Addon.localization.DUNGENAME  = "Dungeon name"
@@ -34,8 +34,8 @@ Addon.localization.MELEEATACK = "Melee attack"
 Addon.localization.OPTIONS    = "Options"
 Addon.localization.OPACITY    = "Background opacity"
 Addon.localization.PROGFORMAT = {
-    [1] = "Percent (100.00%)",
-    [2] = "Forces (300)",
+    [Addon.PROGRESS_FORMAT_PERCENT] = "Percent (100.00%)",
+    [Addon.PROGRESS_FORMAT_FORCES]  = "Forces (300)",
 }
 Addon.localization.PROGRESS   = "Progress format"
 Addon.localization.RESTORE    = "Restore"
@@ -43,6 +43,7 @@ Addon.localization.SCALE      = "Scale"
 Addon.localization.SOURCE     = "Source"
 Addon.localization.STARTINFO  = "iP Mythic Timer loaded. Type /ipmt for options."
 Addon.localization.TIME       = "Time"
+Addon.localization.TIMERCHCKP = "Timer checkpoints"
 Addon.localization.UNKNOWN    = "Unknown"
 Addon.localization.WHODIED    = "Who died"
 
@@ -64,3 +65,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "Samh'rek, Beckoner of Chaos (Fear)",
     [161244] = "Blood of the Corruptor (Blob)",
 }
+
+Addon.localization.SEASONOPTS = 'Season options'
+Addon.localization.WAVEALERT  = 'Alert every 20%'

@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "點擊查看詳細訊息"
 Addon.localization.DEATHTIME  = "損失時間"
 Addon.localization.DIRECTION  = "進度變化"
 Addon.localization.DIRECTIONS = {
-    [1] = "升序 (0% -> 100%)",
-    [2] = "降序 (100% -> 0%)",
+    [Addon.PROGRESS_DIRECTION_ASC] = "升序 (0% -> 100%)",
+    [Addon.PROGRESS_DIRECTION_DESC] = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡紀錄"
 Addon.localization.DUNGENAME  = "地城名稱"
@@ -34,8 +34,8 @@ Addon.localization.MELEEATACK = "近戰攻擊"
 Addon.localization.OPTIONS    = "選項"
 Addon.localization.OPACITY    = "背景透明度"
 Addon.localization.PROGFORMAT = {
-    [1] = "百分 (100.00%)",
-    [2] = "強制 (300)",
+    [Addon.PROGRESS_FORMAT_PERCENT] = "百分 (100.00%)",
+    [Addon.PROGRESS_FORMAT_FORCES]  = "強制 (300)",
 }
 Addon.localization.PROGRESS   = "進度格式"
 Addon.localization.RESTORE    = "恢復"
@@ -43,6 +43,7 @@ Addon.localization.SCALE      = "縮放"
 Addon.localization.SOURCE     = "資源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已載入。輸入 /ipmt 開啟選項。"
 Addon.localization.TIME       = "時間"
+Addon.localization.TIMERCHCKP = "計時器檢查點"
 Addon.localization.UNKNOWN    = "未知"
 Addon.localization.WHODIED    = "誰死了"
 
@@ -64,3 +65,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "山姆雷克，混沌召喚者 (恐懼)",
     [161244] = "腐化者之血 (軟泥)",
 }
+
+Addon.localization.SEASONOPTS = '賽季選項'
+Addon.localization.WAVEALERT  = '每過20%警告'

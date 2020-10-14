@@ -66,18 +66,19 @@ end
 
 function Addon:SetFont(filepath)
     IPMTOptions.font = filepath
-    for frame, info in pairs(IPMTOptions.frame) do
+    for frameName, defaultInfo in pairs(Addon.frameInfo) do
+        local info = IPMTOptions.frame[frameName]
         if info.fontSize then
-            if frame == "corruptions" then
-                for corruptionId, flag in pairs(Addon.isCorrupted) do
-                    Addon.fMain.corruption[corruptionId].text:SetFont(IPMTOptions.font, info.fontSize)
+            if frameName == Addon.season.frameName then
+                if Addon.season.SetFont then
+                    Addon.season:SetFont(IPMTOptions.font, info.fontSize)
                 end
             else
-                Addon.fMain[frame].text:SetFont(IPMTOptions.font, info.fontSize)
-                if frame ~= "dungeonname" then
-                    local width = Addon.fMain[frame].text:GetStringWidth()
-                    local height = Addon.fMain[frame].text:GetStringHeight()
-                    Addon.fMain[frame]:SetSize(width, height)
+                Addon.fMain[frameName].text:SetFont(IPMTOptions.font, info.fontSize)
+                if frameName ~= "dungeonname" then
+                    local width = Addon.fMain[frameName].text:GetStringWidth()
+                    local height = Addon.fMain[frameName].text:GetStringHeight()
+                    Addon.fMain[frameName]:SetSize(width, height)
                 end
             end
         end
@@ -87,22 +88,24 @@ end
 function Addon:SetProgressFormat(value)
     if IPMTOptions.progress ~= value then
         IPMTOptions.progress = value
-        if not Addon.keyActive then
+        if not IPMTDungeon.keyActive then
             Addon.fMain.progress.text:SetText(Addon.frameInfo.progress.text.content[IPMTOptions.progress])
             Addon.fMain.prognosis.text:SetText(Addon.frameInfo.prognosis.text.content[IPMTOptions.progress])
         else
-            Addon:UpdateCriteria()
+            Addon:UpdateProgress()
         end
         Addon:RecalcElem()
-        Addon:TryToShowCorruptions()
+        if Addon.season.ShowTimer then
+            Addon.season:ShowTimer()
+        end
     end
 end
 
 function Addon:SetProgressDirection(value)
     if IPMTOptions.direction ~= value then
         IPMTOptions.direction = value
-        if Addon.keyActive then
-            Addon:UpdateCriteria()
+        if IPMTDungeon.keyActive then
+            Addon:UpdateProgress()
         end
         Addon:RecalcElem()
     end
@@ -180,11 +183,7 @@ function Addon:LoadOptions()
         IPMTOptions.frame = {}
     end
     for frame, info in pairs(Addon.frameInfo) do
-        local reset = false
-        if IPMTOptions.version and IPMTOptions.version < 1121 and frame == "corruptions" then
-            reset = true
-        end
-        if IPMTOptions.frame[frame] == nil or reset then
+        if IPMTOptions.frame[frame] == nil then
             IPMTOptions.frame[frame] = {
                 x      = info.position.x,
                 y      = info.position.y,
@@ -209,8 +208,8 @@ function Addon:LoadOptions()
             end
         end
     end
-    if IPMTOptions.frame.corruptions.fontSize == nil then
-        IPMTOptions.frame.corruptions.fontSize = Addon.frameInfo.corruptions.fontSize
+    if Addon.season.LoadOptions then
+        Addon.season:LoadOptions()
     end
 
     if IPMTOptions.font == nil then
@@ -257,7 +256,11 @@ end
 
 function Addon:RecalcElem(frame)
     if frame ~= nil then
-        if frame ~= "dungeonname" and frame ~= "corruptions" then
+        if frame == Addon.season.frameName then
+            if Addon.season.recalcElem then
+                Addon.season.recalcElem(frame)
+            end
+        elseif frame ~= "dungeonname" then
             local width = Addon.fMain[frame].text:GetStringWidth()
             local height = Addon.fMain[frame].text:GetStringHeight()
             Addon.fMain[frame]:SetSize(width, height)
@@ -277,9 +280,9 @@ Addon.fontSizeFrame = nil
 function Addon:SetFontSize(value, frameRecalc)
     if Addon.fontSizeFrame ~= nil then
         IPMTOptions.frame[Addon.fontSizeFrame].fontSize = value
-        if Addon.fontSizeFrame == "corruptions" then
-            for corruptionId, flag in pairs(Addon.isCorrupted) do
-                Addon.fMain.corruption[corruptionId].text:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
+        if Addon.fontSizeFrame == Addon.season.frameName then
+            if Addon.season.SetFont then
+                Addon.season:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
             end
         else
             Addon.fMain[Addon.fontSizeFrame].text:SetFont(IPMTOptions.font, IPMTOptions.frame[Addon.fontSizeFrame].fontSize)
@@ -290,7 +293,7 @@ function Addon:SetFontSize(value, frameRecalc)
 end
 
 function Addon:StartFontSize(frame)
-    if Addon.fMain[frame].text ~= nil or frame == "corruptions" then
+    if Addon.fMain[frame].text ~= nil or (frame == Addon.season.frameName and Addon.frameInfo[Addon.season.frameName].fontSize) then
         if Addon.fontSizeFrame ~= frame and Addon.isCustomizing then
             Addon.fontSizeFrame = frame
             Addon.fOptions.FS:ClearAllPoints()
@@ -333,15 +336,15 @@ function Addon:ToggleCustomize(enable)
             end
             Addon.fMain[frame]:EnableMouse(true)
             Addon.fMain[frame]:SetMovable(true)
-            if (frame == "deathTimer") then
+            if frame == "deathTimer" then
                 Addon.fMain[frame].button:EnableMouse(false)
             elseif frame == "affixes" then
                 for f = 1,4 do
                     Addon.fMain.affix[f]:EnableMouse(false)
                 end
-            elseif frame == "corruptions" then
-                for corruptionId, corruptionFrame in pairs(Addon.fMain.corruption) do
-                    corruptionFrame:EnableMouse(false)
+            elseif frame == Addon.season.frameName then
+                if Addon.season.ToggleCustomize then
+                    Addon.season:ToggleCustomize(Addon.isCustomizing)
                 end
             end
         end
@@ -361,13 +364,12 @@ function Addon:ToggleCustomize(enable)
                 for f = 1,4 do
                     Addon.fMain.affix[f]:EnableMouse(true)
                 end
-            elseif frame == "corruptions" then 
-                for corruptionId, corruptionFrame in pairs(Addon.fMain.corruption) do
-                    corruptionFrame:EnableMouse(true)
+            elseif frame == Addon.season.frameName then
+                if Addon.season.ToggleCustomize then
+                    Addon.season:ToggleCustomize(Addon.isCustomizing)
                 end
-                Addon:TryToShowCorruptions()
             end
-            if frame ~= "bosses" then
+            if frame ~= "bosses" and frame ~= "timer" then
                 Addon.fMain[frame]:EnableMouse(false)
             end
             Addon.fMain[frame]:SetMovable(false)
@@ -402,7 +404,7 @@ function Addon:ShowOptions()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
     Addon.fOptions.Mapbut:SetChecked(not Addon.DB.global.minimap.hide)
-    if not Addon.keyActive then
+    if IPMTDungeon and not IPMTDungeon.keyActive then
         for frame, info in pairs(Addon.frameInfo) do
             if info.text ~= nil then
                 local content = info.text.content
@@ -422,21 +424,27 @@ function Addon:ShowOptions()
             Addon.fMain.affix[i]:Show()
         end
     end
-    Addon:TryToShowCorruptions()
+    if Addon.season.ShowTimer then
+        Addon.season:ShowTimer()
+    end
     Addon:SelectFont(IPMTOptions.font)
     Addon.fOptions.fProgress:SelectItem(IPMTOptions.progress)
     Addon.fOptions.fProgressDirection:SelectItem(IPMTOptions.direction)
+
+    if Addon.season.options and Addon.season.options.ShowOptions then
+        Addon.season.options:ShowOptions()
+    end
 end
 
 function Addon:CloseOptions()
     Addon.fOptions:Hide()
     Addon.fMain:SetMovable(false)
     Addon.fMain:EnableMouse(false)
-    if not Addon.keyActive then
+    if not IPMTDungeon.keyActive then
         Addon.fMain:Hide()
     end
     Addon:ToggleCustomize(false)
-    if #Addon.DB.global.dungeon.deathes.list == 0 then
+    if IPMTDungeon.deathes and IPMTDungeon.deathes.list and #IPMTDungeon.deathes.list == 0 then
         Addon.fMain.deathTimer:Hide()
     end
     Addon.fOptions.customize:SetChecked(false)

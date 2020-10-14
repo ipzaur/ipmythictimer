@@ -3,7 +3,7 @@ local AddonName, Addon = ...
 local width = 500
 local heigth = 600
 -- Debug Frame
-Addon.fDebug = CreateFrame("Frame", "IPMTDebug", UIParent)
+Addon.fDebug = CreateFrame("Frame", "IPMTDebug", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fDebug:SetFrameStrata("HIGH")
 Addon.fDebug:SetSize(width, heigth)
 Addon.fDebug:SetPoint("CENTER", UIParent)
@@ -39,7 +39,7 @@ end)
 Addon.fDebug.content:SetScrollChild(Addon.fDebug.textarea)
 
 -- X-Close button
-Addon.fDebug.closeX = CreateFrame("Button", nil, Addon.fDebug)
+Addon.fDebug.closeX = CreateFrame("Button", nil, Addon.fDebug, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fDebug.closeX:SetPoint("TOP", Addon.fDebug, "TOPRIGHT", -20, -5)
 Addon.fDebug.closeX:SetSize(26, 26)
 Addon.fDebug.closeX:SetBackdrop(Addon.backdrop)
@@ -57,4 +57,4 @@ Addon.fDebug.closeX.icon = Addon.fDebug.closeX:CreateTexture()
 Addon.fDebug.closeX.icon:SetSize(16, 16)
 Addon.fDebug.closeX.icon:ClearAllPoints()
 Addon.fDebug.closeX.icon:SetPoint("CENTER", Addon.fDebug.closeX, "CENTER", 0, 0)
-Addon.fDebug.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\x-close")
+Addon.fDebug.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\x-close")

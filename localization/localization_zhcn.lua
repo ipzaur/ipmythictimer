@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "点击查看详细信息"
 Addon.localization.DEATHTIME  = "浪费时间"
 Addon.localization.DIRECTION  = "进度变化"
 Addon.localization.DIRECTIONS = {
-    [1] = "升序 (0% -> 100%)",
-    [2] = "降序 (100% -> 0%)",
+    [Addon.PROGRESS_DIRECTION_ASC] = "升序 (0% -> 100%)",
+    [Addon.PROGRESS_DIRECTION_DESC] = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡历史纪录"
 Addon.localization.DUNGENAME  = "地下城名称"
@@ -34,8 +34,8 @@ Addon.localization.MELEEATACK = "近战攻击"
 Addon.localization.OPTIONS    = "选项"
 Addon.localization.OPACITY    = "背景透明度"
 Addon.localization.PROGFORMAT = {
-    [1] = "百分比 (100.00%)",
-    [2] = "强制 (300)",
+    [Addon.PROGRESS_FORMAT_PERCENT] = "百分比 (100.00%)",
+    [Addon.PROGRESS_FORMAT_FORCES]  = "强制 (300)",
 }
 Addon.localization.PROGRESS   = "进度格式"
 Addon.localization.RESTORE    = "恢复"
@@ -43,6 +43,7 @@ Addon.localization.SCALE      = "比例"
 Addon.localization.SOURCE     = "资源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已载入。键入 /ipmt 开启选项。"
 Addon.localization.TIME       = "时间"
+Addon.localization.TIMERCHCKP = "Timer checkpoints"
 Addon.localization.UNKNOWN    = "未知"
 Addon.localization.WHODIED    = "谁死了"
 
@@ -64,3 +65,6 @@ Addon.localization.CORRUPTED = {
     [161243] = "萨姆莱克，混沌唤引者(恐惧)",
     [161244] = "腐蚀者之血(软泥)",
 }
+
+Addon.localization.SEASONOPTS = 'Season options'
+Addon.localization.WAVEALERT  = 'Alert every 20%'

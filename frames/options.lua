@@ -3,7 +3,7 @@ local AddonName, Addon = ...
 local LSM = LibStub("LibSharedMedia-3.0")
 
 -- Options Frame
-Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent)
+Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fOptions:SetFrameStrata("MEDIUM")
 Addon.fOptions:SetSize(270, 480)
 Addon.fOptions:SetPoint("CENTER", UIParent)
@@ -208,7 +208,7 @@ Addon.fOptions.close:SetScript("OnClick", function(self)
 end)
 
 -- Element font size slider
-Addon.fOptions.FS = CreateFrame("Frame")
+Addon.fOptions.FS = CreateFrame("Frame", nil, Addon.fOptions, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fOptions.FS:SetFrameStrata("HIGH")
 Addon.fOptions.FS:SetSize(150, 50)
 Addon.fOptions.FS:SetPoint("CENTER", UIParent)
@@ -257,7 +257,7 @@ Addon.fOptions.help.glow:SetVertexColor(.9, .9, 0)
 Addon.fOptions.help.glow:Hide()
 
 -- X-Close button
-Addon.fOptions.closeX = CreateFrame("Button", nil, Addon.fOptions)
+Addon.fOptions.closeX = CreateFrame("Button", nil, Addon.fOptions, BackdropTemplateMixin and "BackdropTemplate")
 Addon.fOptions.closeX:SetPoint("TOP", Addon.fOptions, "TOPRIGHT", -20, -5)
 Addon.fOptions.closeX:SetSize(26, 26)
 Addon.fOptions.closeX:SetBackdrop(Addon.backdrop)
@@ -275,7 +275,7 @@ Addon.fOptions.closeX.icon = Addon.fOptions.closeX:CreateTexture()
 Addon.fOptions.closeX.icon:SetSize(16, 16)
 Addon.fOptions.closeX.icon:ClearAllPoints()
 Addon.fOptions.closeX.icon:SetPoint("CENTER", Addon.fOptions.closeX, "CENTER", 0, 0)
-Addon.fOptions.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\x-close")
+Addon.fOptions.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\x-close")
 
 -- Frame for settings in global options panel
 Addon.panel = CreateFrame("Frame", "IPMTOptionsPanel", UIParent)
@@ -288,3 +288,20 @@ Addon.panel.fShowOptions:SetScript("OnClick", function(self)
     Addon:OpenSettingsFromPanel()
 end)
 InterfaceOptions_AddCategory(Addon.panel)
+
+if Addon.season.options and Addon.season.options.Render then
+    local top = (-400)
+    Addon.fOptions.season = {}
+    -- Options caption
+    Addon.fOptions.season.caption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    Addon.fOptions.season.caption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, top)
+    Addon.fOptions.season.caption:SetJustifyH("CENTER")
+    Addon.fOptions.season.caption:SetSize(200, 20)
+    Addon.fOptions.season.caption:SetFont(Addon.DECOR_FONT, 17)
+    Addon.fOptions.season.caption:SetTextColor(1, 1, 1)
+    Addon.fOptions.season.caption:SetText(Addon.localization.SEASONOPTS)
+
+    local addHeight = Addon.season.options:Render(top - 30)
+    local height = Addon.fOptions:GetHeight()
+    Addon.fOptions:SetHeight(height + addHeight)
+end
