@@ -34,8 +34,9 @@ function Addon:GetEnemyForces(npcID, progressFormat)
     if Addon.season.isActive and Addon.season.GetForces then
         forces = Addon.season:GetForces(npcID, IPMTDungeon.isTeeming)
     end
+
     if forces == nil then
-        if IPMTDB and IPMTDB[npcID] and IPMTDB[npcID][IPMTDungeon.isTeeming] then
+        if IPMTDB and IPMTDB[npcID] and type(IPMTDB[npcID]) == 'table' and IPMTDB[npcID][IPMTDungeon.isTeeming] then
             forces = IPMTDB[npcID][IPMTDungeon.isTeeming]
         else
             forces = Addon:GetForcesFromMDT(npcID, true)
