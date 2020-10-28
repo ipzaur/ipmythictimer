@@ -101,10 +101,13 @@ function Addon.season:ShowTimer()
                 cost = Addon:GetEnemyForces(corruptionId)
             else
                 if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
-                    cost = "1.25%"
+                    cost = "1.25"
                 else
                     cost = 12
                 end
+            end
+            if cost and IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
+                cost = cost .. "%"
             end
             SetCorruption(corruptionId, killed)
             Addon.fMain.corruption[corruptionId].text:SetText(cost)
@@ -176,7 +179,7 @@ end
 
 function Addon.season.ToggleCustomize(enable)
     for corruptionId, corruptionFrame in pairs(Addon.fMain.corruption) do
-        corruptionFrame:EnableMouse(false)
+        corruptionFrame:EnableMouse(enable)
     end
     if enable then
         Addon.season:ShowTimer()

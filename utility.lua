@@ -2,7 +2,7 @@ local AddonName, Addon = ...
 
 Addon.DECOR_FONT = Addon.FONT_ROBOTO
 Addon.DECOR_FONTSIZE_DELTA = 0
-if GetLocale() == "zhTW" then
+if GetLocale() == "zhTW" or GetLocale() == "zhCN" then
     Addon.DECOR_FONT = "Arial"
     Addon.DECOR_FONTSIZE_DELTA = -2
 end
