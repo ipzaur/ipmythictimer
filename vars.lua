@@ -1,9 +1,6 @@
 local AddonName, Addon = ...
 Addon.version = 1200
 
-Addon.DECOR_FONT = Addon.FONT_ROBOTO
-Addon.DECOR_FONTSIZE_DELTA = 0
-
 Addon.AFFIX_TEEMING = 5
 
 Addon.PROGRESS_FORMAT_PERCENT = 1

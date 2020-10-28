@@ -68,6 +68,3 @@ Addon.localization.CORRUPTED = {
 
 Addon.localization.SEASONOPTS = '賽季選項'
 Addon.localization.WAVEALERT  = '每過20%警告'
-
-Addon.DECOR_FONT = "Arial"
-Addon.DECOR_FONTSIZE_DELTA = -2
