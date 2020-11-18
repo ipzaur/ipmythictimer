@@ -1,0 +1,49 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="Slider.lua"/>
+
+    <Slider name="IPSlider" virtual="true" mixin="IPSliderMixin" inherits="BackdropTemplate">
+        <Size x="200" y="16"/>
+        <HitRectInsets left="0" right="0" top="-5" bottom="-5"/>
+        <ThumbTexture parentKey="Thumb" file="Interface\Buttons\WHITE8X8">
+            <Size x="14" y="14"/>
+        </ThumbTexture>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+        </Scripts>
+    </Slider>
+
+    <Slider name="IPOptionsSlider" virtual="true" mixin="IPOptionsSliderMixin" inherits="IPSlider">
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString parentKey="Text" inherits="GameFontHighlight">
+                    <Anchors>
+                        <Anchor point="BOTTOM" relativePoint="TOP"/>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="Low" inherits="GameFontHighlightSmall" text="LOW">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT">
+                            <Offset>
+                                <AbsDimension x="0" y="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+                <FontString parentKey="High" inherits="GameFontHighlightSmall" text="HIGH">
+                    <Anchors>
+                        <Anchor point="TOPRIGHT" relativePoint="BOTTOMRIGHT">
+                            <Offset>
+                                <AbsDimension x="0" y="-4"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Slider>
+</Ui>

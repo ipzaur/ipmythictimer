@@ -1,0 +1,16 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="ColorButton.lua"/>
+
+    <Button name="IPColorButton" enableMouse="true" virtual="true" mixin="IPColorButtonMixin" inherits="BackdropTemplate">
+        <Size>
+            <AbsDimension x="20" y="20" />
+        </Size>
+
+        <Scripts>
+            <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Button>
+</Ui>

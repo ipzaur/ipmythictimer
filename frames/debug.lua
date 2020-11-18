@@ -20,8 +20,8 @@ Addon.fDebug:SetScript("OnDragStop", function(self, button)
 end)
 Addon.fDebug:Hide()
 
-
-Addon.fDebug.content = iPElemsCreateScrollBox(nil, Addon.fDebug, width - 20, heigth - 46)
+Addon.fDebug.content = CreateFrame("ScrollFrame", nil, Addon.fDebug, "IPScrollBox")
+Addon.fDebug.content:SetSize(width - 20, heigth - 46)
 Addon.fDebug.content:ClearAllPoints()
 Addon.fDebug.content:SetPoint("TOPLEFT", Addon.fDebug, 10, -36)
 

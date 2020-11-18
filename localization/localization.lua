@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "Click for detail information"
 Addon.localization.DEATHTIME  = "Time lost"
 Addon.localization.DIRECTION  = "Progress changing"
 Addon.localization.DIRECTIONS = {
-    [Addon.PROGRESS_DIRECTION_ASC] = "ascending (0% -> 100%)",
-    [Addon.PROGRESS_DIRECTION_DESC] = "descending (100% -> 0%)",
+    asc  = "Ascending (0% -> 100%)",
+    desc = "Descending (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Deaths history"
 Addon.localization.DUNGENAME  = "Dungeon name"
@@ -32,10 +32,9 @@ Addon.localization.MAPBUT     = "LMB (click) - toggle options\n" ..
 Addon.localization.MAPBUTOPT  = "Show/Hide minimap button"
 Addon.localization.MELEEATACK = "Melee attack"
 Addon.localization.OPTIONS    = "Options"
-Addon.localization.OPACITY    = "Background opacity"
 Addon.localization.PROGFORMAT = {
-    [Addon.PROGRESS_FORMAT_PERCENT] = "Percent (100.00%)",
-    [Addon.PROGRESS_FORMAT_FORCES]  = "Forces (300)",
+    percent = "Percent (100.00%)",
+    forces  = "Forces (300)",
 }
 Addon.localization.PROGRESS   = "Progress format"
 Addon.localization.RESTORE    = "Restore"
@@ -68,3 +67,7 @@ Addon.localization.CORRUPTED = {
 
 Addon.localization.SEASONOPTS = 'Season options'
 Addon.localization.WAVEALERT  = 'Alert every 20%'
+
+
+Addon.localization.THEME  = 'Theme'
+Addon.localization.COLORS = 'Colors'

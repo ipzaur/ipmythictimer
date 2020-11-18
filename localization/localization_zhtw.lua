@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "點擊查看詳細訊息"
 Addon.localization.DEATHTIME  = "損失時間"
 Addon.localization.DIRECTION  = "進度變化"
 Addon.localization.DIRECTIONS = {
-    [Addon.PROGRESS_DIRECTION_ASC] = "升序 (0% -> 100%)",
-    [Addon.PROGRESS_DIRECTION_DESC] = "降序 (100% -> 0%)",
+    asc  = "升序 (0% -> 100%)",
+    desc = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡紀錄"
 Addon.localization.DUNGENAME  = "地城名稱"
@@ -32,10 +32,9 @@ Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..
 Addon.localization.MAPBUTOPT  = "顯示/隱藏小地圖按鈕"
 Addon.localization.MELEEATACK = "近戰攻擊"
 Addon.localization.OPTIONS    = "選項"
-Addon.localization.OPACITY    = "背景透明度"
 Addon.localization.PROGFORMAT = {
-    [Addon.PROGRESS_FORMAT_PERCENT] = "百分 (100.00%)",
-    [Addon.PROGRESS_FORMAT_FORCES]  = "強制 (300)",
+    percent = "百分 (100.00%)",
+    forces  = "強制 (300)",
 }
 Addon.localization.PROGRESS   = "進度格式"
 Addon.localization.RESTORE    = "恢復"
@@ -68,3 +67,7 @@ Addon.localization.CORRUPTED = {
 
 Addon.localization.SEASONOPTS = '賽季選項'
 Addon.localization.WAVEALERT  = '每過20%警告'
+
+
+Addon.localization.THEME  = 'Theme'
+Addon.localization.COLORS = 'Colors'

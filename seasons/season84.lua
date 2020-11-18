@@ -4,15 +4,20 @@ if Addon.season.number ~= 84 then return end
 
 Addon.season.affix = 120
 Addon.season.frameName = 'corruptions'
-Addon.season.frame = {
+table.insert(Addon.frames, {
+    label = Addon.season.frameName,
+    name = 'Обелиски',
+})
+
+Addon.theme.default.elements[Addon.season.frameName] = {
     size = {
-        [0] = 180,
-        [1] = 40,
+        w = 180,
+        h = 40,
     },
     position = {
         x = 0,
-        y = -40,
-        point = 'BOTTOMLEFT',
+        y = -4,
+        point = 'TOPLEFT',
         rPoint = 'BOTTOMLEFT',
     },
     hidden = false,
@@ -86,7 +91,7 @@ function Addon.season:BossWipe()
 end
 
 function Addon.season:ShowTimer()
-    if not IPMTOptions.frame[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and Addon.season.isActive) or (not IPMTDungeon.keyActive and Addon.fOptions:IsShown()) or Addon.isCustomizing ) then
+    if not IPMTTheme[IPMTOptions.theme].elements[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and Addon.season.isActive) or (not IPMTDungeon.keyActive and Addon.fOptions:IsShown()) ) then
 
         if IPMTDungeon.corrupted == nil or not IPMTDungeon.keyActive then
             IPMTDungeon.corrupted = {}
@@ -128,7 +133,7 @@ local affixSize = {
     width  = 20,
     height = 20,
 }
-function Addon.season:RenderMain()
+function Addon.season:RenderMain(theme)
     Addon.fMain.corruption = {}
     local f = 0
     for corruptionId, flag in pairs(corruptedNpc) do
@@ -152,13 +157,11 @@ function Addon.season:RenderMain()
         Addon.fMain.corruption[corruptionId].icon:SetTexCoord(x1, x2, 0, 1)
         Addon.fMain.corruption[corruptionId].icon:SetVertexColor(1, 1, 1)
 
-
         Addon.fMain.corruption[corruptionId].text = Addon.fMain.corruption[corruptionId]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
         Addon.fMain.corruption[corruptionId].text:ClearAllPoints()
         Addon.fMain.corruption[corruptionId].text:SetPoint("CENTER", Addon.fMain.corruption[corruptionId], "CENTER", 0, -affixSize.height)
         Addon.fMain.corruption[corruptionId].text:SetJustifyH("CENTER")
-        Addon.fMain.corruption[corruptionId].text:SetFont(Addon.FONT_ROBOTO,
-         Addon.frameInfo[Addon.season.frameName].fontSize)
+        Addon.fMain.corruption[corruptionId].text:SetFont(theme.font, theme.elements[Addon.season.frameName].fontSize)
         Addon.fMain.corruption[corruptionId].text:SetTextColor(1, 1, 1)
         Addon.fMain.corruption[corruptionId].text:SetText("1.25%")
         f = f + 1
@@ -168,20 +171,5 @@ end
 function Addon.season:SetFont(fontFamily, fontSize)
     for corruptionId, flag in pairs(corruptedNpc) do
         Addon.fMain.corruption[corruptionId].text:SetFont(fontFamily, fontSize)
-    end
-end
-
-function Addon.season:LoadOptions()
-    if IPMTOptions.frame[Addon.season.frameName].fontSize == nil then
-        IPMTOptions.frame[Addon.season.frameName].fontSize = Addon.frameInfo[Addon.season.frameName].fontSize
-    end
-end
-
-function Addon.season.ToggleCustomize(enable)
-    for corruptionId, corruptionFrame in pairs(Addon.fMain.corruption) do
-        corruptionFrame:EnableMouse(enable)
-    end
-    if enable then
-        Addon.season:ShowTimer()
     end
 end

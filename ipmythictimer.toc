@@ -5,44 +5,45 @@
 ## Author: iP
 ## Version: 1.2.2
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
-## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon
+## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon, IPMTTheme
 ## X-eMail: ipzaur@gmail.com
-
-vars.lua
-libs.xml
 
 Localization\localization.lua
 Localization\localization_ru.lua
 Localization\localization_zhtw.lua
 Localization\localization_zhcn.lua
 
+vars.lua
+libs.xml
+media.lua
+utility.lua
+
+cooperation\mdt.lua
+cooperation\elvUI.lua
+
+theme\default.lua
+themes.lua
+
 seasons\season82.lua
 seasons\season83.lua
 seasons\season84.lua
 seasons\season91.lua
 
-media.lua
-utility.lua
-libs\iPElems\ipelems.lua
-
-cooperation\mdt.lua
-cooperation\elvUI.lua
-
-prognosis.lua
-main.lua
 frames\main.lua
-
-help.lua
 frames\help.lua
-
-options.lua
 frames\options.lua
-
+frames\elemEditor.lua
+frames\themes.lua
 frames\mapbut.lua
-
-deaths.lua
 frames\deaths.lua
-
 frames\debug.lua
+
+main.lua
+prognosis.lua
+help.lua
+options.lua
+deaths.lua
+elemEditor.lua
+
 
 iPMythicTimer.lua

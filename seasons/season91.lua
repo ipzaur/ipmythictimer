@@ -18,7 +18,7 @@ local current = {
 }
 local sounded = {
     percent = current.percent,
-    wave = current.wave - 1,
+    wave    = current.wave - 1,
 }
 local function AlertWave()
     if not IPMTOptions.wavealert then
@@ -60,7 +60,6 @@ function Addon.season:Progress(forces)
     end
 end
 
-
 Addon.season.options = {}
 
 function Addon.season:LoadOptions()
@@ -97,8 +96,10 @@ function Addon.season.options:Render(top)
         IPMTOptions.wavealert = Addon.fOptions.season.wavealert:GetChecked()
     end)
 
-    Addon.fOptions.season.soundList = iPElemsCreateListBox(nil, Addon.fOptions, getSoundList, {
-        onSelect = function(key, text)
+    Addon.fOptions.season.soundList = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
+    Addon.fOptions.season.soundList:SetList(getSoundList)
+    Addon.fOptions.season.soundList:SetCallback({
+        OnSelect = function(key, text)
             IPMTOptions.wavesound = key
             if not openOptions then
                 PlaySoundFile(IPMTOptions.wavesound, "SFX")
@@ -108,7 +109,6 @@ function Addon.season.options:Render(top)
     })
     Addon.fOptions.season.soundList:SetSize(220, 30)
     Addon.fOptions.season.soundList:SetPoint("CENTER", Addon.fOptions, "TOP", 0, top - 30)
-
     return 140
 end
 

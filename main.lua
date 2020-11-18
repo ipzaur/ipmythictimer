@@ -1,31 +1,7 @@
 local AddonName, Addon = ...
 
 function Addon:ResetDungeon()
-    IPMTDungeon = {
-        id          = 0,
-        keyActive   = false,
-        time        = 0,
-        affixes     = {},
-        level       = 0,
-        players     = {},
-        prognosis   = {},
-        isTeeming   = false,
-        timeLimit   = {
-            [2] = nil,
-            [1] = nil,
-            [0] = nil,
-        },
-        trash       = {
-            total   = 0,
-            current = 0,
-            killed  = 0,
-        },
-        combat      = {
-            boss   = false,
-            killed = {},
-        },
-        deathes     = {},
-    }
+    IPMTDungeon = Addon:CopyObject(Addon.cleanDungeon)
 end
 
 function Addon:GetEnemyForces(npcID, progressFormat)
@@ -396,7 +372,7 @@ end
 hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowTimer)
 
 local function HideTimer()
-    if not Addon.fOptions:IsShown() then
+    if Addon.fOptions ~= nil and not Addon.fOptions:IsShown() then
         Addon.fMain:Hide()
     end
     Addon.keyActive = false
@@ -473,10 +449,16 @@ function Addon:OnEvent(self, event, ...)
         IPMTDungeon.combat.boss = true
     elseif event == "ENCOUNTER_END" then
         EncounterEnd(arg2, arg5)
+    elseif event == "VARIABLES_LOADED" then
+        Addon:InitVars()
+        Addon:Render()
     end
 end
 
-function Addon:Init()
+function Addon:InitVars()
+    Addon:InitThemes()
+    IPMTOptions = Addon:CopyObject(Addon.defaultOption, IPMTOptions)
+
     if IPMTDB == nil then
         IPMTDB = {}
     end
@@ -487,6 +469,19 @@ function Addon:Init()
             IPMTDB = {}
         end
     end
+end
+
+function Addon:Render()
+    Addon:RenderMain()
+
+    if IPMTOptions.version == 0 then
+        Addon:ShowOptions()
+        Addon:ShowHelp()
+        IPMTOptions.version = Addon.version
+    end
+end
+
+function Addon:Init()
     Addon.DB = LibStub("AceDB-3.0"):New("IPMTOptions", {
         global = {
             minimap = {
@@ -494,16 +489,8 @@ function Addon:Init()
             },
         },
     })
-
-    Addon.isCustomizing = false
-    Addon:LoadOptions()
     Addon:InitIcon()
 end
 
 function Addon:OnShow()
-    Addon.fOptions:ClearAllPoints()
-    Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
-    Addon.fMain:ClearAllPoints()
-    Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
-    Addon:SetFont(IPMTOptions.font) -- may be it fix some bug ^_^
 end

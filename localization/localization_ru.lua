@@ -20,8 +20,8 @@ Addon.localization.DEATHSHOW  = "Нажмите для подробной инф
 Addon.localization.DEATHTIME  = "Потеряно времени"
 Addon.localization.DIRECTION  = "Изменение прогресса"
 Addon.localization.DIRECTIONS = {
-    [Addon.PROGRESS_DIRECTION_ASC] = "по возрастанию (0% -> 100%)",
-    [Addon.PROGRESS_DIRECTION_DESC] = "по убыванию (100% -> 0%)",
+    asc  = "По возрастанию (0% -> 100%)",
+    desc = "По убыванию (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Журнал смертей"
 Addon.localization.DUNGENAME  = "Название подземелья"
@@ -32,10 +32,9 @@ Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настро
 Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку у миникарты"
 Addon.localization.MELEEATACK = "Ближний бой"
 Addon.localization.OPTIONS    = "Настройки"
-Addon.localization.OPACITY    = "Непрозрачность фона"
 Addon.localization.PROGFORMAT = {
-    [Addon.PROGRESS_FORMAT_PERCENT] = "Проценты (100.00%)",
-    [Addon.PROGRESS_FORMAT_FORCES]  = "Вес мобов (300)",
+    percent = "Проценты (100.00%)",
+    forces  = "Вес мобов (300)",
 }
 Addon.localization.PROGRESS   = "Формат прогресса"
 Addon.localization.RESTORE    = "Сбросить"
@@ -68,3 +67,8 @@ Addon.localization.CORRUPTED = {
 
 Addon.localization.SEASONOPTS = 'Настройки для сезона'
 Addon.localization.WAVEALERT  = 'Оповещать перед 20%'
+
+
+Addon.localization.THEME  = 'Тема'
+Addon.localization.COLORS = 'Цвета'
+Addon.localization.BGCOLOR = 'цвет фона'
