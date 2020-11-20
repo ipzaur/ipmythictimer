@@ -4,7 +4,7 @@ function Addon:InitThemes()
     if IPMTTheme == nil then
         IPMTTheme = {}
     end
-    IPMTTheme.default = Addon:CopyObject(Addon.theme.default, IPMTTheme.default)
+    IPMTTheme[1] = Addon:CopyObject(Addon.theme[1], IPMTTheme[1])
 end
 
 function Addon:ToggleThemeEditor()
@@ -39,7 +39,8 @@ function Addon:ShowThemeEditor()
          
     end
     Addon.fOptions:SetSize(optionsSize.expanded.w, optionsSize.expanded.h)
-    Addon.fOptions.themeEdit.icon:SetVertexColor(1, 1, 1)
+    Addon.fOptions.editTheme.fTexture:SetVertexColor(1, 1, 1)
+    Addon.fOptions.editTheme:SetBackdropColor(.25,.25,.25, 1)
 
     local theme = IPMTTheme[IPMTOptions.theme]
     for frame, info in pairs(theme.elements) do
@@ -55,7 +56,7 @@ function Addon:CloseThemeEditor()
     end
     local theme = IPMTTheme[IPMTOptions.theme]
     Addon.fOptions:SetSize(optionsSize.collapsed.w, optionsSize.collapsed.h)
-    Addon.fOptions.themeEdit.icon:SetVertexColor(.5, .5, .5)
+    Addon.fOptions.editTheme:SetBackdropColor(.175,.175,.175, 1)
     Addon.fThemes:Hide()
     for i,info in ipairs(Addon.frames) do
         Addon:ToggleMovable(info.label, false)
@@ -117,14 +118,14 @@ function Addon:ToggleVisible(frame, woSave)
 
     if elemInfo.hidden then
         Addon.fMain[frame]:SetBackdropColor(.85,0,0, .15)
-        Addon.fThemes[frame].toggle.icon:SetTexCoord(.5, 1, 0, .5)
+        Addon.fThemes[frame].toggle.icon:SetTexCoord(.25, .5, 0, .5)
     else
         local alpha = .15
         if woSave == true then
             alpha = 0
         end
         Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
-        Addon.fThemes[frame].toggle.icon:SetTexCoord(0, .5, 0, .5)
+        Addon.fThemes[frame].toggle.icon:SetTexCoord(0, .25, 0, .5)
     end
 end
 

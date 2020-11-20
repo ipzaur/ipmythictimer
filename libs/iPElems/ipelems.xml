@@ -1,6 +1,6 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
     <Include file="ScrollBox.xml"/>
-    <Include file="ScrollBox2.xml"/>
+    <Include file="Button.xml"/>
     <Include file="ListBox.xml"/>
     <Include file="EditBox.xml"/>
     <Include file="ColorButton.xml"/>

@@ -6,7 +6,7 @@ function Addon:RenderOptions()
     -- Options Frame
     Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent, BackdropTemplateMixin and "BackdropTemplate")
     Addon.fOptions:SetFrameStrata("MEDIUM")
-    Addon.fOptions:SetSize(270, 408)
+    Addon.fOptions:SetSize(270, 458)
     Addon.fOptions:ClearAllPoints()
     Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
     Addon.fOptions:SetBackdrop(Addon.backdrop)
@@ -29,9 +29,9 @@ function Addon:RenderOptions()
 
     Addon.fOptions.common = CreateFrame("Frame", nil, Addon.fOptions)
     Addon.fOptions.common:SetFrameStrata("MEDIUM")
-    Addon.fOptions.common:SetWidth(250)
-    Addon.fOptions.common:SetPoint("TOPLEFT", Addon.fOptions, "TOPLEFT", 10, -10)
-    Addon.fOptions.common:SetPoint("BOTTOM", Addon.fOptions, "BOTTOMLEFT", 10, 10)
+    Addon.fOptions.common:SetWidth(230)
+    Addon.fOptions.common:SetPoint("TOPLEFT", Addon.fOptions, "TOPLEFT", 20, -10)
+    Addon.fOptions.common:SetPoint("BOTTOM", Addon.fOptions, "BOTTOMLEFT", 20, 10)
 
     -- Options caption
     Addon.fOptions.caption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -43,20 +43,17 @@ function Addon:RenderOptions()
     Addon.fOptions.caption:SetText(Addon.localization.OPTIONS)
 
     -- Scale slider
-    Addon.fOptions.scale = CreateFrame("Slider", "IPMTScale", Addon.fOptions.common, "OptionsSliderTemplate")
-    Addon.fOptions.scale:SetWidth(220)
-    Addon.fOptions.scale:SetHeight(18)
-    Addon.fOptions.scale:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -66)
+    Addon.fOptions.scale = CreateFrame("Slider", nil, Addon.fOptions.common, "IPOptionsSlider")
+    Addon.fOptions.scale:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -66)
+    Addon.fOptions.scale:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -66)
     Addon.fOptions.scale:SetOrientation('HORIZONTAL')
-    Addon.fOptions.scale:SetThumbTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
-    Addon.fOptions.scale:EnableMouseWheel(true)
     Addon.fOptions.scale:SetMinMaxValues(0, 100)
     Addon.fOptions.scale:SetValue(IPMTOptions.scale)
     Addon.fOptions.scale:SetValueStep(1.0)
     Addon.fOptions.scale:SetObeyStepOnDrag(true)
-    getglobal(Addon.fOptions.scale:GetName() .. 'Low'):SetText('100 %')
-    getglobal(Addon.fOptions.scale:GetName() .. 'High'):SetText('200 %')
-    getglobal(Addon.fOptions.scale:GetName() .. 'Text'):SetText(Addon.localization.SCALE .. " (" .. (IPMTOptions.scale + 100) .. "%)")
+    Addon.fOptions.scale.Low:SetText('100 %')
+    Addon.fOptions.scale.High:SetText('200 %')
+    Addon.fOptions.scale.Text:SetText(Addon.localization.SCALE .. " (" .. (IPMTOptions.scale + 100) .. "%)")
     Addon.fOptions.scale:SetScript('OnValueChanged', function(self)
         Addon:SetScale(self:GetValue())
     end)
@@ -74,8 +71,9 @@ function Addon:RenderOptions()
 
     -- ProgressFormat selector
     Addon.fOptions.progressFormat = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
-    Addon.fOptions.progressFormat:SetSize(220, 30)
-    Addon.fOptions.progressFormat:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -134)
+    Addon.fOptions.progressFormat:SetHeight(30)
+    Addon.fOptions.progressFormat:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -134)
+    Addon.fOptions.progressFormat:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -134)
     Addon.fOptions.progressFormat:SetList(Addon.optionList.progress, IPMTOptions.progress)
     Addon.fOptions.progressFormat:SetCallback({
         OnSelect = function(self, key, text)
@@ -93,8 +91,9 @@ function Addon:RenderOptions()
 
     -- Progress direction selector
     Addon.fOptions.progressDirection = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
-    Addon.fOptions.progressDirection:SetSize(220, 30)
-    Addon.fOptions.progressDirection:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -192)
+    Addon.fOptions.progressDirection:SetHeight(30)
+    Addon.fOptions.progressDirection:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -192)
+    Addon.fOptions.progressDirection:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -192)
     Addon.fOptions.progressDirection:SetList(Addon.optionList.direction, IPMTOptions.direction)
     Addon.fOptions.progressDirection:SetCallback({
         OnSelect = function(self, key, text)
@@ -134,8 +133,9 @@ function Addon:RenderOptions()
         return list
     end
     Addon.fOptions.theme = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
-    Addon.fOptions.theme:SetSize(220, 30)
-    Addon.fOptions.theme:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -304)
+    Addon.fOptions.theme:SetHeight(30)
+    Addon.fOptions.theme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -304)
+    Addon.fOptions.theme:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -304)
     Addon.fOptions.theme:SetList(getThemesList, IPMTOptions.theme)
     Addon.fOptions.theme:SetCallback({
         OnSelect = function(self, key, text)
@@ -145,53 +145,135 @@ function Addon:RenderOptions()
         end,
     })
 
+    -- New theme button
+    Addon.fOptions.newTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
+    Addon.fOptions.newTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -340)
+    Addon.fOptions.newTheme:SetSize(50, 30)
+    Addon.fOptions.newTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+    Addon.fOptions.newTheme.fTexture:SetSize(20, 20)
+    Addon.fOptions.newTheme.fTexture:SetTexCoord(.5, .75, .5, 1)
+    Addon.fOptions.newTheme.fTexture:SetVertexColor(.75, .75, .75)
+    Addon.fOptions.newTheme:SetScript("OnClick", function(self)
+        print('new')
+    end)
+    Addon.fOptions.newTheme:HookScript("OnEnter", function(self)
+        self.fTexture:SetVertexColor(1, 1, 1)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText('Создать тему на основе текущей', .9, .9, 0, 1, true)
+        GameTooltip:Show()
+    end)
+    Addon.fOptions.newTheme:HookScript("OnLeave", function(self)
+        self.fTexture:SetVertexColor(.75, .75, .75)
+        GameTooltip:Hide()
+    end)
+
+    -- Remove theme button
+    Addon.fOptions.removeTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
+    Addon.fOptions.removeTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 60, -340)
+    Addon.fOptions.removeTheme:SetSize(50, 30)
+    Addon.fOptions.removeTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+    Addon.fOptions.removeTheme.fTexture:SetSize(20, 20)
+    Addon.fOptions.removeTheme.fTexture:SetTexCoord(.75, 1, 0, .5)
+    Addon.fOptions.removeTheme.fTexture:SetVertexColor(.75, .75, .75)
+    Addon.fOptions.removeTheme:SetScript("OnClick", function(self)
+        if not self.disabled then
+            print('remove')
+        end
+    end)
+    Addon.fOptions.removeTheme:HookScript("OnEnter", function(self)
+        if not self.disabled then
+            self.fTexture:SetVertexColor(1, 1, 1)
+        end
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText('Удалить тему', .9, .9, 0, 1, true)
+        GameTooltip:Show()
+    end)
+    Addon.fOptions.removeTheme:HookScript("OnLeave", function(self)
+        if not self.disabled then
+            self.fTexture:SetVertexColor(.75, .75, .75)
+        end
+        GameTooltip:Hide()
+    end)
+    Addon.fOptions.removeTheme.OnDisabled = function(self, disable)
+        if disable then
+            self.fTexture:SetVertexColor(.35, .35, .35)
+        else
+            self.fTexture:SetVertexColor(.75, .75, .75)
+        end
+    end
+    print(IPMTOptions.theme)
+    if IPMTOptions.theme == 1 then
+        Addon.fOptions.removeTheme:ToggleDisabled(true)
+    end
+
+    -- Restore theme button
+    Addon.fOptions.restoreTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
+    Addon.fOptions.restoreTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 120, -340)
+    Addon.fOptions.restoreTheme:SetSize(50, 30)
+    Addon.fOptions.restoreTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+    Addon.fOptions.restoreTheme.fTexture:SetSize(20, 20)
+    Addon.fOptions.restoreTheme.fTexture:SetTexCoord(.75, 1, .5, 1)
+    Addon.fOptions.restoreTheme.fTexture:SetVertexColor(.75, .75, .75)
+    Addon.fOptions.restoreTheme:SetScript("OnClick", function(self)
+        print('restore')
+    end)
+    Addon.fOptions.restoreTheme:HookScript("OnEnter", function(self)
+        self.fTexture:SetVertexColor(1, 1, 1)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText('Вернуть тему "по-умолчанию" в исходное состояние и применить её', .9, .9, 0, 1, true)
+        GameTooltip:Show()
+    end)
+    Addon.fOptions.restoreTheme:HookScript("OnLeave", function(self)
+        self.fTexture:SetVertexColor(.75, .75, .75)
+        GameTooltip:Hide()
+    end)
+
     -- Edit Theme button
-    Addon.fOptions.themeEdit = CreateFrame("Button", nil, Addon.fOptions.common, BackdropTemplateMixin and "BackdropTemplate")
-    Addon.fOptions.themeEdit:SetPoint("CENTER", Addon.fOptions.common, "TOP", 122, -304)
-    Addon.fOptions.themeEdit:SetSize(20, 20)
-    Addon.fOptions.themeEdit:SetBackdrop(Addon.backdrop)
-    Addon.fOptions.themeEdit:SetBackdropColor(0,0,0, 0)
-    Addon.fOptions.themeEdit:SetScript("OnClick", function(self)
+    Addon.fOptions.editTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
+    Addon.fOptions.editTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 180, -340)
+    Addon.fOptions.editTheme:SetSize(50, 30)
+    Addon.fOptions.editTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+    Addon.fOptions.editTheme.fTexture:SetSize(20, 20)
+    Addon.fOptions.editTheme.fTexture:SetTexCoord(0, .25, .5, 1)
+    Addon.fOptions.editTheme.fTexture:SetVertexColor(.75, .75, .75)
+    Addon.fOptions.editTheme:SetScript("OnClick", function(self)
         Addon:ToggleThemeEditor()
     end)
-    Addon.fOptions.themeEdit:SetScript("OnEnter", function(self, event, ...)
+    Addon.fOptions.editTheme:HookScript("OnEnter", function(self)
+        self.fTexture:SetVertexColor(1, 1, 1)
         local text
         if Addon.fThemes == nil or not Addon.fThemes:IsShown() then
-            Addon.fOptions.themeEdit.icon:SetVertexColor(.9, .9, .9)
             text = 'Открыть редактор темы'
         else
+            self:SetBackdropColor(.25,.25,.25, 1)
             text = 'Закрыть редактор темы'
         end
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(text, .9, .9, 0, 1, true)
         GameTooltip:Show()
     end)
-    Addon.fOptions.themeEdit:SetScript("OnLeave", function(self, event, ...)
+    Addon.fOptions.editTheme:HookScript("OnLeave", function(self)
         if Addon.fThemes == nil or not Addon.fThemes:IsShown() then
-            Addon.fOptions.themeEdit.icon:SetVertexColor(.5, .5, .5)
+            self.fTexture:SetVertexColor(.75, .75, .75)
+        else
+            self:SetBackdropBorderColor(1,1,1, 1)
+            self:SetBackdropColor(.25,.25,.25, 1)
         end
         GameTooltip:Hide()
     end)
-    Addon.fOptions.themeEdit.icon = Addon.fOptions.themeEdit:CreateTexture()
-    Addon.fOptions.themeEdit.icon:SetSize(20, 20)
-    Addon.fOptions.themeEdit.icon:ClearAllPoints()
-    Addon.fOptions.themeEdit.icon:SetPoint("CENTER", Addon.fOptions.themeEdit, "CENTER", 0, 0)
-    Addon.fOptions.themeEdit.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
-    Addon.fOptions.themeEdit.icon:SetVertexColor(.5, .5, .5)
-    Addon.fOptions.themeEdit.icon:SetTexCoord(0, .5, .5, 1)
 
     -- Clear database button
-    Addon.fOptions.cleanDB = CreateFrame("Button", nil, Addon.fOptions.common, "UIPanelButtonTemplate")
+    Addon.fOptions.cleanDB = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
     Addon.fOptions.cleanDB:SetPoint("CENTER", Addon.fOptions.common, "BOTTOM", 0, 20)
     Addon.fOptions.cleanDB:SetSize(220, 30)
     Addon.fOptions.cleanDB:SetText(Addon.localization.CLEANDBBT)
     Addon.fOptions.cleanDB:SetScript("OnClick", function(self)
         Addon:CleanDB()
     end)
-    Addon.fOptions.cleanDB:SetScript("OnEnter", function(self, event, ...)
+    Addon.fOptions.cleanDB:HookScript("OnEnter", function(self, event, ...)
         Addon:ToggleDBTooltip(self, true)
     end)
-    Addon.fOptions.cleanDB:SetScript("OnLeave", function(self, event, ...)
+    Addon.fOptions.cleanDB:HookScript("OnLeave", function(self, event, ...)
         Addon:ToggleDBTooltip(self, false)
     end)
 
@@ -262,13 +344,4 @@ function Addon:RenderOptions()
     end
 
 
-
-    -- Restore button
-    Addon.fOptions.restore = CreateFrame("Button", nil, Addon.fOptions, "UIPanelButtonTemplate")
-    Addon.fOptions.restore:SetPoint("CENTER", Addon.fOptions, "BOTTOM", 0, -98)
-    Addon.fOptions.restore:SetSize(200, 30)
-    Addon.fOptions.restore:SetText(Addon.localization.RESTORE)
-    Addon.fOptions.restore:SetScript("OnClick", function(self)
-        Addon:RestoreOptions()
-    end)
 end

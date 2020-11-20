@@ -39,7 +39,7 @@ end
 function Addon:ToggleDBTooltip(self, show)
     if show then
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText(Addon.localization.CLEANDBTT, 1, 1, 1, 1, true)
+        GameTooltip:SetText(Addon.localization.CLEANDBTT, .9, .9, 0, 1, true)
         GameTooltip:Show()
     else
         GameTooltip:Hide()
@@ -49,7 +49,7 @@ end
 function Addon:SetScale(value)
     IPMTOptions.scale = value
     Addon.fMain:SetScale(1 + IPMTOptions.scale / 100)
-    getglobal(Addon.fOptions.scale:GetName() .. 'Text'):SetText(Addon.localization.SCALE .. " (" .. (IPMTOptions.scale + 100) .. "%)")
+    Addon.fOptions.scale.Text:SetText(Addon.localization.SCALE .. " (" .. (IPMTOptions.scale + 100) .. "%)")
 end
 
 function Addon:SetProgressFormat(value)

@@ -2,7 +2,7 @@ local AddonName, Addon = ...
 
 Addon.theme = {}
 
-Addon.theme.default = {
+Addon.theme[1] = {
     name    = 'По-умолчанию',
     font    = Addon.FONT_ROBOTO,
     main = {

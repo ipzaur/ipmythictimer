@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="Button.lua"/>
+
+    <Button name="IPButton" virtual="true" mixin="IPButtonMixin" inherits="BackdropTemplate">
+        <Size>
+            <AbsDimension x="60" y="20" />
+        </Size>
+        <Scripts>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Button>
+</Ui>

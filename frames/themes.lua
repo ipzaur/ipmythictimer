@@ -9,8 +9,8 @@ function Addon:RenderThemeEditor()
     Addon.fThemes = CreateFrame("ScrollFrame", "IPMTThemes", Addon.fOptions, "IPScrollBox")
     Addon.fThemes:SetFrameStrata("MEDIUM")
     Addon.fThemes:SetWidth(340)
-    Addon.fThemes:SetPoint("TOPLEFT", Addon.fOptions, "TOPLEFT", Addon.fOptions.common:GetWidth() + 30, -40)
-    Addon.fThemes:SetPoint("BOTTOMLEFT", Addon.fOptions, "BOTTOMLEFT", Addon.fOptions.common:GetWidth() + 30, 20)
+    Addon.fThemes:SetPoint("TOPLEFT", Addon.fOptions, "TOPLEFT", Addon.fOptions.common:GetWidth() + 50, -40)
+    Addon.fThemes:SetPoint("BOTTOMLEFT", Addon.fOptions, "BOTTOMLEFT", Addon.fOptions.common:GetWidth() + 50, 20)
     Addon.fThemes:SetBackdropColor(0,0,0, 0)
     Addon.fThemes:SetBackdropBorderColor(0,0,0, 0)
     Addon.fThemes.fContent:SetSize(320,680)
@@ -24,7 +24,7 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.caption:SetTextColor(1, 1, 1)
     Addon.fThemes.caption:SetText('Редактирование темы')
 
-    local top = -22
+    local top = -20
 
     -- Name caption
     Addon.fThemes.nameCaption = Addon.fThemes.fContent:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -371,7 +371,7 @@ function Addon:RenderThemeEditor()
         Addon.fThemes[frame].moveMode.icon:SetPoint("CENTER", Addon.fThemes[frame].moveMode, "CENTER", 0, 0)
         Addon.fThemes[frame].moveMode.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
         Addon.fThemes[frame].moveMode.icon:SetVertexColor(.5, .5, .5)
-        Addon.fThemes[frame].moveMode.icon:SetTexCoord(.5, 1, .5, 1)
+        Addon.fThemes[frame].moveMode.icon:SetTexCoord(.25, .5, .5, 1)
 
         subTop = -30
         if params.hasText then

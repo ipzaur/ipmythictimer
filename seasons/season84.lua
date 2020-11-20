@@ -9,7 +9,7 @@ table.insert(Addon.frames, {
     name = 'Обелиски',
 })
 
-Addon.theme.default.elements[Addon.season.frameName] = {
+Addon.theme[1].elements[Addon.season.frameName] = {
     size = {
         w = 180,
         h = 40,
