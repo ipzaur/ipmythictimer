@@ -15,16 +15,13 @@ local maxHeight = 264
 local openedListBox = nil
 WorldFrame:HookScript("OnMouseDown", function(self, button)
     if button == 'LeftButton' and openedListBox ~= nil then
-        if openedListBox.callback and openedListBox.callback.OnCancel then
-            openedListBox.callback:OnCancel()
-        end
-        openedListBox:ToggleList(false)
+        openedListBox:ToggleList(false, true)
     end
 end)
 
 
 function IPListBoxMixin:OnClick()
-    self:ToggleList()
+    self:ToggleList(nil, true)
 end
 
 function IPListBoxMixin:OnEnter()
@@ -110,7 +107,7 @@ function IPListBoxMixin:SetCallback(callbacks)
     end
 end
 
-function IPListBoxMixin:ToggleList(show)
+function IPListBoxMixin:ToggleList(show, canCancel)
     if show == nil then
         show = not self.opened
     end
@@ -134,6 +131,9 @@ function IPListBoxMixin:ToggleList(show)
         self.fList:Hide()
         self:SetBackdropBorderColor(1,1,1, 0.5)
         self.fTriangle:SetVertexColor(1, 1, 1, .5)
+        if canCancel == true and self.callback and self.callback.OnCancel then
+            self.callback:OnCancel()
+        end
         openedListBox = nil
     end
     self.opened = show

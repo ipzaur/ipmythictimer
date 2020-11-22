@@ -6,4 +6,5 @@
     <Include file="ColorButton.xml"/>
     <Include file="FieldSet.xml"/>
     <Include file="Slider.xml"/>
+    <Include file="CheckButton.xml"/>
 </Ui>

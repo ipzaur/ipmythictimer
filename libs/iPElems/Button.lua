@@ -62,13 +62,13 @@ function IPButtonMixin:ToggleDisabled(disable)
     end
     self.disabled = disable
     if self.disabled == true then
-        self:SetBackdropColor(bgColor - .025,bgColor - .025,bgColor - .025, 1)
+        self:SetBackdropColor(bgColor - .025, bgColor - .025, bgColor - .025, 1)
         self:SetBackdropBorderColor(1,1,1, .25)
     else
-        self:SetBackdropColor(bgColor,bgColor,bgColor, 1)
-        self:SetBackdropBorderColor(1,1,1, 5)
+        self:SetBackdropColor(bgColor, bgColor, bgColor, 1)
+        self:SetBackdropBorderColor(1,1,1, .5)
     end
     if self.OnDisabled ~= nil then
-        self:OnDisabled(self, self.disabled)
+        self:OnDisabled(self.disabled)
     end
 end

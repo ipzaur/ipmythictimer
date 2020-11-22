@@ -42,15 +42,5 @@ function Addon:CloseElemEditor()
 end
 
 function Addon:SetElemPosition(param, value)
-    local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frameName]
-    elemInfo.position[param] = value
-    local point = elemInfo.position.point
-    if point == nil then
-        point = 'LEFT'
-    end
-    local rPoint = elemInfo.position.rPoint
-    if rPoint == nil then
-        rPoint = 'TOPLEFT'
-    end
-    Addon:MoveElement(frameName, point, rPoint, elemInfo.position.x, elemInfo.position.y)
+    Addon:MoveElement(frameName, {[param] = value})
 end

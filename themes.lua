@@ -4,7 +4,10 @@ function Addon:InitThemes()
     if IPMTTheme == nil then
         IPMTTheme = {}
     end
-    IPMTTheme[1] = Addon:CopyObject(Addon.theme[1], IPMTTheme[1])
+
+    for i, theme in ipairs(IPMTTheme) do
+        IPMTTheme[i] = Addon:CopyObject(Addon.theme[1], IPMTTheme[i])
+    end
 end
 
 function Addon:ToggleThemeEditor()
@@ -28,7 +31,6 @@ local optionsSize = {
 function Addon:ShowThemeEditor()
     if Addon.fThemes == nil then
         Addon:RenderThemeEditor()
-        Addon:FillThemeEditor()
     end
     if optionsSize.collapsed.w == 0 then
         optionsSize.collapsed.w = Addon.fOptions:GetWidth()
@@ -42,11 +44,7 @@ function Addon:ShowThemeEditor()
     Addon.fOptions.editTheme.fTexture:SetVertexColor(1, 1, 1)
     Addon.fOptions.editTheme:SetBackdropColor(.25,.25,.25, 1)
 
-    local theme = IPMTTheme[IPMTOptions.theme]
-    for frame, info in pairs(theme.elements) do
-        Addon.fMain[frame]:Show()
-        Addon:ToggleVisible(frame, true)
-    end
+    Addon:FillThemeEditor()
     Addon.fThemes:Show()
 end
 
@@ -57,6 +55,7 @@ function Addon:CloseThemeEditor()
     local theme = IPMTTheme[IPMTOptions.theme]
     Addon.fOptions:SetSize(optionsSize.collapsed.w, optionsSize.collapsed.h)
     Addon.fOptions.editTheme:SetBackdropColor(.175,.175,.175, 1)
+    Addon.fOptions.editTheme:SetBackdropColor(.175,.175,.175, 1)
     Addon.fThemes:Hide()
     for i,info in ipairs(Addon.frames) do
         Addon:ToggleMovable(info.label, false)
@@ -65,20 +64,40 @@ function Addon:CloseThemeEditor()
         end
     end
     Addon:CloseElemEditor()
+    Addon.fOptions.editTheme:OnLeave()
 end
 
 function Addon:FillThemeEditor()
     local theme = IPMTTheme[IPMTOptions.theme]
     Addon.fThemes.name:SetText(theme.name)
+
+    Addon.fThemes.fFonts:SelectItem(theme.font, true)
     Addon.fThemes.fFonts.fText:SetFont(theme.font, 12)
 
     Addon.fThemes.bg.width:SetText(theme.main.size.w)
     Addon.fThemes.bg.height:SetText(theme.main.size.h)
+    Addon.fThemes.bg.texture:SelectItem(theme.main.background.texture, true)
     Addon.fThemes.bg.color:ColorChange(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a, true)
+    Addon.fThemes.bg.borderInset:SetValue(theme.main.border.inset)
+    Addon.fThemes.bg.border:SelectItem(theme.main.border.texture, true)
     Addon.fThemes.bg.borderColor:ColorChange(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a, true)
+    Addon.fThemes.bg.borderSize:SetValue(theme.main.border.size)
 
     for frame, info in pairs(theme.elements) do
+        Addon.fMain[frame]:Show()
         Addon:ToggleVisible(frame, true)
+        if info.fontSize ~= nil then
+            Addon.fThemes[frame].fontSize:SetValue(info.fontSize)
+        end
+        if info.color ~= nil then
+            if info.color.r ~= nil then
+                Addon.fThemes[frame].color[-1]:ColorChange(info.color.r, info.color.g, info.color.b, info.color.a, true)
+            else
+                for i, color in pairs(info.color) do
+                    Addon.fThemes[frame].color[i]:ColorChange(color.r, color.g, color.b, color.a, true)
+                end
+            end
+        end
     end
 end
 
@@ -87,11 +106,97 @@ function Addon:SetThemeName(name)
     Addon.fOptions.theme:SelectItem(IPMTOptions.theme, true)
 end
 
+function Addon:ToggleVisible(frame, woSave)
+    local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+    if woSave ~= true then
+        elemInfo.hidden = not elemInfo.hidden
+    end
+
+    if elemInfo.hidden then
+        Addon.fMain[frame]:SetBackdropColor(.85,0,0, .35)
+        alpha = Addon.fThemes[frame].toggle.icon:GetAlpha()
+        Addon.fThemes[frame].toggle.icon:SetVertexColor(.85, 0, 0, alpha)
+        Addon.fThemes[frame].toggle.icon:SetTexCoord(.25, .5, 0, .5)
+    else
+        local alpha = .15
+        if woSave == true then
+            alpha = 0
+        end
+        Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
+        Addon.fThemes[frame].toggle.icon:SetTexCoord(0, .25, 0, .5)
+        alpha = Addon.fThemes[frame].toggle.icon:GetAlpha()
+        Addon.fThemes[frame].toggle.icon:SetVertexColor(1, 1, 1, alpha)
+    end
+end
+function Addon:HoverVisible(frame, button)
+    button.icon:SetAlpha(.9)
+    local text
+    if IPMTTheme[IPMTOptions.theme].elements[frame].hidden then
+        text = 'Показать элемент'
+    else
+        text = 'Скрыть элемент'
+    end
+    GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+    GameTooltip:SetText(text, .9, .9, 0, 1, true)
+    GameTooltip:Show()
+    Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+end
+function Addon:BlurVisible(frame, button)
+    button.icon:SetAlpha(.5)
+    GameTooltip:Hide()
+end
+
+function Addon:ChangeMain(param, value, woSave)
+    local theme = IPMTTheme[IPMTOptions.theme]
+
+    local params = Addon:CopyObject(theme.main)
+
+    if param == 'width' then
+        params.size.w = value
+    elseif param == 'height' then
+        params.size.h = value
+    elseif param == 'color' then
+        params.background.color = Addon:CopyObject(value)
+    elseif param == 'borderColor' then
+        params.border.color = Addon:CopyObject(value)
+    elseif param == 'texture' then
+        params.background.texture = value
+    elseif param == 'border' then
+        params.border.texture = value
+    elseif param == 'borderSize' then
+        params.border.size = value
+    elseif param == 'borderInset' then
+        params.border.inset = value
+    end
+
+    local backdrop = {
+        bgFile   = params.background.texture,
+        edgeFile = params.border.texture,
+        tile     = false,
+        edgeSize = params.border.size,
+        insets   = {
+            left   = params.border.inset,
+            right  = params.border.inset,
+            top    = params.border.inset,
+            bottom = params.border.inset,
+        },
+    }
+    if backdrop.edgeFile == 'none' then
+        backdrop.edgeFile = nil
+    end
+
+    Addon.fMain:SetSize(params.size.w, params.size.h)
+    Addon.fMain:SetBackdrop(backdrop)
+    Addon.fMain:SetBackdropColor(params.background.color.r, params.background.color.g, params.background.color.b, params.background.color.a)
+    Addon.fMain:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
+
+    if woSave ~= true then
+        theme.main = Addon:CopyObject(params)
+    end
+end
+
 function Addon:SetFont(filepath, woSave)
     local theme = IPMTTheme[IPMTOptions.theme]
-    if woSave ~= true then
-        theme.font = filepath
-    end
     for i, info in ipairs(Addon.frames) do
         local frameName = info.label
         local elemInfo = theme.elements[frameName]
@@ -108,156 +213,71 @@ function Addon:SetFont(filepath, woSave)
             end
         end
     end
-end
-
-function Addon:ToggleVisible(frame, woSave)
-    local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
     if woSave ~= true then
-        elemInfo.hidden = not elemInfo.hidden
-    end
-
-    if elemInfo.hidden then
-        Addon.fMain[frame]:SetBackdropColor(.85,0,0, .15)
-        Addon.fThemes[frame].toggle.icon:SetTexCoord(.25, .5, 0, .5)
-    else
-        local alpha = .15
-        if woSave == true then
-            alpha = 0
-        end
-        Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
-        Addon.fThemes[frame].toggle.icon:SetTexCoord(0, .25, 0, .5)
+        theme.font = filepath
     end
 end
 
-function Addon:ChangeMain(param, value, woSave)
+function Addon:SetFontSize(frame, value, woSave)
     local theme = IPMTTheme[IPMTOptions.theme]
-    if param == 'color' then
-        if woSave ~= true then
-            theme.main.background.color = Addon:CopyObject(value)
-        end
-        Addon.fMain:SetBackdropColor(value.r, value.g, value.b, value.a)
-    end
-    if param == 'borderColor' then
-        if woSave ~= true then
-            theme.main.border.color = Addon:CopyObject(value)
-        end
-        Addon.fMain:SetBackdropBorderColor(value.r, value.g, value.b, value.a)
-    end
-    if param == 'width' then
-        if woSave ~= true then
-            theme.main.size.w = value
-        end
-        Addon.fMain:SetWidth(value)
-    end
-    if param == 'height' then
-        if woSave ~= true then
-            theme.main.size.h = value
-        end
-        Addon.fMain:SetHeight(value)
-    end
-    if param == 'texture' or param == 'border' or param == 'borderSize' or param == 'borderInset' then
-        local backdrop = {
-            bgFile   = theme.main.background.texture,
-            edgeFile = theme.main.border.texture,
-            tile     = false,
-            edgeSize = theme.main.border.size,
-            insets   = {
-                left   = theme.main.border.inset,
-                right  = theme.main.border.inset,
-                top    = theme.main.border.inset,
-                bottom = theme.main.border.inset,
-            },
-        }
-        if backdrop.edgeFile == 'none' then
-            backdrop.edgeFile = nil
-        end
-        if param == 'texture' then
-            if woSave ~= true then
-                theme.main.background.texture = value
-            end
-            backdrop.bgFile = value
-        end
-        if param == 'border' then
-            if woSave ~= true then
-                theme.main.border.texture = value
-            end
-            if value == 'none' then
-                value = nil
-            end
-            backdrop.edgeFile = value
-        end
-        if param == 'borderSize' then
-            if woSave ~= true then
-                theme.main.border.size = value
-            end
-            backdrop.edgeSize = value
-        end
-        if param == 'borderInset' then
-            if woSave ~= true then
-                theme.main.border.inset = value
-            end
-            backdrop.insets = {
-                left   = value,
-                right  = value,
-                top    = value,
-                bottom = value,
-            }
-        end
-        Addon.fMain:SetBackdrop(backdrop)
-        Addon.fMain:SetBackdropColor(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a)
-        Addon.fMain:SetBackdropBorderColor(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a)
-    end
-end
-
-function Addon:SetFontSize(frame, value)
-    local theme = IPMTTheme[IPMTOptions.theme]
-    local elemInfo = theme.elements[frame]
-    elemInfo.fontSize = value
     if frame == Addon.season.frameName then
         if Addon.season.SetFont then
-            Addon.season:SetFont(theme.font, elemInfo.fontSize)
+            Addon.season:SetFont(theme.font, value)
         end
     else
-        Addon.fMain[frame].text:SetFont(theme.font, elemInfo.fontSize)
+        Addon.fMain[frame].text:SetFont(theme.font, value)
         if frame ~= "dungeonname" then
             local width = Addon.fMain[frame].text:GetStringWidth()
             local height = Addon.fMain[frame].text:GetStringHeight()
             Addon.fMain[frame]:SetSize(width, height)
         end
     end
+    if woSave ~= true then
+        theme.elements[frame].fontSize = value
+    end
 end
 
-function Addon:SetColor(frame, color, i)
+function Addon:SetColor(frame, color, i, woSave)
     local theme = IPMTTheme[IPMTOptions.theme]
-    local elemInfo = theme.elements[frame]
-    if elemInfo.color.r ~= nil then
-        elemInfo.color = Addon:CopyObject(color)
-    else
-        elemInfo.color[i] = Addon:CopyObject(color)
-    end
     if frame == Addon.season.frameName then
         if Addon.season.SetColor then
-            Addon.season:SetColor(color)
+            Addon.season:SetColor(color, i)
         end
     else
         Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
         Addon.fMain[frame].text:SetAlpha(color.a)
     end
-end
-
-function Addon:SetIconSize(frame, value)
-    local theme = IPMTTheme[IPMTOptions.theme]
-    local elemInfo = theme.elements[frame]
-    elemInfo.iconSize = value
-    Addon.fMain[frame]:SetSize(elemInfo.iconSize*4 + 10, elemInfo.iconSize + 10)
-    for f = 1,4 do
-        local right = (-1) * (elemInfo.iconSize + 1) * (f-1)
-        Addon.fMain.affix[f]:SetSize(elemInfo.iconSize, elemInfo.iconSize)
-        Addon.fMain.affix[f].Portrait:SetSize(elemInfo.iconSize, elemInfo.iconSize - 2)
-        Addon.fMain.affix[f]:SetPoint("RIGHT", Addon.fMain.affixes, "RIGHT", right - 4, 0)
+    if woSave ~= true then
+        local elemInfo = theme.elements[frame]
+        if elemInfo.color.r ~= nil then
+            elemInfo.color = Addon:CopyObject(color)
+        else
+            elemInfo.color[i] = Addon:CopyObject(color)
+        end
     end
 end
 
+function Addon:SetIconSize(frame, value, woSave)
+    if frame == Addon.season.frameName then
+        if Addon.season.SetIconSize then
+            Addon.season:SetIconSize(value)
+        end
+    else
+        Addon.fMain[frame]:SetSize(value*4 + 10, value + 10)
+        for f = 1,4 do
+            local right = (-1) * (value + 1) * (f-1)
+            Addon.fMain.affix[f]:SetSize(value, value)
+            Addon.fMain.affix[f].Portrait:SetSize(value, value - 2)
+            Addon.fMain.affix[f]:SetPoint("RIGHT", Addon.fMain.affixes, "RIGHT", right - 4, 0)
+        end
+    end
+
+    if woSave ~= true then
+        IPMTTheme[IPMTOptions.theme].elements[frame].iconSize = value
+    end
+end
+
+-- Movable element
 function Addon:ToggleMovable(frame, enable)
     if enable == nil then
         enable = not Addon.fMain[frame].isMovable
@@ -265,7 +285,7 @@ function Addon:ToggleMovable(frame, enable)
     Addon.fMain[frame].isMovable = enable
     if Addon.fMain[frame].isMovable then
         Addon.fMain[frame]:SetBackdropColor(1,1,1, .25)
-        Addon.fThemes[frame].moveMode.icon:SetVertexColor(1, 1, 1)
+        Addon.fThemes[frame].moveMode.icon:SetAlpha(1)
     else
         if IPMTTheme[IPMTOptions.theme].elements[frame].hidden then
             Addon.fMain[frame]:SetBackdropColor(.85,0,0, .15)
@@ -276,24 +296,67 @@ function Addon:ToggleMovable(frame, enable)
             end
             Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
         end
-        Addon.fThemes[frame].moveMode.icon:SetVertexColor(.5, .5, .5)
+        local alpha = Addon.fThemes[frame].moveMode.icon:GetAlpha()
+        if alpha == 1 then
+            alpha = .9
+        else
+            alpha = .5
+        end
+        Addon.fThemes[frame].moveMode.icon:SetAlpha(alpha)
     end
     Addon.fMain[frame]:EnableMouse(Addon.fMain[frame].isMovable)
     Addon.fMain[frame]:SetMovable(Addon.fMain[frame].isMovable)
-    for f = 1,4 do
-        Addon.fMain.affix[f]:EnableMouse(not Addon.fMain[frame].isMovable)
+    if frame == 'affixes' then
+        for f = 1,4 do
+            Addon.fMain.affix[f]:EnableMouse(not Addon.fMain[frame].isMovable)
+        end
     end
 end
+function Addon:HoverMovable(frame, button)
+    if not Addon.fMain[frame].isMovable then
+        button.icon:SetAlpha(.9)
+    end
+    local text
+    GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+    GameTooltip:SetText('Переместить элемент', .9, .9, 0, 1, true)
+    GameTooltip:Show()
+    Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+end
+function Addon:BlurMovable(frame, button)
+    if not Addon.fMain[frame].isMovable then
+        button.icon:SetAlpha(.5)
+    end
+    GameTooltip:Hide()
+end
 
-function Addon:MoveElement(frame, point, rPoint, x, y)
-    Addon.fMain[frame]:ClearAllPoints()
-    Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, x, y)
-
+function Addon:MoveElement(frame, params, woSave)
     local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
-    elemInfo.position.x = x
-    elemInfo.position.y = y
-    elemInfo.position.point = point
-    elemInfo.position.rPoint = rPoint
+    if params == nil then
+        params = elemInfo.position
+    else
+        if params.point == nil then
+            params.point = elemInfo.position.point
+        end
+        if params.rPoint == nil then
+            params.rPoint = elemInfo.position.rPoint
+        end
+        if params.x == nil then
+            params.x = elemInfo.position.x
+        end
+        if params.y == nil then
+            params.y = elemInfo.position.y
+        end
+    end
+    Addon.fMain[frame]:ClearAllPoints()
+    Addon.fMain[frame]:SetPoint(params.point, Addon.fMain, params.rPoint, params.x, params.y)
+
+    if woSave ~= true then
+        local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+        elemInfo.position.x = params.x
+        elemInfo.position.y = params.y
+        elemInfo.position.point = params.point
+        elemInfo.position.rPoint = params.rPoint
+    end
 end
 
 function Addon:SmartMoveElement(self, frame)
@@ -311,5 +374,69 @@ function Addon:SmartMoveElement(self, frame)
     else
         rPoint = "TOP" .. point
     end
-    Addon:MoveElement(frame, point, rPoint, x, y)
+    Addon:MoveElement(frame, {
+        point = point,
+        rPoint = rPoint,
+        x = x,
+        y = y,
+    })
+end
+
+function Addon:DuplicateTheme(theme)
+    local newTheme = Addon:CopyObject(theme)
+    newTheme.name = newTheme.name .. ' (копия)'
+    table.insert(IPMTTheme, newTheme)
+end
+
+function Addon:ApplyTheme(themeID)
+    IPMTOptions.theme = themeID
+    local theme = IPMTTheme[IPMTOptions.theme]
+
+    Addon:ChangeMain(nil, nil, true)
+    Addon:SetFont(theme.font, true)
+    for frame, info in pairs(theme.elements) do
+        Addon:MoveElement(frame, nil, true)
+        if info.fontSize ~= nil then
+            Addon:SetFontSize(frame, info.fontSize, true)
+            if info.color ~= nil then
+                if info.color.r ~= nil then
+                    Addon:SetColor(frame, info.color, nil, true)
+                else
+                    Addon:SetColor(frame, info.color[0], nil, true)
+                end
+            end
+        end
+        if info.iconSize then
+            Addon:SetIconSize(frame, info.iconSize, true)
+        end
+        if info.hidden then
+            Addon.fMain[frame]:Hide()
+        else
+            Addon.fMain[frame]:Show()
+            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+        end
+    end
+    if Addon.fThemes ~= nil and Addon.fThemes:IsShown() then
+        Addon:FillThemeEditor()
+    end
+    Addon.fOptions.removeTheme:ToggleDisabled(IPMTOptions.theme == 1)
+end
+
+function Addon:RemoveTheme(themeID)
+    if themeID == 1 then
+        return
+    end
+    local themes = {}
+    for i,theme in ipairs(IPMTTheme) do
+        if i ~= themeID then
+            table.insert(themes, theme)
+        end
+    end
+    IPMTTheme = themes
+    Addon.fOptions.theme:SelectItem(1)
+end
+
+function Addon:RestoreDefaultTheme()
+    IPMTTheme[1] = Addon:CopyObject(Addon.theme[1])
+    Addon.fOptions.theme:SelectItem(1)
 end

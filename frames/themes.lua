@@ -316,28 +316,17 @@ function Addon:RenderThemeEditor()
             Addon:ToggleVisible(frame)
         end)
         Addon.fThemes[frame].toggle:SetScript("OnEnter", function(self, event, ...)
-            self.icon:SetVertexColor(.9, .9, .9)
-            local text
-            if IPMTTheme[IPMTOptions.theme].elements[frame].hidden then
-                text = 'Показать элемент'
-            else
-                text = 'Скрыть элемент'
-            end
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText(text, .9, .9, 0, 1, true)
-            GameTooltip:Show()
-            Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+            Addon:HoverVisible(frame, self)
         end)
         Addon.fThemes[frame].toggle:SetScript("OnLeave", function(self, event, ...)
-            self.icon:SetVertexColor(.5, .5, .5)
-            GameTooltip:Hide()
+            Addon:BlurVisible(frame, self)
         end)
         Addon.fThemes[frame].toggle.icon = Addon.fThemes[frame].toggle:CreateTexture()
         Addon.fThemes[frame].toggle.icon:SetSize(20, 20)
         Addon.fThemes[frame].toggle.icon:ClearAllPoints()
         Addon.fThemes[frame].toggle.icon:SetPoint("CENTER", Addon.fThemes[frame].toggle, "CENTER", 0, 0)
         Addon.fThemes[frame].toggle.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
-        Addon.fThemes[frame].toggle.icon:SetVertexColor(.5, .5, .5)
+        Addon.fThemes[frame].toggle.icon:SetAlpha(.5)
 
 
         -- Toggle Movable button
@@ -350,66 +339,59 @@ function Addon:RenderThemeEditor()
             Addon:ToggleMovable(frame)
         end)
         Addon.fThemes[frame].moveMode:SetScript("OnEnter", function(self, event, ...)
-            if not Addon.fMain[frame].isMovable then
-                self.icon:SetVertexColor(.9, .9, .9)
-            end
-            local text
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText('Переместить элемент', .9, .9, 0, 1, true)
-            GameTooltip:Show()
-            Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+            Addon:HoverMovable(frame, self)
         end)
         Addon.fThemes[frame].moveMode:SetScript("OnLeave", function(self, event, ...)
-            if not Addon.fMain[frame].isMovable then
-                self.icon:SetVertexColor(.5, .5, .5)
-            end
-            GameTooltip:Hide()
+            Addon:BlurMovable(frame, self)
         end)
         Addon.fThemes[frame].moveMode.icon = Addon.fThemes[frame].moveMode:CreateTexture()
         Addon.fThemes[frame].moveMode.icon:SetSize(20, 20)
         Addon.fThemes[frame].moveMode.icon:ClearAllPoints()
         Addon.fThemes[frame].moveMode.icon:SetPoint("CENTER", Addon.fThemes[frame].moveMode, "CENTER", 0, 0)
         Addon.fThemes[frame].moveMode.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
-        Addon.fThemes[frame].moveMode.icon:SetVertexColor(.5, .5, .5)
+        Addon.fThemes[frame].moveMode.icon:SetVertexColor(1, 1, 1)
+        Addon.fThemes[frame].moveMode.icon:SetAlpha(.5)
         Addon.fThemes[frame].moveMode.icon:SetTexCoord(.25, .5, .5, 1)
 
         subTop = -30
         if params.hasText then
-            Addon.fThemes[frame].colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-            Addon.fThemes[frame].colorCaption:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
-            Addon.fThemes[frame].colorCaption:SetJustifyH("LEFT")
-            Addon.fThemes[frame].colorCaption:SetSize(70, 20)
-            Addon.fThemes[frame].colorCaption:SetTextColor(1, 1, 1)
-            Addon.fThemes[frame].colorCaption:SetText('Цвет')
-            -- Color
-            local colorInfo = Addon:CopyObject(elemInfo.color)
-            if colorInfo.r ~= nil then
-                colorInfo = {
-                    [-1] = colorInfo,
-                }
-            end
-            Addon.fThemes[frame].color = {}
-            for i = -1,2 do
-                if colorInfo[i] ~= nil then
-                    Addon.fThemes[frame].color[i] = CreateFrame("Button", nil, Addon.fThemes[frame], "IPColorButton")
-                    Addon.fThemes[frame].color[i]:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 90 + (i+1)*30, subTop)
-                    Addon.fThemes[frame].color[i]:SetBackdropColor(.5,0,0, 1)
-                    Addon.fThemes[frame].color[i]:SetCallback(function(self, r, g, b, a)
-                        Addon:SetColor(frame, {r=r, g=g, b=b, a=a}, i)
-                    end)
-                    Addon.fThemes[frame].color[i]:ColorChange(colorInfo[i].r, colorInfo[i].g, colorInfo[i].b, colorInfo[i].a, true)
-                    Addon.fThemes[frame].color[i]:HookScript("OnEnter", function(self)
-                        Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
-                        if params.colors ~= nil and params.colors[i] ~= nil then
-                            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                            GameTooltip:SetText(params.colors[i], .9, .9, 0, 1, true)
-                            GameTooltip:Show()
-                        end
-                    end)
-                    if params.colors ~= nil and params.colors[i] ~= nil then
-                        Addon.fThemes[frame].color[i]:HookScript("OnLeave", function(self)
-                            GameTooltip:Hide()
+            if elemInfo.color ~= nil then
+                local colorInfo = Addon:CopyObject(elemInfo.color)
+                if colorInfo.r ~= nil then
+                    colorInfo = {
+                        [-1] = colorInfo,
+                    }
+                end
+                Addon.fThemes[frame].colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+                Addon.fThemes[frame].colorCaption:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
+                Addon.fThemes[frame].colorCaption:SetJustifyH("LEFT")
+                Addon.fThemes[frame].colorCaption:SetSize(65, 20)
+                Addon.fThemes[frame].colorCaption:SetTextColor(1, 1, 1)
+                Addon.fThemes[frame].colorCaption:SetText('Цвет')
+                -- Color
+                Addon.fThemes[frame].color = {}
+                for i = -1,2 do
+                    if colorInfo[i] ~= nil then
+                        Addon.fThemes[frame].color[i] = CreateFrame("Button", nil, Addon.fThemes[frame], "IPColorButton")
+                        Addon.fThemes[frame].color[i]:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 90 + (i+1)*30, subTop)
+                        Addon.fThemes[frame].color[i]:SetBackdropColor(.5,0,0, 1)
+                        Addon.fThemes[frame].color[i]:SetCallback(function(self, r, g, b, a)
+                            Addon:SetColor(frame, {r=r, g=g, b=b, a=a}, i)
                         end)
+                        Addon.fThemes[frame].color[i]:ColorChange(colorInfo[i].r, colorInfo[i].g, colorInfo[i].b, colorInfo[i].a, true)
+                        Addon.fThemes[frame].color[i]:HookScript("OnEnter", function(self)
+                            Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+                            if params.colors ~= nil and params.colors[i] ~= nil then
+                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                                GameTooltip:SetText(params.colors[i], .9, .9, 0, 1, true)
+                                GameTooltip:Show()
+                            end
+                        end)
+                        if params.colors ~= nil and params.colors[i] ~= nil then
+                            Addon.fThemes[frame].color[i]:HookScript("OnLeave", function(self)
+                                GameTooltip:Hide()
+                            end)
+                        end
                     end
                 end
             end
@@ -427,12 +409,12 @@ function Addon:RenderThemeEditor()
             Addon.fThemes[frame].fontSize.High:SetText('40')
             Addon.fThemes[frame].fontSize:SetScript('OnValueChanged', function(self)
                 local value = self:GetValue()
-                Addon.fThemes[frame].fontSize.Text:SetText("Размер шрифта (" .. value .. ")")
+                self.Text:SetText("Размер шрифта (" .. value .. ")")
                 Addon:SetFontSize(frame, value)
             end)
             Addon.fThemes[frame].fontSize:SetScript('OnMouseWheel', function(self)
                 local value = self:GetValue()
-                Addon.fThemes[frame].fontSize.Text:SetText("Размер шрифта (" .. value .. ")")
+                self.Text:SetText("Размер шрифта (" .. value .. ")")
                 Addon:SetFontSize(frame, value)
             end)
             Addon.fThemes[frame].fontSize:HookScript("OnEnter", function(self)
@@ -467,6 +449,11 @@ function Addon:RenderThemeEditor()
             end)
             Addon.fThemes[frame].iconSize:SetValue(theme.elements[frame].iconSize)
         end
+
+        if frame == Addon.season.frameName and Addon.season.RenderThemeFieldSet then
+            subTop = Addon.season:RenderThemeFieldSet(subTop, theme)
+        end
+
         Addon.fThemes[frame]:SetHeight((subTop - 40) * -1)
 
         top = top - Addon.fThemes[frame]:GetHeight() - 47

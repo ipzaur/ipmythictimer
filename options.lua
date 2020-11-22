@@ -118,7 +118,7 @@ function Addon:ToggleOptions()
         Addon:ShowOptions()
     end
 end
-function Addon:toggleMapbutton(show)
+function Addon:ToggleMapButton(show)
     local icon = LibStub("LibDBIcon-1.0")
     Addon.DB.global.minimap.hide = not show
     if not Addon.DB.global.minimap.hide then
@@ -141,7 +141,7 @@ function Addon:ShowOptions()
     if IPMTDungeon and not IPMTDungeon.keyActive then
         for i, info in ipairs(Addon.frames) do
             local frame = info.label
-            if info.hasText then
+            if info.hasText and nonCombatContent[frame] ~= nil then
                 local content = nonCombatContent[frame].content
                 if frame == "progress" or frame == "prognosis" then
                     content = content[IPMTOptions.progress]

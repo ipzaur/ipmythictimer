@@ -102,17 +102,19 @@ function Addon:RenderOptions()
     })
 
     -- Minimap Button checkbox
-    Addon.fOptions.Mapbut = CreateFrame("CheckButton", nil, Addon.fOptions.common, "InterfaceOptionsCheckButtonTemplate")
-    Addon.fOptions.Mapbut:SetSize(22, 22)
-    Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 20, -240)
+    Addon.fOptions.Mapbut = CreateFrame("CheckButton", nil, Addon.fOptions.common, "IPCheckButton")
+    Addon.fOptions.Mapbut:SetHeight(22)
+    Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -240)
+    Addon.fOptions.Mapbut:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -240)
+    --[[
     Addon.fOptions.Mapbut.label = Addon.fOptions.Mapbut:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
     Addon.fOptions.Mapbut.label:SetJustifyH("LEFT")
     Addon.fOptions.Mapbut.label:SetPoint("LEFT", Addon.fOptions.Mapbut, "CENTER", 20, 0)
     Addon.fOptions.Mapbut.label:SetSize(200, 40)
-    Addon.fOptions.Mapbut.label:SetTextColor(1, 1, 1)
-    Addon.fOptions.Mapbut.label:SetText(Addon.localization.MAPBUTOPT)
+    Addon.fOptions.Mapbut.label:SetTextColor(1, 1, 1)--]]
+    Addon.fOptions.Mapbut:SetText(Addon.localization.MAPBUTOPT)
     Addon.fOptions.Mapbut:SetScript("PostClick", function(self)
-        Addon:toggleMapbutton(Addon.fOptions.Mapbut:GetChecked())
+        Addon:ToggleMapButton(self:GetChecked())
     end)
 
 
@@ -127,8 +129,8 @@ function Addon:RenderOptions()
     -- Themes selector
     local function getThemesList()
         local list = {}
-        for label,theme in pairs(IPMTTheme) do
-            list[label] = theme.name
+        for id,theme in pairs(IPMTTheme) do
+            list[id] = theme.name
         end
         return list
     end
@@ -139,9 +141,7 @@ function Addon:RenderOptions()
     Addon.fOptions.theme:SetList(getThemesList, IPMTOptions.theme)
     Addon.fOptions.theme:SetCallback({
         OnSelect = function(self, key, text)
-            print(key)
-            print(text)
-            --Addon:SetProgressDirection(key)
+            Addon:ApplyTheme(key)
         end,
     })
 
@@ -154,7 +154,8 @@ function Addon:RenderOptions()
     Addon.fOptions.newTheme.fTexture:SetTexCoord(.5, .75, .5, 1)
     Addon.fOptions.newTheme.fTexture:SetVertexColor(.75, .75, .75)
     Addon.fOptions.newTheme:SetScript("OnClick", function(self)
-        print('new')
+        Addon:DuplicateTheme(IPMTTheme[IPMTOptions.theme])
+        Addon.fOptions.theme:SelectItem(#IPMTTheme)
     end)
     Addon.fOptions.newTheme:HookScript("OnEnter", function(self)
         self.fTexture:SetVertexColor(1, 1, 1)
@@ -177,7 +178,7 @@ function Addon:RenderOptions()
     Addon.fOptions.removeTheme.fTexture:SetVertexColor(.75, .75, .75)
     Addon.fOptions.removeTheme:SetScript("OnClick", function(self)
         if not self.disabled then
-            print('remove')
+           Addon:RemoveTheme(IPMTOptions.theme)
         end
     end)
     Addon.fOptions.removeTheme:HookScript("OnEnter", function(self)
@@ -201,7 +202,6 @@ function Addon:RenderOptions()
             self.fTexture:SetVertexColor(.75, .75, .75)
         end
     end
-    print(IPMTOptions.theme)
     if IPMTOptions.theme == 1 then
         Addon.fOptions.removeTheme:ToggleDisabled(true)
     end
@@ -215,7 +215,7 @@ function Addon:RenderOptions()
     Addon.fOptions.restoreTheme.fTexture:SetTexCoord(.75, 1, .5, 1)
     Addon.fOptions.restoreTheme.fTexture:SetVertexColor(.75, .75, .75)
     Addon.fOptions.restoreTheme:SetScript("OnClick", function(self)
-        print('restore')
+        Addon:RestoreDefaultTheme()
     end)
     Addon.fOptions.restoreTheme:HookScript("OnEnter", function(self)
         self.fTexture:SetVertexColor(1, 1, 1)

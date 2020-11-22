@@ -11,7 +11,6 @@ local backdrop = {
 }
 
 local currentButton = nil
-local isClosing = false
 local function ColorChange(restore)
     if currentButton == nil then
         return
@@ -24,41 +23,45 @@ local function ColorChange(restore)
         a = OpacitySliderFrame:GetValue()
     end
     currentButton:ColorChange(r, g, b, a)
-
-    if isClosing == true then
-        currentButton = nil
-        isClosing = false
-    end
 end
 local function ShowColorPicker(button)
-    currentButton = button
-    ColorPickerFrame:SetColorRGB(currentButton.r, currentButton.g, currentButton.b)
     ColorPickerFrame.hasOpacity = true
     ColorPickerFrame.opacity = currentButton.a
     ColorPickerFrame.previousValues = {currentButton.r, currentButton.g, currentButton.b, currentButton.a}
     ColorPickerFrame.func        = ColorChange
     ColorPickerFrame.opacityFunc = ColorChange
     ColorPickerFrame.cancelFunc  = ColorChange
-    ColorPickerFrame:Hide()
-    ColorPickerFrame:Show()
+    ColorPickerFrame:SetColorRGB(currentButton.r, currentButton.g, currentButton.b)
+    OpacitySliderFrame:SetValue(currentButton.a)
 
+    ColorPickerFrame:Show()
 end
-ColorPickerFrame:HookScript("OnHide", function()
+ColorPickerCancelButton:HookScript("OnHide", function()
     if currentButton ~= nil then
-        isClosing = true
+        currentButton = nil
+    end
+end)
+ColorPickerOkayButton:HookScript("OnHide", function()
+    if currentButton ~= nil then
+        currentButton = nil
     end
 end)
 
 function IPColorButtonMixin:OnClick()
+    if currentButton ~= nil then
+        ColorPickerFrame.cancelFunc(ColorPickerFrame.previousValues)
+    end
+    ColorPickerFrame:Hide()
+    currentButton = self
     ShowColorPicker(self)
 end
 
 function IPColorButtonMixin:OnEnter()
-    self:SetBackdropBorderColor(1,1,1, 1)
+    self:SetBackdropBorderColor(1,1,1)
 end
 
 function IPColorButtonMixin:OnLeave()
-    self:SetBackdropBorderColor(1,1,1, .5)
+    self:SetBackdropBorderColor(.5,.5,.5)
 end
 
 function IPColorButtonMixin:ColorChange(r, g, b, a, woCallback)
@@ -77,7 +80,7 @@ function IPColorButtonMixin:OnLoad()
     self.Callback = nil
 
     self:SetBackdrop(backdrop)
-    self:SetBackdropBorderColor(1,1,1, .5)
+    self:SetBackdropBorderColor(.5,.5,.5)
 end
 
 function IPColorButtonMixin:SetCallback(Callback)

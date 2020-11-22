@@ -457,7 +457,11 @@ end
 
 function Addon:InitVars()
     Addon:InitThemes()
+    local globalVars = IPMTOptions.global
     IPMTOptions = Addon:CopyObject(Addon.defaultOption, IPMTOptions)
+    if globalVars ~= nil then
+        IPMTOptions.global = globalVars
+    end
 
     if IPMTDB == nil then
         IPMTDB = {}
