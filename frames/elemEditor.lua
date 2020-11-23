@@ -1,14 +1,14 @@
 local AddonName, Addon = ...
 
 local points = {
-    CENTER = 'CENTER',
-    TOP = 'TOP',
-    RIGHT = 'RIGHT',
-    LEFT = 'LEFT',
-    BOTTOM = 'BOTTOM',
-    TOPLEFT = 'TOPLEFT',
-    TOPRIGHT = 'TOPRIGHT',
-    BOTTOMLEFT = 'BOTTOMLEFT',
+    CENTER      = 'CENTER',
+    TOP         = 'TOP',
+    BOTTOM      = 'BOTTOM',
+    LEFT        = 'LEFT',
+    RIGHT       = 'RIGHT',
+    TOPLEFT     = 'TOPLEFT',
+    TOPRIGHT    = 'TOPRIGHT',
+    BOTTOMLEFT  = 'BOTTOMLEFT',
     BOTTOMRIGHT = 'BOTTOMRIGHT',
 }
 
@@ -35,7 +35,7 @@ function Addon:RenderElemEditor()
     Addon.fElemEditor.caption:SetSize(250, 20)
     Addon.fElemEditor.caption:SetFont(Addon.DECOR_FONT, 20)
     Addon.fElemEditor.caption:SetTextColor(1, 1, 1)
-    Addon.fElemEditor.caption:SetText('Настройка элемента')
+    Addon.fElemEditor.caption:SetText(Addon.localization.ELEMPOS)
 
     -- X-Close button
     Addon.fElemEditor.closeX = CreateFrame("Button", nil, Addon.fElemEditor, BackdropTemplateMixin and "BackdropTemplate")
@@ -66,7 +66,7 @@ function Addon:RenderElemEditor()
     Addon.fElemEditor.pointCaption:SetJustifyH("CENTER")
     Addon.fElemEditor.pointCaption:SetSize(200, 20)
     Addon.fElemEditor.pointCaption:SetTextColor(1, 1, 1)
-    Addon.fElemEditor.pointCaption:SetText('Опорная точка')
+    Addon.fElemEditor.pointCaption:SetText(Addon.localization.POINT)
     -- Point
     top = top - 24
     Addon.fElemEditor.point = CreateFrame("Button", nil, Addon.fElemEditor, "IPListBox")
@@ -85,7 +85,7 @@ function Addon:RenderElemEditor()
     Addon.fElemEditor.rPointCaption:SetJustifyH("CENTER")
     Addon.fElemEditor.rPointCaption:SetSize(200, 20)
     Addon.fElemEditor.rPointCaption:SetTextColor(1, 1, 1)
-    Addon.fElemEditor.rPointCaption:SetText('Точка зависимости')
+    Addon.fElemEditor.rPointCaption:SetText(Addon.localization.RELPOINT)
     -- Relative Point
     top = top - 24
     Addon.fElemEditor.rPoint = CreateFrame("Button", nil, Addon.fElemEditor, "IPListBox")

@@ -30,7 +30,7 @@ function IPFieldSetMixin:OnLoad()
     self.fTextBG:SetFrameStrata("MEDIUM")
 
     self.fTextBG.fText = self.fTextBG:CreateFontString(nil, "MEDIUM", "GameFontNormal")
-    self.fTextBG.fText:SetSize(190, 22)
+    self.fTextBG.fText:SetSize(250, 22)
     self.fTextBG.fText:ClearAllPoints()
     self.fTextBG.fText:SetPoint("CENTER", self.fTextBG, "CENTER", 0, 0)
     self.fTextBG.fText:SetJustifyH("CENTER")

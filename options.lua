@@ -1,36 +1,5 @@
 local AddonName, Addon = ...
 
-local nonCombatContent = {
-    level = {
-        content  = "24",
-    },
-    plusLevel = {
-        content  = "+3",
-    },
-    timer = {
-        content  = "27:32",
-        colorId  = 1,
-    },
-    plusTimer = {
-        content  = "04:19",
-    },
-    deathTimer = {
-        content  = "-00:15 [3]",
-    },
-    progress = {
-        content  = {"57.32%", "134/286"},
-    },
-    prognosis = {
-        content  = {"63.46%", "148"},
-    },
-    bosses = {
-        content  = "3/5",
-    },
-    dungeonname = {
-        content  = Addon.localization.DUNGENAME,
-    },
-}
-
 local LSM = LibStub("LibSharedMedia-3.0")
 
 function Addon:CleanDB()
@@ -61,7 +30,6 @@ function Addon:SetProgressFormat(value)
         else
             Addon:UpdateProgress()
         end
-        Addon:RecalcElem()
         if Addon.season.ShowTimer then
             Addon.season:ShowTimer()
         end
@@ -74,45 +42,11 @@ function Addon:SetProgressDirection(value)
         if IPMTDungeon.keyActive then
             Addon:UpdateProgress()
         end
-        Addon:RecalcElem()
-    end
-end
-
-function Addon:SelectFont(font)
-    local fontList = LSM:List('font')
-    for i,fontName in pairs(fontList) do
-        local filepath = LSM:Fetch('font', fontName)
-        if (font == filepath) then
-            Addon.fThemes.fFonts:SelectItem(font)
-        end
-    end
-end
-
-function Addon:RecalcElem(frame)
-    if frame ~= nil then
-        if frame == Addon.season.frameName then
-            if Addon.season.recalcElem then
-                Addon.season.recalcElem(frame)
-            end
-        elseif frame ~= "dungeonname" then
-            local width = Addon.fMain[frame].text:GetStringWidth()
-            local height = Addon.fMain[frame].text:GetStringHeight()
-            Addon.fMain[frame]:SetSize(width, height)
-        end
-    else
-        for i, info in ipairs(Addon.frames) do
-            local frame = info.label
-            if frame ~= "dungeonname" and Addon.fMain[frame].text ~= nil then
-                local width = Addon.fMain[frame].text:GetStringWidth()
-                local height = Addon.fMain[frame].text:GetStringHeight()
-                Addon.fMain[frame]:SetSize(width, height)
-            end
-        end
     end
 end
 
 function Addon:ToggleOptions()
-    if Addon.fOptions and Addon.fOptions:IsShown() then
+    if Addon.opened.options then
         Addon:CloseOptions()
     else
         Addon:ShowOptions()
@@ -132,29 +66,25 @@ function Addon:ShowOptions()
     if Addon.fOptions == nil then
         Addon:RenderOptions()
     end
+
     Addon.fOptions:Show()
     Addon.fMain:Show()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
-    Addon.fOptions.Mapbut:SetChecked(not Addon.DB.global.minimap.hide)
+
     local theme = IPMTTheme[IPMTOptions.theme]
     if IPMTDungeon and not IPMTDungeon.keyActive then
         for i, info in ipairs(Addon.frames) do
             local frame = info.label
-            if info.hasText and nonCombatContent[frame] ~= nil then
-                local content = nonCombatContent[frame].content
+            if info.hasText and info.dummy ~= nil then
+                local text = info.dummy.text
                 if frame == "progress" or frame == "prognosis" then
-                    content = content[IPMTOptions.progress]
+                    text = text[IPMTOptions.progress]
                 end
-                Addon.fMain[frame].text:SetText(content)
-                if nonCombatContent[frame].colorId then
-                    local color = theme.elements[frame].color[nonCombatContent[frame].colorId]
+                Addon.fMain[frame].text:SetText(text)
+                if info.dummy.colorId then
+                    local color = theme.elements[frame].color[info.dummy.colorId]
                     Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
-                end
-                if frame ~= "dungeonname" then
-                    local width = Addon.fMain[frame].text:GetStringWidth()
-                    local height = Addon.fMain[frame].text:GetStringHeight()
-                    Addon.fMain[frame]:SetSize(width, height)
                 end
             end
         end
@@ -169,9 +99,13 @@ function Addon:ShowOptions()
     if Addon.season.options and Addon.season.options.ShowOptions then
         Addon.season.options:ShowOptions()
     end
+    Addon.opened.options = true
 end
 
 function Addon:CloseOptions()
+    if not Addon.opened.options then
+        return
+    end
     Addon:CloseThemeEditor()
     Addon.fMain:SetMovable(false)
     Addon.fMain:EnableMouse(false)
@@ -181,7 +115,11 @@ function Addon:CloseOptions()
     if IPMTDungeon.deathes and IPMTDungeon.deathes.list and #IPMTDungeon.deathes.list == 0 then
         Addon.fMain.deathTimer:Hide()
     end
+    Addon.fMain.timer:EnableMouse(true)
+    Addon.fMain.deathTimer:EnableMouse(true)
+    Addon.fMain.bosses:EnableMouse(true)
     Addon.fOptions:Hide()
+    Addon.opened.options = false
 end
 
 local hideMainMenu = false
@@ -195,7 +133,7 @@ hooksecurefunc('GameMenuFrame_UpdateVisibleButtons', TryToHideMainMenu)
 
 local _G = getfenv(0)
 _G.hooksecurefunc("StaticPopup_EscapePressed", function()
-    if Addon.fOptions ~= nil and Addon.fOptions:IsShown() then
+    if Addon.opened.options then
         if not GameMenuFrame:IsShown() and not InterfaceOptionsFrame:IsShown() then
             Addon:CloseOptions()
             hideMainMenu = true

@@ -3,7 +3,7 @@ local AddonName, Addon = ...
 Addon.theme = {}
 
 Addon.theme[1] = {
-    name    = 'По-умолчанию',
+    name    = Addon.localization.DEFAULT,
     font    = Addon.FONT_ROBOTO,
     main = {
         size = {

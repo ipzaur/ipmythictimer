@@ -3,6 +3,32 @@ local AddonName, Addon = ...
 function Addon:InitThemes()
     if IPMTTheme == nil then
         IPMTTheme = {}
+        if IPMTOptions.font then
+            IPMTTheme = {
+                [1] = {
+                    font = IPMTOptions.font,
+                    main = {
+                        size = {
+                            w = IPMTOptions.size[0],
+                            h = IPMTOptions.size[1],
+                        },
+                        background = {
+                            color   = {r=0, g=0, b=0, a=IPMTOptions.opacity},
+                        },
+                    },
+                    elements = {},
+                }
+            }
+            for frame, info in pairs(IPMTOptions.frame) do
+                IPMTTheme[1].elements[frame] = {}
+                if info.fontSize then 
+                    IPMTTheme[1].elements[frame].fontSize = info.fontSize
+                end
+                if info.hidden then 
+                    IPMTTheme[1].elements[frame].hidden = info.hidden
+                end
+            end
+        end
     end
 
     for i, theme in ipairs(IPMTTheme) do
@@ -11,7 +37,7 @@ function Addon:InitThemes()
 end
 
 function Addon:ToggleThemeEditor()
-    if Addon.fThemes and Addon.fThemes:IsShown() then
+    if Addon.opened.themes then
         Addon:CloseThemeEditor()
     else
         Addon:ShowThemeEditor()
@@ -43,7 +69,9 @@ function Addon:ShowThemeEditor()
     Addon.fOptions:SetSize(optionsSize.expanded.w, optionsSize.expanded.h)
     Addon.fOptions.editTheme.fTexture:SetVertexColor(1, 1, 1)
     Addon.fOptions.editTheme:SetBackdropColor(.25,.25,.25, 1)
+    Addon.opened.themes = true
 
+    Addon:FillDummy()
     Addon:FillThemeEditor()
     Addon.fThemes:Show()
 end
@@ -55,16 +83,52 @@ function Addon:CloseThemeEditor()
     local theme = IPMTTheme[IPMTOptions.theme]
     Addon.fOptions:SetSize(optionsSize.collapsed.w, optionsSize.collapsed.h)
     Addon.fOptions.editTheme:SetBackdropColor(.175,.175,.175, 1)
-    Addon.fOptions.editTheme:SetBackdropColor(.175,.175,.175, 1)
     Addon.fThemes:Hide()
-    for i,info in ipairs(Addon.frames) do
-        Addon:ToggleMovable(info.label, false)
-        if theme.elements[info.label].hidden then
-            Addon.fMain[info.label]:Hide()
+    Addon.opened.themes = false
+    for frame,info in pairs(theme.elements) do
+        Addon:ToggleMovable(frame, false)
+        if info.hidden then
+            Addon.fMain[frame]:Hide()
+        elseif IPMTDungeon.keyActive and frame == 'deathTimer' then
+            Addon.deaths:Update()
         end
     end
     Addon:CloseElemEditor()
     Addon.fOptions.editTheme:OnLeave()
+end
+
+function Addon:FillDummy()
+    local theme = IPMTTheme[IPMTOptions.theme]
+    for i, info in ipairs(Addon.frames) do
+        local frame = info.label
+        if info.hasText and info.dummy ~= nil then
+            if not IPMTDungeon.keyActive or Addon.fMain[frame].text:GetText() == nil then
+                local text = info.dummy.text
+                if frame == "progress" or frame == "prognosis" then
+                    text = text[IPMTOptions.progress]
+                end
+                Addon.fMain[frame].text:SetText(text)
+                Addon.fMain[frame]:Show()
+                if info.dummy.colorId then
+                    local color = theme.elements[frame].color[info.dummy.colorId]
+                    Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
+                end
+            end
+            if frame ~= 'dungeonname' then
+                local width = Addon.fMain[frame].text:GetStringWidth()
+                local height = Addon.fMain[frame].text:GetStringHeight()
+                Addon.fMain[frame]:SetSize(width, height)
+            end
+        end
+    end
+
+    if not IPMTDungeon.keyActive then
+        local name, description, filedataid = C_ChallengeMode.GetAffixInfo(117) -- Reaping icon
+        for i = 1,4 do
+            SetPortraitToTexture(Addon.fMain.affix[i].Portrait, filedataid)
+            Addon.fMain.affix[i]:Show()
+        end
+    end
 end
 
 function Addon:FillThemeEditor()
@@ -132,9 +196,9 @@ function Addon:HoverVisible(frame, button)
     button.icon:SetAlpha(.9)
     local text
     if IPMTTheme[IPMTOptions.theme].elements[frame].hidden then
-        text = 'Показать элемент'
+        text = Addon.localization.ELEMACTION.SHOW
     else
-        text = 'Скрыть элемент'
+        text = Addon.localization.ELEMACTION.HIDE
     end
     GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
     GameTooltip:SetText(text, .9, .9, 0, 1, true)
@@ -291,7 +355,7 @@ function Addon:ToggleMovable(frame, enable)
             Addon.fMain[frame]:SetBackdropColor(.85,0,0, .15)
         else
             local alpha = .15
-            if not Addon.fThemes:IsShown() then
+            if not Addon.opened.themes then
                 alpha = 0
             end
             Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
@@ -318,7 +382,7 @@ function Addon:HoverMovable(frame, button)
     end
     local text
     GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
-    GameTooltip:SetText('Переместить элемент', .9, .9, 0, 1, true)
+    GameTooltip:SetText(Addon.localization.ELEMACTION.MOVE, .9, .9, 0, 1, true)
     GameTooltip:Show()
     Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
 end
@@ -384,7 +448,7 @@ end
 
 function Addon:DuplicateTheme(theme)
     local newTheme = Addon:CopyObject(theme)
-    newTheme.name = newTheme.name .. ' (копия)'
+    newTheme.name = newTheme.name .. " (" .. Addon.localization.COPY .. ")"
     table.insert(IPMTTheme, newTheme)
 end
 
@@ -416,7 +480,7 @@ function Addon:ApplyTheme(themeID)
             Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
         end
     end
-    if Addon.fThemes ~= nil and Addon.fThemes:IsShown() then
+    if Addon.opened.themes then
         Addon:FillThemeEditor()
     end
     Addon.fOptions.removeTheme:ToggleDisabled(IPMTOptions.theme == 1)

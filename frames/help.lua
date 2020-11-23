@@ -211,7 +211,7 @@ local helpInfo = {
             y = 4,
             point = "BOTTOMLEFT",
         },
-        text = Addon.localization.DUNGENAME,
+        text = Addon.localization.ELEMENT.DUNGENAME,
         line = {
             size = {
                 [0] = 178,
@@ -228,8 +228,7 @@ local helpInfo = {
 
 function Addon:HideHelp()
     if Addon.fOptions.help.glow:IsShown() then
-        Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPLEFT", 20, -5)
-        Addon.fOptions.help:SetSize(30, 30)
+        Addon.fOptions.help.icon:SetSize(16, 16)
         Addon.fOptions.help.glow:Hide()
 
         for frame, info in pairs(helpInfo) do
@@ -239,8 +238,7 @@ function Addon:HideHelp()
 end
 
 function Addon:ShowHelp()
-    Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPLEFT", 20, 0)
-    Addon.fOptions.help:SetSize(40, 40)
+    Addon.fOptions.help.icon:SetSize(20, 20)
     Addon.fOptions.help.glow:Show()
 
     if Addon.fHelp == nil then

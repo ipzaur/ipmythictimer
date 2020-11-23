@@ -6,12 +6,12 @@ Addon.season.affix = 120
 Addon.season.frameName = 'corruptions'
 table.insert(Addon.frames, {
     label    = Addon.season.frameName,
-    name     = 'Обелиски',
+    name     = Addon.localization.ELEMENT.OBELISKS,
     hasText  = true,
     hasIcons = true,
     colors = {
-        [-1] = 'Цвет живого обелиска',
-        [0]  = 'Цвет закрытого обелиска',
+        [-1] = Addon.localization.COLORDESCR.OBELISKS[-1],
+        [0]  = Addon.localization.COLORDESCR.OBELISKS[0],
     },
 })
 
@@ -105,7 +105,7 @@ function Addon.season:BossWipe()
 end
 
 function Addon.season:ShowTimer()
-    if not IPMTTheme[IPMTOptions.theme].elements[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and Addon.season.isActive) or (not IPMTDungeon.keyActive and Addon.fOptions:IsShown()) ) then
+    if not IPMTTheme[IPMTOptions.theme].elements[Addon.season.frameName].hidden and ( (IPMTDungeon.keyActive and Addon.season.isActive) or (not IPMTDungeon.keyActive and Addon.opened.options) ) then
 
         if IPMTDungeon.corrupted == nil or not IPMTDungeon.keyActive then
             IPMTDungeon.corrupted = {}

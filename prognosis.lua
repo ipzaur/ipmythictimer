@@ -72,7 +72,7 @@ function Addon:ShowPrognosis()
             Addon.fMain.prognosis.text:SetText(progress)
         end
         Addon.fMain.prognosis:Show()
-    elseif not Addon.isCustomizing then
+    elseif not Addon.opened.themes then
         Addon.fMain.prognosis:Hide()
     end
 end

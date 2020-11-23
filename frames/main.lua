@@ -65,15 +65,6 @@ function Addon:RenderMain()
     end)
     Addon.fMain:Hide()
 
-    Addon.fMain.cCaption = Addon.fMain:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    Addon.fMain.cCaption:ClearAllPoints()
-    Addon.fMain.cCaption:SetPoint('BOTTOMLEFT', -20, -130)
-    Addon.fMain.cCaption:SetJustifyH('LEFT')
-    Addon.fMain.cCaption:SetFont(Addon.DECOR_FONT, 12 + Addon.DECOR_FONTSIZE_DELTA)
-    Addon.fMain.cCaption:SetTextColor(1, 1, 1)
-    Addon.fMain.cCaption:SetText(Addon.localization.CCAPTION)
-    Addon.fMain.cCaption:Hide()
-
     for i, info in ipairs(Addon.frames) do
         local frame = info.label
         local elemInfo = theme.elements[frame]
@@ -125,6 +116,7 @@ function Addon:RenderMain()
         Addon.fMain[frame]:RegisterForDrag("LeftButton")
         Addon.fMain[frame]:SetScript("OnDragStart", function(self, button)
             if self.isMovable then
+                GameTooltip:Hide()
                 Addon:StartDragging(self, button)
             end
         end)
@@ -141,28 +133,27 @@ function Addon:RenderMain()
                 Addon.deaths:Toggle()
             end
         end)
-        if frame == 'deathTimer' then
-            Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
-                Addon.deaths:ShowTooltip(self)
-            end)
-            Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
-                GameTooltip:Hide()
-            end)
-        elseif frame == 'bosses' then
-            Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
-                Addon:OnBossesEnter(self)
-            end)
-            Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
-                GameTooltip:Hide()
-            end)
-        elseif frame == 'timer' then
-            Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
-                Addon:OnTimerEnter(self)
-            end)
-            Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
-                GameTooltip:Hide()
-            end)
-        elseif frame == 'affixes' then
+        Addon.fMain[frame]:SetScript("OnEnter", function(self, event, ...)
+            if self.isMovable then
+                if not self.isMoving then
+                    GameTooltip:SetOwner(self, "ANCHOR_LEFT")
+                    GameTooltip:SetText(Addon.localization.PRECISEPOS, .9, .9, 0, 1, true)
+                    GameTooltip:Show()
+                end
+            else
+                if frame == 'deathTimer' then
+                    Addon.deaths:ShowTooltip(self)
+                elseif frame == 'bosses' then
+                    Addon:OnBossesEnter(self)
+                elseif frame == 'timer' then
+                    Addon:OnTimerEnter(self)
+                end
+            end
+        end)
+        Addon.fMain[frame]:SetScript("OnLeave", function(self, event, ...)
+            GameTooltip:Hide()
+        end)
+        if frame == 'affixes' then
             Addon.fMain.affix = {}
             for f = 1,4 do
                 Addon.fMain.affix[f] = CreateFrame("Frame", nil, Addon.fMain.affixes, "ScenarioChallengeModeAffixTemplate")

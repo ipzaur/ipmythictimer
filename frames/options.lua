@@ -106,16 +106,11 @@ function Addon:RenderOptions()
     Addon.fOptions.Mapbut:SetHeight(22)
     Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -240)
     Addon.fOptions.Mapbut:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -240)
-    --[[
-    Addon.fOptions.Mapbut.label = Addon.fOptions.Mapbut:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    Addon.fOptions.Mapbut.label:SetJustifyH("LEFT")
-    Addon.fOptions.Mapbut.label:SetPoint("LEFT", Addon.fOptions.Mapbut, "CENTER", 20, 0)
-    Addon.fOptions.Mapbut.label:SetSize(200, 40)
-    Addon.fOptions.Mapbut.label:SetTextColor(1, 1, 1)--]]
     Addon.fOptions.Mapbut:SetText(Addon.localization.MAPBUTOPT)
     Addon.fOptions.Mapbut:SetScript("PostClick", function(self)
         Addon:ToggleMapButton(self:GetChecked())
     end)
+    Addon.fOptions.Mapbut:SetChecked(not Addon.DB.global.minimap.hide)
 
 
     -- Themes caption
@@ -124,7 +119,7 @@ function Addon:RenderOptions()
     Addon.fOptions.themeCaption:SetJustifyH("CENTER")
     Addon.fOptions.themeCaption:SetSize(180, 20)
     Addon.fOptions.themeCaption:SetTextColor(1, 1, 1)
-    Addon.fOptions.themeCaption:SetText('Тема')
+    Addon.fOptions.themeCaption:SetText(Addon.localization.THEME)
 
     -- Themes selector
     local function getThemesList()
@@ -160,7 +155,7 @@ function Addon:RenderOptions()
     Addon.fOptions.newTheme:HookScript("OnEnter", function(self)
         self.fTexture:SetVertexColor(1, 1, 1)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText('Создать тему на основе текущей', .9, .9, 0, 1, true)
+        GameTooltip:SetText(Addon.localization.THEMEBUTNS.DUPLICATE, .9, .9, 0, 1, true)
         GameTooltip:Show()
     end)
     Addon.fOptions.newTheme:HookScript("OnLeave", function(self)
@@ -186,7 +181,7 @@ function Addon:RenderOptions()
             self.fTexture:SetVertexColor(1, 1, 1)
         end
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText('Удалить тему', .9, .9, 0, 1, true)
+        GameTooltip:SetText(Addon.localization.THEMEBUTNS.DELETE, .9, .9, 0, 1, true)
         GameTooltip:Show()
     end)
     Addon.fOptions.removeTheme:HookScript("OnLeave", function(self)
@@ -220,7 +215,7 @@ function Addon:RenderOptions()
     Addon.fOptions.restoreTheme:HookScript("OnEnter", function(self)
         self.fTexture:SetVertexColor(1, 1, 1)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText('Вернуть тему "по-умолчанию" в исходное состояние и применить её', .9, .9, 0, 1, true)
+        GameTooltip:SetText(Addon.localization.THEMEBUTNS.RESTORE, .9, .9, 0, 1, true)
         GameTooltip:Show()
     end)
     Addon.fOptions.restoreTheme:HookScript("OnLeave", function(self)
@@ -242,18 +237,18 @@ function Addon:RenderOptions()
     Addon.fOptions.editTheme:HookScript("OnEnter", function(self)
         self.fTexture:SetVertexColor(1, 1, 1)
         local text
-        if Addon.fThemes == nil or not Addon.fThemes:IsShown() then
-            text = 'Открыть редактор темы'
+        if not Addon.opened.themes then
+            text = Addon.localization.THEMEBUTNS.OPENEDITOR
         else
             self:SetBackdropColor(.25,.25,.25, 1)
-            text = 'Закрыть редактор темы'
+            text = Addon.localization.THEMEBUTNS.CLOSEEDITOR
         end
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(text, .9, .9, 0, 1, true)
         GameTooltip:Show()
     end)
     Addon.fOptions.editTheme:HookScript("OnLeave", function(self)
-        if Addon.fThemes == nil or not Addon.fThemes:IsShown() then
+        if not Addon.opened.themes then
             self.fTexture:SetVertexColor(.75, .75, .75)
         else
             self:SetBackdropBorderColor(1,1,1, 1)
@@ -279,18 +274,21 @@ function Addon:RenderOptions()
 
     -- Help button
     Addon.fOptions.help = CreateFrame("Button", nil, Addon.fOptions)
-    Addon.fOptions.help:SetPoint("TOP", Addon.fOptions, "TOPLEFT", 20, -5)
-    Addon.fOptions.help:SetSize(30, 30)
+    Addon.fOptions.help:SetPoint("CENTER", Addon.fOptions, "TOPLEFT", 20, -20)
+    Addon.fOptions.help:SetSize(40, 40)
     Addon.fOptions.help:SetScript("OnClick", function(self)
         Addon:ToggleHelp()
     end)
     Addon.fOptions.help.icon = Addon.fOptions.help:CreateTexture()
-    Addon.fOptions.help.icon:SetAllPoints(Addon.fOptions.help)
-    Addon.fOptions.help.icon:SetTexture("Interface\\common\\help-i")
+    Addon.fOptions.help.icon:SetSize(16, 16)
+    Addon.fOptions.help.icon:SetPoint("CENTER", Addon.fOptions.help, "CENTER", 0, 0)
+    Addon.fOptions.help.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+    Addon.fOptions.help.icon:SetTexCoord(.5, .75, 0, .5)
+    Addon.fOptions.help.icon:SetVertexColor(.9, .85, 0)
     Addon.fOptions.help.glow = Addon.fOptions.help:CreateTexture(nil, "BACKGROUND")
     Addon.fOptions.help.glow:SetAllPoints(Addon.fOptions.help)
     Addon.fOptions.help.glow:SetTexture(167062)
-    Addon.fOptions.help.glow:SetVertexColor(.9, .9, 0)
+    Addon.fOptions.help.glow:SetVertexColor(.9, .85, 0)
     Addon.fOptions.help.glow:Hide()
 
     -- X-Close button
@@ -330,8 +328,8 @@ function Addon:RenderOptions()
         local top = (-400)
         Addon.fOptions.season = {}
         -- Options caption
-        Addon.fOptions.season.caption = Addon.fOptions:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-        Addon.fOptions.season.caption:SetPoint("CENTER", Addon.fOptions, "TOP", 0, top)
+        Addon.fOptions.season.caption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+        Addon.fOptions.season.caption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, top)
         Addon.fOptions.season.caption:SetJustifyH("CENTER")
         Addon.fOptions.season.caption:SetSize(200, 20)
         Addon.fOptions.season.caption:SetFont(Addon.DECOR_FONT, 17)
@@ -339,8 +337,9 @@ function Addon:RenderOptions()
         Addon.fOptions.season.caption:SetText(Addon.localization.SEASONOPTS)
 
         local addHeight = Addon.season.options:Render(top - 30)
-        local height = Addon.fOptions:GetHeight()
-        Addon.fOptions:SetHeight(height + addHeight)
+        local height = Addon.fOptions.common:GetHeight()
+        Addon.fOptions.common:SetHeight(height + addHeight)
+        Addon.fOptions:SetHeight(height + addHeight + 20)
     end
 
 

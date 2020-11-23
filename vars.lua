@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-Addon.version = 1200
+Addon.version = 1300
 
 Addon.AFFIX_TEEMING = 5
 
@@ -30,62 +30,94 @@ Addon.backdrop = {
     edgeFile = nil,
     tile     = false,
 }
+Addon.opened = {
+    options = false,
+    themes  = false,
+}
 
 Addon.frames = {
     {
         label = 'dungeonname',
-        name = 'Название подземелья',
+        name = Addon.localization.ELEMENT.DUNGENAME,
         hasText = true,
+        dummy = {
+            text = Addon.localization.ELEMENT.DUNGENAME,
+        },
     },
     {
         label = 'level',
-        name = 'Уровень ключа',
+        name = Addon.localization.ELEMENT.LEVEL,
         hasText = true,
+        dummy = {
+            text = '24',
+        },
     },
     {
         label = 'plusLevel',
-        name = 'Улучшение ключа',
+        name = Addon.localization.ELEMENT.PLUSLEVEL,
         hasText = true,
+        dummy = {
+            text = '+2',
+        },
     },
     {
         label = 'timer',
-        name = 'Время ключа',
+        name = Addon.localization.ELEMENT.TIMER,
         hasText = true,
         colors = {
-            [-1] = 'Цвет таймера, если группа не уложилась в таймер',
-            [0]  = 'Цвет таймера, если время укладывается в диапазон для +1',
-            [1]  = 'Цвет таймера, если время укладывается в диапозон для +2',
-            [2]  = 'Цвет таймера, если время укладывается в диапазон для +3',
+            [-1] = Addon.localization.COLORDESCR.TIMER[-1],
+            [0]  = Addon.localization.COLORDESCR.TIMER[0],
+            [1]  = Addon.localization.COLORDESCR.TIMER[1],
+            [2]  = Addon.localization.COLORDESCR.TIMER[2],
+        },
+        dummy = {
+            text = '27:31',
+            colorId = 1,
         },
     },
     {
         label = 'plusTimer',
-        name = 'Время до ухудшения прогресса',
+        name = Addon.localization.ELEMENT.PLUSTIMER,
         hasText = true,
+        dummy = {
+            text = '04:19',
+        },
     },
     {
         label = 'deathTimer',
-        name = 'Смерти',
+        name = Addon.localization.ELEMENT.DEATHS,
         hasText = true,
+        dummy = {
+            text = '-00:15 [3]',
+        },
     },
     {
         label = 'progress',
-        name = 'Убито противников',
+        name = Addon.localization.ELEMENT.PROGRESS,
         hasText = true,
+        dummy = {
+            text = {"57.32%", "134/286"},
+        },
     },
     {
         label = 'prognosis',
-        name = 'Проценты после боя',
+        name = Addon.localization.ELEMENT.PROGNOSIS,
         hasText = true,
+        dummy = {
+            text = {"63.46%", "148"},
+        },
     },
     {
         label = 'bosses',
-        name = 'Боссы',
+        name = Addon.localization.ELEMENT.BOSSES,
         hasText = true,
+        dummy = {
+            text = '3/5',
+        },
     },
     {
         label = 'affixes',
-        name = 'Активные аффиксы',
+        name = Addon.localization.ELEMENT.AFFIXES,
         hasIcons = true,
     },
 }
@@ -113,6 +145,8 @@ Addon.defaultOption = {
             y = -50,
         },
     },
+    wavealert = true,
+    wavesound = Addon.ACOUSTIC_STRING_X3,
 }
 
 Addon.cleanDungeon = {
