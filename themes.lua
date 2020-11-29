@@ -2,22 +2,24 @@ local AddonName, Addon = ...
 
 function Addon:InitThemes()
     if IPMTTheme == nil then
-        IPMTTheme = {}
+        IPMTTheme = {
+            [1] = {}
+        }
+        -- copy params from prev 1.1.x and 1.2.x
         if IPMTOptions.font then
-            IPMTTheme = {
-                [1] = {
-                    font = IPMTOptions.font,
-                    main = {
-                        size = {
-                            w = IPMTOptions.size[0],
-                            h = IPMTOptions.size[1],
-                        },
-                        background = {
-                            color   = {r=0, g=0, b=0, a=IPMTOptions.opacity},
-                        },
+            IPMTTheme[1] = {
+                font = IPMTOptions.font,
+                main = {
+                    size = {
+                        w = IPMTOptions.size[0],
+                        h = IPMTOptions.size[1],
                     },
-                    elements = {},
-                }
+                    background = {
+                        color   = {r=0, g=0, b=0, a=IPMTOptions.opacity},
+                    },
+                },
+                elements = {},
+                decors = {},
             }
             for frame, info in pairs(IPMTOptions.frame) do
                 IPMTTheme[1].elements[frame] = {}
@@ -28,11 +30,19 @@ function Addon:InitThemes()
                     IPMTTheme[1].elements[frame].hidden = info.hidden
                 end
             end
+        else
+            IPMTTheme = {
+                [1] = {}
+            }
         end
     end
 
     for i, theme in ipairs(IPMTTheme) do
+        local decors = theme.decors
         IPMTTheme[i] = Addon:CopyObject(Addon.theme[1], IPMTTheme[i])
+        if #decors then
+            IPMTTheme[i].decors = decors
+        end
     end
 end
 
@@ -163,6 +173,22 @@ function Addon:FillThemeEditor()
             end
         end
     end
+    for decorID, info in ipairs(theme.decors) do
+        if not info.hidden then
+            Addon.fMain.decors[decorID]:Show()
+        else
+            Addon.fMain.decors[decorID]:Hide()
+        end
+        Addon.fThemes.decors[decorID].width:SetText(info.size.w)
+        Addon.fThemes.decors[decorID].height:SetText(info.size.h)
+        Addon.fThemes.decors[decorID].texture:SelectItem(info.background.texture, true)
+        Addon.fThemes.decors[decorID].color:ColorChange(info.background.color.r, info.background.color.g, info.background.color.b, info.background.color.a, true)
+        Addon.fThemes.decors[decorID].borderInset:SetValue(info.border.inset)
+        Addon.fThemes.decors[decorID].border:SelectItem(info.border.texture, true)
+        Addon.fThemes.decors[decorID].borderColor:ColorChange(info.border.color.r, info.border.color.g, info.border.color.b, info.border.color.a, true)
+        Addon.fThemes.decors[decorID].borderSize:SetValue(info.border.size)
+        Addon:ToggleVisible(decorID, true)
+    end
 end
 
 function Addon:SetThemeName(name)
@@ -171,31 +197,61 @@ function Addon:SetThemeName(name)
 end
 
 function Addon:ToggleVisible(frame, woSave)
-    local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+    local element
+    local elemInfo
+    local editorElement
+    if type(frame) == "number" then
+        element = Addon.fMain.decors[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
+        editorElement = Addon.fThemes.decors[frame]
+    else
+        element = Addon.fMain[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+        editorElement = Addon.fThemes[frame]
+    end
     if woSave ~= true then
         elemInfo.hidden = not elemInfo.hidden
     end
 
-    if elemInfo.hidden then
-        Addon.fMain[frame]:SetBackdropColor(.85,0,0, .35)
-        alpha = Addon.fThemes[frame].toggle.icon:GetAlpha()
-        Addon.fThemes[frame].toggle.icon:SetVertexColor(.85, 0, 0, alpha)
-        Addon.fThemes[frame].toggle.icon:SetTexCoord(.25, .5, 0, .5)
-    else
-        local alpha = .15
-        if woSave == true then
-            alpha = 0
+    if type(frame) == "number" then
+        if elemInfo.hidden then
+            element:Hide()
+        else
+            element:Show()
         end
-        Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
-        Addon.fThemes[frame].toggle.icon:SetTexCoord(0, .25, 0, .5)
-        alpha = Addon.fThemes[frame].toggle.icon:GetAlpha()
-        Addon.fThemes[frame].toggle.icon:SetVertexColor(1, 1, 1, alpha)
+    else
+        if elemInfo.hidden then
+            element:SetBackdropColor(.85,0,0, .35)
+        else
+            local alpha = .15
+            if woSave == true then
+                alpha = 0
+            end
+            element:SetBackdropColor(1,1,1, alpha)
+        end
+    end
+    if elemInfo.hidden then
+        alpha = editorElement.toggle.icon:GetAlpha()
+        editorElement.toggle.icon:SetVertexColor(.85, 0, 0, alpha)
+        editorElement.toggle.icon:SetTexCoord(.25, .5, 0, .5)
+    else
+        editorElement.toggle.icon:SetTexCoord(0, .25, 0, .5)
+        alpha = editorElement.toggle.icon:GetAlpha()
+        editorElement.toggle.icon:SetVertexColor(1, 1, 1, alpha)
     end
 end
 function Addon:HoverVisible(frame, button)
     button.icon:SetAlpha(.9)
     local text
-    if IPMTTheme[IPMTOptions.theme].elements[frame].hidden then
+    local element
+    if type(frame) == "number" then
+        element = Addon.fMain.decors[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
+    else
+        element = Addon.fMain[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+    end
+    if element.hidden then
         text = Addon.localization.ELEMACTION.SHOW
     else
         text = Addon.localization.ELEMACTION.HIDE
@@ -203,21 +259,31 @@ function Addon:HoverVisible(frame, button)
     GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
     GameTooltip:SetText(text, .9, .9, 0, 1, true)
     GameTooltip:Show()
-    Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+    if type(frame) ~= "number" then
+        Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+    end
 end
 function Addon:BlurVisible(frame, button)
     button.icon:SetAlpha(.5)
     GameTooltip:Hide()
 end
 
-function Addon:ChangeMain(param, value, woSave)
+function Addon:ChangeDecor(decorID, param, value, woSave)
     local theme = IPMTTheme[IPMTOptions.theme]
 
-    local params = Addon:CopyObject(theme.main)
+    local element
+    local params
+    if decorID == "main" then
+        element = Addon.fMain
+        params = Addon:CopyObject(theme.main)
+    else
+        element = Addon.fMain.decors[decorID]
+        params = Addon:CopyObject(theme.decors[decorID])
+    end
 
-    if param == 'width' then
+    if param == 'width' and value ~= '' then
         params.size.w = value
-    elseif param == 'height' then
+    elseif param == 'height' and value ~= '' then
         params.size.h = value
     elseif param == 'color' then
         params.background.color = Addon:CopyObject(value)
@@ -249,13 +315,17 @@ function Addon:ChangeMain(param, value, woSave)
         backdrop.edgeFile = nil
     end
 
-    Addon.fMain:SetSize(params.size.w, params.size.h)
-    Addon.fMain:SetBackdrop(backdrop)
-    Addon.fMain:SetBackdropColor(params.background.color.r, params.background.color.g, params.background.color.b, params.background.color.a)
-    Addon.fMain:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
+    element:SetSize(params.size.w, params.size.h)
+    element:SetBackdrop(backdrop)
+    element:SetBackdropColor(params.background.color.r, params.background.color.g, params.background.color.b, params.background.color.a)
+    element:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
 
     if woSave ~= true then
-        theme.main = Addon:CopyObject(params)
+        if decorID == "main" then
+            theme.main = Addon:CopyObject(params)
+        else
+            theme.decors[decorID] = Addon:CopyObject(params)
+        end
     end
 end
 
@@ -343,33 +413,50 @@ end
 
 -- Movable element
 function Addon:ToggleMovable(frame, enable)
-    if enable == nil then
-        enable = not Addon.fMain[frame].isMovable
-    end
-    Addon.fMain[frame].isMovable = enable
-    if Addon.fMain[frame].isMovable then
-        Addon.fMain[frame]:SetBackdropColor(1,1,1, .25)
-        Addon.fThemes[frame].moveMode.icon:SetAlpha(1)
+    local element
+    local editorElement
+    local elemInfo
+    if type(frame) == "number" then
+        element = Addon.fMain.decors[frame]
+        editorElement = Addon.fThemes.decors[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
     else
-        if IPMTTheme[IPMTOptions.theme].elements[frame].hidden then
-            Addon.fMain[frame]:SetBackdropColor(.85,0,0, .15)
-        else
-            local alpha = .15
-            if not Addon.opened.themes then
-                alpha = 0
-            end
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, alpha)
+        element = Addon.fMain[frame]
+        editorElement = Addon.fThemes[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+    end
+
+    if enable == nil then
+        enable = not element.isMovable
+    end
+    element.isMovable = enable
+    if element.isMovable then
+        if type(frame) ~= "number" then
+            element:SetBackdropColor(1,1,1, .25)
         end
-        local alpha = Addon.fThemes[frame].moveMode.icon:GetAlpha()
+        editorElement.moveMode.icon:SetAlpha(1)
+    else
+        if type(frame) ~= "number" then
+            if elemInfo.hidden then
+                element:SetBackdropColor(.85,0,0, .15)
+            else
+                local alpha = .15
+                if not Addon.opened.themes then
+                    alpha = 0
+                end
+                element:SetBackdropColor(1,1,1, alpha)
+            end
+        end
+        local alpha = editorElement.moveMode.icon:GetAlpha()
         if alpha == 1 then
             alpha = .9
         else
             alpha = .5
         end
-        Addon.fThemes[frame].moveMode.icon:SetAlpha(alpha)
+        editorElement.moveMode.icon:SetAlpha(alpha)
     end
-    Addon.fMain[frame]:EnableMouse(Addon.fMain[frame].isMovable)
-    Addon.fMain[frame]:SetMovable(Addon.fMain[frame].isMovable)
+    element:EnableMouse(element.isMovable)
+    element:SetMovable(element.isMovable)
     if frame == 'affixes' then
         for f = 1,4 do
             Addon.fMain.affix[f]:EnableMouse(not Addon.fMain[frame].isMovable)
@@ -377,24 +464,47 @@ function Addon:ToggleMovable(frame, enable)
     end
 end
 function Addon:HoverMovable(frame, button)
-    if not Addon.fMain[frame].isMovable then
+    local element
+    if type(frame) == "number" then
+        element = Addon.fMain.decors[frame]
+    else
+        element = Addon.fMain[frame]
+    end
+    if not element.isMovable then
         button.icon:SetAlpha(.9)
     end
     local text
     GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
     GameTooltip:SetText(Addon.localization.ELEMACTION.MOVE, .9, .9, 0, 1, true)
     GameTooltip:Show()
-    Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+    if type(frame) ~= "number" then
+        Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
+    end
 end
 function Addon:BlurMovable(frame, button)
-    if not Addon.fMain[frame].isMovable then
+    local element
+    if type(frame) == "number" then
+        element = Addon.fMain.decors[frame]
+    else
+        element = Addon.fMain[frame]
+    end
+    if not element.isMovable then
         button.icon:SetAlpha(.5)
     end
     GameTooltip:Hide()
 end
 
 function Addon:MoveElement(frame, params, woSave)
-    local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+    local element
+    local elemInfo
+    if type(frame) == "number" then
+        element = Addon.fMain.decors[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
+    else
+        element = Addon.fMain[frame]
+        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+    end
+
     if params == nil then
         params = elemInfo.position
     else
@@ -411,11 +521,10 @@ function Addon:MoveElement(frame, params, woSave)
             params.y = elemInfo.position.y
         end
     end
-    Addon.fMain[frame]:ClearAllPoints()
-    Addon.fMain[frame]:SetPoint(params.point, Addon.fMain, params.rPoint, params.x, params.y)
+    element:ClearAllPoints()
+    element:SetPoint(params.point, Addon.fMain, params.rPoint, params.x, params.y)
 
     if woSave ~= true then
-        local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
         elemInfo.position.x = params.x
         elemInfo.position.y = params.y
         elemInfo.position.point = params.point
@@ -480,6 +589,14 @@ function Addon:ApplyTheme(themeID)
             Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
         end
     end
+    for decorID, info in ipairs(theme.decors) do
+        Addon:MoveElement(decorID, nil, true)
+        if info.hidden then
+            Addon.fMain[frame]:Hide()
+        else
+            Addon.fMain[frame]:Show()
+        end
+    end
     if Addon.opened.themes then
         Addon:FillThemeEditor()
     end
@@ -503,4 +620,40 @@ end
 function Addon:RestoreDefaultTheme()
     IPMTTheme[1] = Addon:CopyObject(Addon.theme[1])
     Addon.fOptions.theme:SelectItem(1)
+end
+
+function Addon:AddDecor()
+    local theme = IPMTTheme[IPMTOptions.theme]
+
+    local decorID = #theme.decors + 1
+    theme.decors[decorID] = Addon:CopyObject(Addon.defaultDecor)
+    Addon:RenderDecor(decorID)
+    Addon:RenderDecorEditor(decorID)
+end
+
+function Addon:RemoveDecor(decorID)
+    local theme = IPMTTheme[IPMTOptions.theme]
+    local lastID = #theme.decors
+    for i = decorID,lastID do
+        if theme.decors[i+1] ~= nil then
+            theme.decors[i] = theme.decors[i+1]
+            Addon:RenderDecorEditor(i)
+            Addon:RenderDecor(i)
+        end
+    end
+    theme.decors[lastID] = nil
+    Addon.fMain.decors[lastID]:Hide()
+    Addon.fThemes.decors[lastID]:Hide()
+
+    Addon:RecalcThemesHeight()
+end
+function Addon:HoverDecor(decorID, button)
+    button.icon:SetAlpha(.9)
+    GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+    GameTooltip:SetText(Addon.localization.DELETDECOR, .9, .9, 0, 1, true)
+    GameTooltip:Show()
+end
+function Addon:BlurDecor(decorID, button)
+    button.icon:SetAlpha(.5)
+    GameTooltip:Hide()
 end

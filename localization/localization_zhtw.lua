@@ -2,6 +2,8 @@ if GetLocale() ~= "zhTW" then return end
 
 local AddonName, Addon = ...
 
+Addon.localization.ADDELEMENT = "Add element" -- need correct
+
 Addon.localization.BACKGROUND = "背景"
 Addon.localization.BORDER     = "邊框"
 Addon.localization.BRDERWIDTH = "邊框寬度"
@@ -32,10 +34,12 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "傷害"
+Addon.localization.DECORELEMS = "Decor elements" -- need correct
 Addon.localization.DEFAULT    = "預設"
 Addon.localization.DEATHCOUNT = "死亡人數"
 Addon.localization.DEATHSHOW  = "點擊查看詳細訊息"
 Addon.localization.DEATHTIME  = "損失時間"
+Addon.localization.DELETDECOR = "Delete decorative element" -- need correct
 Addon.localization.DIRECTION  = "進度變化"
 Addon.localization.DIRECTIONS = {
     asc  = "升序 (0% -> 100%)",

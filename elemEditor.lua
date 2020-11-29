@@ -19,7 +19,12 @@ function Addon:ShowElemEditor(frame)
     end
     frameName = frame
     Addon.fElemEditor:Show()
-    local elemInfo = IPMTTheme[IPMTOptions.theme].elements[frameName]
+    local elemInfo
+    if type(frame) == "number" then
+        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frameName]
+    else
+        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frameName]
+    end
     local point = elemInfo.position.point
     if point == nil then
         point = 'LEFT'

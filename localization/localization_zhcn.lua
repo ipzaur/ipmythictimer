@@ -2,6 +2,8 @@ if GetLocale() ~= "zhCN" then return end
 
 local AddonName, Addon = ...
 
+Addon.localization.ADDELEMENT = "Add element" -- need correct
+
 Addon.localization.BACKGROUND = "背景"
 Addon.localization.BORDER     = "边框"
 Addon.localization.BRDERWIDTH = "边框宽度"
@@ -32,10 +34,12 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "伤害"
+Addon.localization.DECORELEMS = "Decor elements" -- need correct
 Addon.localization.DEFAULT    = "默认"
 Addon.localization.DEATHCOUNT = "死亡"
 Addon.localization.DEATHSHOW  = "点击查看详细信息"
 Addon.localization.DEATHTIME  = "浪费时间"
+Addon.localization.DELETDECOR = "Delete decorative element" -- need correct
 Addon.localization.DIRECTION  = "进度变化"
 Addon.localization.DIRECTIONS = {
     asc  = "升序 (0% -> 100%)",

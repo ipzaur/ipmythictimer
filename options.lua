@@ -146,3 +146,14 @@ function Addon:OpenSettingsFromPanel()
     hideMainMenu = true
     InterfaceOptionsFrame:Hide()
 end
+
+function Addon:InitOptions()
+    local globalVars = nil
+    if IPMTOptions ~= nil and IPMTOptions.global then
+        globalVars = IPMTOptions.global
+    end
+    IPMTOptions = Addon:CopyObject(Addon.defaultOption, IPMTOptions)
+    if globalVars ~= nil then
+        IPMTOptions.global = globalVars
+    end
+end

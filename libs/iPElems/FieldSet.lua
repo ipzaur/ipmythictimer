@@ -22,7 +22,7 @@ function IPFieldSetMixin:OnLoad()
     backdrop.edgeFile = "Interface\\Buttons\\WHITE8X8"
     backdrop.edgeSize = 2
     self.fTextBG = CreateFrame("Frame", nil, self, BackdropTemplateMixin and "BackdropTemplate")
-    self.fTextBG:SetSize(190, 22)
+    self.fTextBG:SetSize(250, 22)
     self.fTextBG:SetPoint("CENTER", self, "TOP", 0, 0)
     self.fTextBG:SetBackdrop(backdrop)
     self.fTextBG:SetBackdropColor(captionColor,captionColor,captionColor, 1)
@@ -30,7 +30,7 @@ function IPFieldSetMixin:OnLoad()
     self.fTextBG:SetFrameStrata("MEDIUM")
 
     self.fTextBG.fText = self.fTextBG:CreateFontString(nil, "MEDIUM", "GameFontNormal")
-    self.fTextBG.fText:SetSize(250, 22)
+    self.fTextBG.fText:SetSize(280, 22)
     self.fTextBG.fText:ClearAllPoints()
     self.fTextBG.fText:SetPoint("CENTER", self.fTextBG, "CENTER", 0, 0)
     self.fTextBG.fText:SetJustifyH("CENTER")

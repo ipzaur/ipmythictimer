@@ -2,6 +2,8 @@ if GetLocale() ~= "ruRU" then return end
 
 local AddonName, Addon = ...
 
+Addon.localization.ADDELEMENT = "Добавить элемент"
+
 Addon.localization.BACKGROUND = "Фон"
 Addon.localization.BORDER     = "Рамка"
 Addon.localization.BRDERWIDTH = "Толщина рамки"
@@ -32,10 +34,12 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "Урон"
+Addon.localization.DECORELEMS = "Декоративные элементы"
 Addon.localization.DEFAULT    = "По-умолчанию"
 Addon.localization.DEATHCOUNT = "Смертей"
 Addon.localization.DEATHSHOW  = "Нажмите для подробной информации"
 Addon.localization.DEATHTIME  = "Потеряно времени"
+Addon.localization.DELETDECOR = "Удалить декоративный элемент"
 Addon.localization.DIRECTION  = "Изменение прогресса"
 Addon.localization.DIRECTIONS = {
     asc  = "По возрастанию (0% -> 100%)",

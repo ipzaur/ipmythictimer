@@ -2,6 +2,8 @@ local AddonName, Addon = ...
 
 Addon.localization = {}
 
+Addon.localization.ADDELEMENT = "Add element"
+
 Addon.localization.BACKGROUND = "Background"
 Addon.localization.BORDER     = "Border"
 Addon.localization.BRDERWIDTH = "Border width"
@@ -32,10 +34,12 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "Damage"
+Addon.localization.DECORELEMS = "Decorative elements"
 Addon.localization.DEFAULT    = "Default"
 Addon.localization.DEATHCOUNT = "Deaths"
 Addon.localization.DEATHSHOW  = "Click for detail information"
 Addon.localization.DEATHTIME  = "Time lost"
+Addon.localization.DELETDECOR = "Delete decorative element"
 Addon.localization.DIRECTION  = "Progress changing"
 Addon.localization.DIRECTIONS = {
     asc  = "Ascending (0% -> 100%)",

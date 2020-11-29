@@ -179,5 +179,30 @@ Addon.theme[1] = {
             iconSize = 22,
             hidden = false,
         },
-    }
+    },
+    decors = {},
+}
+
+Addon.defaultDecor = {
+    size = {
+        w = 60,
+        h = 60,
+    },
+    position = {
+        x      = -100,
+        y      = 100,
+        point  = 'TOPLEFT',
+        rPoint = 'TOPLEFT',
+    },
+    background = {
+        texture = "Interface\\Buttons\\WHITE8X8",
+        color   = {r=0, g=0, b=0, a=.4},
+    },
+    border  = {
+        texture = 'none',
+        size    = 0,
+        color   = {r=1, g=1, b=1, a=0},
+        inset   = 0,
+    },
+    hidden = false,
 }
