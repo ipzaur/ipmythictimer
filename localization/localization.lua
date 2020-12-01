@@ -6,6 +6,7 @@ Addon.localization.ADDELEMENT = "Add element"
 
 Addon.localization.BACKGROUND = "Background"
 Addon.localization.BORDER     = "Border"
+Addon.localization.BORDERLIST = "Select a border from the library"
 Addon.localization.BRDERWIDTH = "Border width"
 
 Addon.localization.CLEANDBBT  = "Clean database"
@@ -85,6 +86,10 @@ Addon.localization.HELP       = {
 
 Addon.localization.ICONSIZE   = "Icon size"
 
+Addon.localization.JUSTIFYH   = "Horizontal text justify"
+
+Addon.localization.LAYER      = "Layer"
+
 Addon.localization.MAPBUT     = "LMB (click) - toggle options\n" ..
                                 "LMB (drag) - move button"
 Addon.localization.MAPBUTOPT  = "Show/Hide minimap button"
@@ -108,6 +113,7 @@ Addon.localization.SOURCE     = "Source"
 Addon.localization.STARTINFO  = "iP Mythic Timer loaded. Type /ipmt for options."
 
 Addon.localization.TEXTURE    = "Texture"
+Addon.localization.TEXTURELST = "Select a texture from the library"
 Addon.localization.TXTRINDENT = "Texture indent"
 Addon.localization.THEME      = "Theme"
 Addon.localization.THEMEBUTNS = {

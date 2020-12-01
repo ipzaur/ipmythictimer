@@ -2,7 +2,13 @@ local AddonName, Addon = ...
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
-local function getTextureList()
+local justifyList = {
+    CENTER = 'CENTER',
+    LEFT   = 'LEFT',
+    RIGHT  = 'RIGHT',
+}
+
+local function GetTextureList()
     local textureList = LSM:List('background')
     local list = {}
     for i,texture in pairs(textureList) do
@@ -14,7 +20,7 @@ local function getTextureList()
     return list
 end
 
-local function getBorderList()
+local function GetBorderList()
     local borderList = LSM:List('border')
     local list = {
         none = 'None',
@@ -28,7 +34,7 @@ local function getBorderList()
     return list
 end
 
-local function getFontList()
+local function GetFontList()
     local fontList = LSM:List('font')
     local list = {}
     for i,font in pairs(fontList) do
@@ -39,6 +45,74 @@ local function getFontList()
 end
 
 local top = 0
+
+local function RenderTextureBlock(parent, decorID, subTop, textureType, observeVar, hoverText)
+    local listName = textureType .. 'List'
+    local colorName = 'color'
+    if textureType == 'border' then
+        colorName = 'borderColor'
+    end
+    parent[listName] = CreateFrame("Button", nil, parent, "IPListBox")
+    parent[listName]:SetSize(20, 30)
+    parent[listName].fText:Hide()
+    parent[listName].fTriangle:ClearAllPoints()
+    parent[listName].fTriangle:SetPoint("CENTER", parent[listName], "CENTER", 0, 0)
+    parent[listName].fTriangle:SetSize(8, 8)
+    parent[listName]:SetPoint("LEFT", parent, "TOPLEFT", 10, subTop)
+    if textureType == 'texture' then
+        parent[listName]:SetList(GetTextureList)
+    else
+        parent[listName]:SetList(GetBorderList)
+    end
+    parent[listName]:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:ChangeDecor(decorID, textureType, key, true)
+        end,
+        OnCancel = function(self)
+            local original
+            if textureType == 'texture' then
+                original = observeVar.background.texture
+            else
+                original = observeVar.border.texture
+            end
+            Addon:ChangeDecor(decorID, textureType, original)
+        end,
+        OnSelect = function(self, key, text)
+            parent[textureType]:SetText(key)
+        end,
+    })
+    parent[listName]:HookScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(hoverText, .9, .9, 0, 1, true)
+        GameTooltip:Show()
+        self:GetParent():OnEnter()
+    end)
+    parent[listName]:HookScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+    -- Background texture input
+    parent[textureType] = CreateFrame("EditBox", nil, parent, "IPEditBox")
+    parent[textureType]:SetAutoFocus(false)
+    parent[textureType]:SetPoint("LEFT", parent, "TOPLEFT", 30, subTop)
+    parent[textureType]:SetPoint("RIGHT", parent, "TOPRIGHT", -40, subTop)
+    parent[textureType]:SetHeight(30)
+    parent[textureType]:SetScript('OnTextChanged', function(self)
+        Addon:ChangeDecor(decorID, textureType, self:GetText())
+    end)
+    parent[textureType]:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+    -- Background color picker
+    parent[colorName] = CreateFrame("Button", nil, parent, "IPColorButton")
+    parent[colorName]:SetPoint("RIGHT", parent, "TOPRIGHT", -10, subTop)
+    parent[colorName]:SetBackdropColor(.5,0,0, 1)
+    parent[colorName]:SetCallback(function(self, r, g, b, a)
+        Addon:ChangeDecor(decorID, colorName, {r=r, g=g, b=b, a=a})
+    end)
+    parent[colorName]:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+end
 
 function Addon:RenderThemeEditor()
     local theme = IPMTTheme[IPMTOptions.theme]
@@ -97,7 +171,7 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.fFonts:SetHeight(30)
     Addon.fThemes.fFonts:SetPoint("LEFT", Addon.fThemes.fContent, "TOPLEFT", 20, top)
     Addon.fThemes.fFonts:SetPoint("RIGHT", Addon.fThemes.fContent, "TOPRIGHT", -20, top)
-    Addon.fThemes.fFonts:SetList(getFontList, theme.font)
+    Addon.fThemes.fFonts:SetList(GetFontList, theme.font)
     Addon.fThemes.fFonts:SetCallback({
         OnHoverItem = function(self, fItem, key, text)
             Addon:SetFont(key, true)
@@ -169,34 +243,8 @@ function Addon:RenderThemeEditor()
 
     -- Background texture selector
     subTop = subTop - 24
-    Addon.fThemes.bg.texture = CreateFrame("Button", nil, Addon.fThemes.bg, "IPListBox")
-    Addon.fThemes.bg.texture:SetSize(250, 30)
-    Addon.fThemes.bg.texture:SetPoint("LEFT", Addon.fThemes.bg, "TOPLEFT", 10, subTop)
-    Addon.fThemes.bg.texture:SetList(getTextureList, theme.main.background.texture)
-    Addon.fThemes.bg.texture:SetCallback({
-        OnHoverItem = function(self, fItem, key, text)
-            Addon:ChangeDecor('main', 'texture', key, true)
-        end,
-        OnCancel = function(self)
-            Addon:ChangeDecor('main', 'texture', theme.main.background.texture)
-        end,
-        OnSelect = function(self, key, text)
-            Addon:ChangeDecor('main', 'texture', key)
-        end,
-    })
-    Addon.fThemes.bg.texture:HookScript("OnEnter", function(self)
-        self:GetParent():OnEnter()
-    end)
-    -- Background color picker
-    Addon.fThemes.bg.color = CreateFrame("Button", nil, Addon.fThemes.bg, "IPColorButton")
-    Addon.fThemes.bg.color:SetPoint("RIGHT", Addon.fThemes.bg, "TOPRIGHT", -10, subTop)
-    Addon.fThemes.bg.color:SetBackdropColor(.5,0,0, 1)
-    Addon.fThemes.bg.color:SetCallback(function(self, r, g, b, a)
-        Addon:ChangeDecor('main', 'color', {r=r, g=g, b=b, a=a})
-    end)
-    Addon.fThemes.bg.color:HookScript("OnEnter", function(self)
-        self:GetParent():OnEnter()
-    end)
+    RenderTextureBlock(Addon.fThemes.bg, 'main', subTop, 'texture', theme.main, Addon.localization.TEXTURELST)
+
     -- BackgroundBorder Inset slider
     subTop = subTop - 46
     Addon.fThemes.bg.borderInset = CreateFrame("Slider", nil, Addon.fThemes.bg, "IPOptionsSlider")
@@ -205,6 +253,7 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.bg.borderInset:SetOrientation('HORIZONTAL')
     Addon.fThemes.bg.borderInset:SetMinMaxValues(0, 30)
     Addon.fThemes.bg.borderInset:SetValueStep(1.0)
+    Addon.fThemes.bg.borderInset:EnableMouseWheel(0)
     Addon.fThemes.bg.borderInset:SetObeyStepOnDrag(true)
     Addon.fThemes.bg.borderInset.Low:SetText('0')
     Addon.fThemes.bg.borderInset.High:SetText('30')
@@ -213,15 +262,9 @@ function Addon:RenderThemeEditor()
         Addon.fThemes.bg.borderInset.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
         Addon:ChangeDecor('main', 'borderInset', value)
     end)
-    Addon.fThemes.bg.borderInset:SetScript('OnMouseWheel', function(self)
-        local value = self:GetValue()
-        Addon.fThemes.bg.borderInset.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
-        Addon:ChangeDecor('main', 'borderInset', value)
-    end)
     Addon.fThemes.bg.borderInset:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
-    Addon.fThemes.bg.borderInset:SetValue(theme.main.border.inset)
 
     -- BackgroundBorder texture caption
     subTop = subTop - 30
@@ -231,38 +274,10 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.bg.borderCaption:SetSize(200, 20)
     Addon.fThemes.bg.borderCaption:SetTextColor(1, 1, 1)
     Addon.fThemes.bg.borderCaption:SetText(Addon.localization.BORDER)
+
     -- BackgroundBorder texture selector
-
     subTop = subTop - 24
-    Addon.fThemes.bg.border = CreateFrame("Button", nil, Addon.fThemes.bg, "IPListBox")
-    Addon.fThemes.bg.border:SetSize(250, 30)
-    Addon.fThemes.bg.border:SetPoint("LEFT", Addon.fThemes.bg, "TOPLEFT", 10, subTop)
-    Addon.fThemes.bg.border:SetList(getBorderList, theme.main.border.texture)
-    Addon.fThemes.bg.border:SetCallback({
-        OnHoverItem = function(self, fItem, key, text)
-            Addon:ChangeDecor('main', 'border', key, true)
-        end,
-        OnCancel = function(self)
-            Addon:ChangeDecor('main', 'border', theme.main.border.texture)
-        end,
-        OnSelect = function(self, key, text)
-            Addon:ChangeDecor('main', 'border', key)
-        end,
-    })
-    Addon.fThemes.bg.border:HookScript("OnEnter", function(self)
-        self:GetParent():OnEnter()
-    end)
-
-    -- BackgroundBorder color picker
-    Addon.fThemes.bg.borderColor = CreateFrame("Button", nil, Addon.fThemes.bg, "IPColorButton")
-    Addon.fThemes.bg.borderColor:SetPoint("RIGHT", Addon.fThemes.bg, "TOPRIGHT", -10, subTop)
-    Addon.fThemes.bg.borderColor:SetBackdropColor(.5,0,0, 1)
-    Addon.fThemes.bg.borderColor:SetCallback(function(self, r, g, b, a)
-        Addon:ChangeDecor('main', 'borderColor', {r=r, g=g, b=b, a=a})
-    end)
-    Addon.fThemes.bg.borderColor:HookScript("OnEnter", function(self)
-        self:GetParent():OnEnter()
-    end)
+    RenderTextureBlock(Addon.fThemes.bg, 'main', subTop, 'border', theme.main, Addon.localization.BORDERLIST)
 
     -- BackgroundBorder Size slider
     subTop = subTop - 46
@@ -272,15 +287,11 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.bg.borderSize:SetOrientation('HORIZONTAL')
     Addon.fThemes.bg.borderSize:SetMinMaxValues(1, 30)
     Addon.fThemes.bg.borderSize:SetValueStep(1.0)
+    Addon.fThemes.bg.borderSize:EnableMouseWheel(0)
     Addon.fThemes.bg.borderSize:SetObeyStepOnDrag(true)
     Addon.fThemes.bg.borderSize.Low:SetText('1')
     Addon.fThemes.bg.borderSize.High:SetText('30')
     Addon.fThemes.bg.borderSize:SetScript('OnValueChanged', function(self)
-        local value = self:GetValue()
-        Addon.fThemes.bg.borderSize.Text:SetText(Addon.localization.BRDERWIDTH .. " (" .. value .. ")")
-        Addon:ChangeDecor('main', 'borderSize', value)
-    end)
-    Addon.fThemes.bg.borderSize:SetScript('OnMouseWheel', function(self)
         local value = self:GetValue()
         Addon.fThemes.bg.borderSize.Text:SetText(Addon.localization.BRDERWIDTH .. " (" .. value .. ")")
         Addon:ChangeDecor('main', 'borderSize', value)
@@ -451,6 +462,7 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
         Addon.fThemes[frame].fontSize:SetOrientation('HORIZONTAL')
         Addon.fThemes[frame].fontSize:SetMinMaxValues(6, 40)
         Addon.fThemes[frame].fontSize:SetValueStep(1.0)
+        Addon.fThemes[frame].fontSize:EnableMouseWheel(0)
         Addon.fThemes[frame].fontSize:SetObeyStepOnDrag(true)
         Addon.fThemes[frame].fontSize.Low:SetText('6')
         Addon.fThemes[frame].fontSize.High:SetText('40')
@@ -459,15 +471,41 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
             self.Text:SetText(Addon.localization.FONTSIZE .. " (" .. value .. ")")
             Addon:SetFontSize(frame, value)
         end)
-        Addon.fThemes[frame].fontSize:SetScript('OnMouseWheel', function(self)
-            local value = self:GetValue()
-            self.Text:SetText(Addon.localization.FONTSIZE .. " (" .. value .. ")")
-            Addon:SetFontSize(frame, value)
-        end)
         Addon.fThemes[frame].fontSize:HookScript("OnEnter", function(self)
             Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
         end)
-        Addon.fThemes[frame].fontSize:SetValue(elemInfo.fontSize)
+
+        -- Justify Horizontal caption
+        subTop = subTop - 30
+        Addon.fThemes[frame].justifyHCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+        Addon.fThemes[frame].justifyHCaption:SetPoint("CENTER", Addon.fThemes[frame], "TOP", 0, subTop)
+        Addon.fThemes[frame].justifyHCaption:SetJustifyH("CENTER")
+        Addon.fThemes[frame].justifyHCaption:SetSize(250, 20)
+        Addon.fThemes[frame].justifyHCaption:SetTextColor(1, 1, 1)
+        Addon.fThemes[frame].justifyHCaption:SetText(Addon.localization.JUSTIFYH)
+
+        -- Justify Horizontal
+        subTop = subTop - 24
+        Addon.fThemes[frame].justifyH = CreateFrame("Button", nil, Addon.fThemes[frame], "IPListBox")
+        Addon.fThemes[frame].justifyH:SetHeight(30)
+        Addon.fThemes[frame].justifyH:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
+        Addon.fThemes[frame].justifyH:SetPoint("RIGHT", Addon.fThemes[frame], "TOPRIGHT", -10, subTop)
+        Addon.fThemes[frame].justifyH:SetList(justifyList)
+        Addon.fThemes[frame].justifyH:SetCallback({
+            OnHoverItem = function(self, fItem, key, text)
+                Addon:SetJustifyH(frame, key, true)
+            end,
+            OnCancel = function(self)
+                Addon:SetJustifyH(frame, elemInfo.justifyH)
+            end,
+            OnSelect = function(self, key, text)
+                Addon:SetJustifyH(frame, key)
+            end,
+        })
+        Addon.fThemes[frame].justifyH:HookScript("OnEnter", function(self)
+            self:GetParent():OnEnter()
+        end)
+
     end
     if frameParams.hasIcons then
         -- Icon Size
@@ -478,15 +516,11 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
         Addon.fThemes[frame].iconSize:SetOrientation('HORIZONTAL')
         Addon.fThemes[frame].iconSize:SetMinMaxValues(10, 40)
         Addon.fThemes[frame].iconSize:SetValueStep(1.0)
+        Addon.fThemes[frame].iconSize:EnableMouseWheel(0)
         Addon.fThemes[frame].iconSize:SetObeyStepOnDrag(true)
         Addon.fThemes[frame].iconSize.Low:SetText('10')
         Addon.fThemes[frame].iconSize.High:SetText('40')
         Addon.fThemes[frame].iconSize:SetScript('OnValueChanged', function(self)
-            local value = self:GetValue()
-            Addon.fThemes[frame].iconSize.Text:SetText(Addon.localization.ICONSIZE .. " (" .. value .. ")")
-            Addon:SetIconSize(frame, value)
-        end)
-        Addon.fThemes[frame].iconSize:SetScript('OnMouseWheel', function(self)
             local value = self:GetValue()
             Addon.fThemes[frame].iconSize.Text:SetText(Addon.localization.ICONSIZE .. " (" .. value .. ")")
             Addon:SetIconSize(frame, value)
@@ -505,6 +539,9 @@ end
 
 function Addon:RenderDecorEditor(decorID)
     local decorInfo = IPMTTheme[IPMTOptions.theme].decors[decorID]
+    if not Addon.opened.themes then
+        return
+    end
     if Addon.fThemes.decors[decorID] == nil then
         local decorTop = top - (decorOuterHeight + 47) * (decorID - 1)
         Addon.fThemes.decors[decorID] = CreateFrame("Frame", nil, Addon.fThemes.fContent, "IPFieldSet")
@@ -526,6 +563,7 @@ function Addon:RenderDecorEditor(decorID)
         end)
         Addon.fThemes.decors[decorID].remove:SetScript("OnEnter", function(self, event, ...)
             Addon:HoverDecor(decorID, self)
+            self:GetParent():OnEnter()
         end)
         Addon.fThemes.decors[decorID].remove:SetScript("OnLeave", function(self, event, ...)
             Addon:BlurDecor(decorID, self)
@@ -549,6 +587,7 @@ function Addon:RenderDecorEditor(decorID)
         end)
         Addon.fThemes.decors[decorID].toggle:SetScript("OnEnter", function(self, event, ...)
             Addon:HoverVisible(decorID, self)
+            self:GetParent():OnEnter()
         end)
         Addon.fThemes.decors[decorID].toggle:SetScript("OnLeave", function(self, event, ...)
             Addon:BlurVisible(decorID, self)
@@ -572,6 +611,7 @@ function Addon:RenderDecorEditor(decorID)
         end)
         Addon.fThemes.decors[decorID].moveMode:SetScript("OnEnter", function(self, event, ...)
             Addon:HoverMovable(decorID, self)
+            self:GetParent():OnEnter()
         end)
         Addon.fThemes.decors[decorID].moveMode:SetScript("OnLeave", function(self, event, ...)
             Addon:BlurMovable(decorID, self)
@@ -602,6 +642,9 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].width:SetScript('OnTextChanged', function(self)
             Addon:ChangeDecor(decorID, 'width', self:GetText())
         end)
+        Addon.fThemes.decors[decorID].width:HookScript("OnEnter", function(self)
+            self:GetParent():OnEnter()
+        end)
         -- Background height caption
         Addon.fThemes.decors[decorID].heightCaption = Addon.fThemes.decors[decorID]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
         Addon.fThemes.decors[decorID].heightCaption:SetPoint("RIGHT", Addon.fThemes.decors[decorID], "TOPRIGHT", -80, subTop)
@@ -618,6 +661,9 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].height:SetScript('OnTextChanged', function(self)
             Addon:ChangeDecor(decorID, 'height', self:GetText())
         end)
+        Addon.fThemes.decors[decorID].height:HookScript("OnEnter", function(self)
+            self:GetParent():OnEnter()
+        end)
 
         -- Background texture caption
         subTop = subTop - 30
@@ -630,34 +676,8 @@ function Addon:RenderDecorEditor(decorID)
 
         -- Background texture selector
         subTop = subTop - 24
-        Addon.fThemes.decors[decorID].texture = CreateFrame("Button", nil, Addon.fThemes.decors[decorID], "IPListBox")
-        Addon.fThemes.decors[decorID].texture:SetSize(250, 30)
-        Addon.fThemes.decors[decorID].texture:SetPoint("LEFT", Addon.fThemes.decors[decorID], "TOPLEFT", 10, subTop)
-        Addon.fThemes.decors[decorID].texture:SetList(getTextureList, decorInfo.background.texture)
-        Addon.fThemes.decors[decorID].texture:SetCallback({
-            OnHoverItem = function(self, fItem, key, text)
-                Addon:ChangeDecor(decorID, 'texture', key, true)
-            end,
-            OnCancel = function(self)
-                Addon:ChangeDecor(decorID, 'texture', decorInfo.background.texture)
-            end,
-            OnSelect = function(self, key, text)
-                Addon:ChangeDecor(decorID, 'texture', key)
-            end,
-        })
-        Addon.fThemes.decors[decorID].texture:HookScript("OnEnter", function(self)
-            self:GetParent():OnEnter()
-        end)
-        -- Background color picker
-        Addon.fThemes.decors[decorID].color = CreateFrame("Button", nil, Addon.fThemes.decors[decorID], "IPColorButton")
-        Addon.fThemes.decors[decorID].color:SetPoint("RIGHT", Addon.fThemes.decors[decorID], "TOPRIGHT", -10, subTop)
-        Addon.fThemes.decors[decorID].color:SetBackdropColor(.5,0,0, 1)
-        Addon.fThemes.decors[decorID].color:SetCallback(function(self, r, g, b, a)
-            Addon:ChangeDecor(decorID, 'color', {r=r, g=g, b=b, a=a})
-        end)
-        Addon.fThemes.decors[decorID].color:HookScript("OnEnter", function(self)
-            self:GetParent():OnEnter()
-        end)
+        RenderTextureBlock(Addon.fThemes.decors[decorID], decorID, subTop, 'texture', decorInfo, Addon.localization.TEXTURELST)
+
         -- BackgroundBorder Inset slider
         subTop = subTop - 46
         Addon.fThemes.decors[decorID].borderInset = CreateFrame("Slider", nil, Addon.fThemes.decors[decorID], "IPOptionsSlider")
@@ -666,17 +686,13 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].borderInset:SetOrientation('HORIZONTAL')
         Addon.fThemes.decors[decorID].borderInset:SetMinMaxValues(0, 30)
         Addon.fThemes.decors[decorID].borderInset:SetValueStep(1.0)
+        Addon.fThemes.decors[decorID].borderInset:EnableMouseWheel(0)
         Addon.fThemes.decors[decorID].borderInset:SetObeyStepOnDrag(true)
         Addon.fThemes.decors[decorID].borderInset.Low:SetText('0')
         Addon.fThemes.decors[decorID].borderInset.High:SetText('30')
         Addon.fThemes.decors[decorID].borderInset:SetScript('OnValueChanged', function(self)
             local value = self:GetValue()
             self.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
-            Addon:ChangeDecor(decorID, 'borderInset', value)
-        end)
-        Addon.fThemes.decors[decorID].borderInset:SetScript('OnMouseWheel', function(self)
-            local value = self:GetValue()
-            Addon.fThemes.decors[decorID].borderInset.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
             Addon:ChangeDecor(decorID, 'borderInset', value)
         end)
         Addon.fThemes.decors[decorID].borderInset:HookScript("OnEnter", function(self)
@@ -692,38 +708,10 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].borderCaption:SetSize(200, 20)
         Addon.fThemes.decors[decorID].borderCaption:SetTextColor(1, 1, 1)
         Addon.fThemes.decors[decorID].borderCaption:SetText(Addon.localization.BORDER)
+
         -- BackgroundBorder texture selector
-
         subTop = subTop - 24
-        Addon.fThemes.decors[decorID].border = CreateFrame("Button", nil, Addon.fThemes.decors[decorID], "IPListBox")
-        Addon.fThemes.decors[decorID].border:SetSize(250, 30)
-        Addon.fThemes.decors[decorID].border:SetPoint("LEFT", Addon.fThemes.decors[decorID], "TOPLEFT", 10, subTop)
-        Addon.fThemes.decors[decorID].border:SetList(getBorderList, decorInfo.border.texture)
-        Addon.fThemes.decors[decorID].border:SetCallback({
-            OnHoverItem = function(self, fItem, key, text)
-                Addon:ChangeDecor(decorID, 'border', key, true)
-            end,
-            OnCancel = function(self)
-                Addon:ChangeDecor(decorID, 'border', decorInfo.border.texture)
-            end,
-            OnSelect = function(self, key, text)
-                Addon:ChangeDecor(decorID, 'border', key)
-            end,
-        })
-        Addon.fThemes.decors[decorID].border:HookScript("OnEnter", function(self)
-            self:GetParent():OnEnter()
-        end)
-
-        -- BackgroundBorder color picker
-        Addon.fThemes.decors[decorID].borderColor = CreateFrame("Button", nil, Addon.fThemes.decors[decorID], "IPColorButton")
-        Addon.fThemes.decors[decorID].borderColor:SetPoint("RIGHT", Addon.fThemes.decors[decorID], "TOPRIGHT", -10, subTop)
-        Addon.fThemes.decors[decorID].borderColor:SetBackdropColor(.5,0,0, 1)
-        Addon.fThemes.decors[decorID].borderColor:SetCallback(function(self, r, g, b, a)
-            Addon:ChangeDecor(decorID, 'borderColor', {r=r, g=g, b=b, a=a})
-        end)
-        Addon.fThemes.decors[decorID].borderColor:HookScript("OnEnter", function(self)
-            self:GetParent():OnEnter()
-        end)
+        RenderTextureBlock(Addon.fThemes.decors[decorID], decorID, subTop, 'border', decorInfo, Addon.localization.BORDERLIST)
 
         -- BackgroundBorder Size slider
         subTop = subTop - 46
@@ -733,6 +721,7 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].borderSize:SetOrientation('HORIZONTAL')
         Addon.fThemes.decors[decorID].borderSize:SetMinMaxValues(1, 30)
         Addon.fThemes.decors[decorID].borderSize:SetValueStep(1.0)
+        Addon.fThemes.decors[decorID].borderSize:EnableMouseWheel(0)
         Addon.fThemes.decors[decorID].borderSize:SetObeyStepOnDrag(true)
         Addon.fThemes.decors[decorID].borderSize.Low:SetText('1')
         Addon.fThemes.decors[decorID].borderSize.High:SetText('30')
@@ -741,14 +730,31 @@ function Addon:RenderDecorEditor(decorID)
             Addon.fThemes.decors[decorID].borderSize.Text:SetText(Addon.localization.BRDERWIDTH .. " (" .. value .. ")")
             Addon:ChangeDecor(decorID, 'borderSize', value)
         end)
-        Addon.fThemes.decors[decorID].borderSize:SetScript('OnMouseWheel', function(self)
-            local value = self:GetValue()
-            Addon.fThemes.decors[decorID].borderSize.Text:SetText(Addon.localization.BRDERWIDTH .. " (" .. value .. ")")
-            Addon:ChangeDecor(decorID, 'borderSize', value)
-        end)
         Addon.fThemes.decors[decorID].borderSize:HookScript("OnEnter", function(self)
             self:GetParent():OnEnter()
         end)
+
+        -- Layer slider
+        subTop = subTop - 46
+        Addon.fThemes.decors[decorID].layer = CreateFrame("Slider", nil, Addon.fThemes.decors[decorID], "IPOptionsSlider")
+        Addon.fThemes.decors[decorID].layer:SetPoint("LEFT", Addon.fThemes.decors[decorID], "TOPLEFT", 10, subTop)
+        Addon.fThemes.decors[decorID].layer:SetPoint("RIGHT", Addon.fThemes.decors[decorID], "TOPRIGHT", -10, subTop)
+        Addon.fThemes.decors[decorID].layer:SetOrientation('HORIZONTAL')
+        Addon.fThemes.decors[decorID].layer:SetMinMaxValues(0, 50)
+        Addon.fThemes.decors[decorID].layer:SetValueStep(1.0)
+        Addon.fThemes.decors[decorID].layer:EnableMouseWheel(0)
+        Addon.fThemes.decors[decorID].layer:SetObeyStepOnDrag(true)
+        Addon.fThemes.decors[decorID].layer.Low:SetText('0')
+        Addon.fThemes.decors[decorID].layer.High:SetText('50')
+        Addon.fThemes.decors[decorID].layer:SetScript('OnValueChanged', function(self)
+            local value = self:GetValue()
+            Addon.fThemes.decors[decorID].layer.Text:SetText(Addon.localization.LAYER .. " (" .. value .. ")")
+            Addon:SetLayer(decorID, value)
+        end)
+        Addon.fThemes.decors[decorID].layer:HookScript("OnEnter", function(self)
+            self:GetParent():OnEnter()
+        end)
+
         if decorOuterHeight == 0 then
             decorOuterHeight = (subTop - 40) * -1
         end
@@ -756,9 +762,9 @@ function Addon:RenderDecorEditor(decorID)
     end
 
     Addon.fThemes.decors[decorID]:Show()
-    Addon.fThemes.decors[decorID].texture:SelectItem(decorInfo.background.texture)
+    Addon.fThemes.decors[decorID].texture:SetText(decorInfo.background.texture)
     Addon.fThemes.decors[decorID].color:ColorChange(decorInfo.background.color.r, decorInfo.background.color.g, decorInfo.background.color.b, decorInfo.background.color.a, true)
-    Addon.fThemes.decors[decorID].border:SelectItem(decorInfo.border.texture)
+    Addon.fThemes.decors[decorID].border:SetText(decorInfo.border.texture)
     Addon.fThemes.decors[decorID].borderInset:SetValue(decorInfo.border.inset)
     Addon.fThemes.decors[decorID].borderSize:SetValue(decorInfo.border.size)
     Addon.fThemes.decors[decorID].borderColor:ColorChange(decorInfo.border.color.r, decorInfo.border.color.g, decorInfo.border.color.b, decorInfo.border.color.a, true)

@@ -170,14 +170,14 @@ function IPListBoxMixin:RenderItem(num, key, text, selected)
         self.fItem[num]:SetScript("OnEnter", function(item, event, ...)
             self.fItem[num]:SetBackdropColor(1,1,1, .1)
             if self.callback and self.callback.OnHoverItem then
-                self.callback:OnHoverItem(self.fItem[num], key, text)
+                self.callback:OnHoverItem(self.fItem[num], self.fItem[num].key, self.fItem[num].text)
             end
         end)
         self.fItem[num]:SetScript("OnLeave", function(item, event, ...)
             self.fItem[num]:SetBackdropColor(1,1,1, 0)
         end)
         self.fItem[num]:SetScript("OnClick", function(item)
-            self:SelectItem(key)
+            self:SelectItem(self.fItem[num].key)
         end)
         self.fItem[num].fText = self.fItem[num]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
         self.fItem[num].fText:SetPoint("TOPLEFT", self.fItem[num], "LEFT", 10, 9)
@@ -188,6 +188,8 @@ function IPListBoxMixin:RenderItem(num, key, text, selected)
     if self.callback and self.callback.OnRenderItem then
         self.callback:OnRenderItem(self.fItem[num], key, text)
     end
+    self.fItem[num].key = key
+    self.fItem[num].text = text
     self.fItem[num].fText:SetText(text)
     local width = math.ceil(self.fItem[num].fText:GetStringWidth()) + 20
     self.fItem[num].fText:SetWidth(width)

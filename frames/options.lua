@@ -122,7 +122,7 @@ function Addon:RenderOptions()
     Addon.fOptions.themeCaption:SetText(Addon.localization.THEME)
 
     -- Themes selector
-    local function getThemesList()
+    local function GetThemesList()
         local list = {}
         for id,theme in pairs(IPMTTheme) do
             list[id] = theme.name
@@ -133,7 +133,7 @@ function Addon:RenderOptions()
     Addon.fOptions.theme:SetHeight(30)
     Addon.fOptions.theme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -304)
     Addon.fOptions.theme:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -304)
-    Addon.fOptions.theme:SetList(getThemesList, IPMTOptions.theme)
+    Addon.fOptions.theme:SetList(GetThemesList, IPMTOptions.theme)
     Addon.fOptions.theme:SetCallback({
         OnSelect = function(self, key, text)
             Addon:ApplyTheme(key)

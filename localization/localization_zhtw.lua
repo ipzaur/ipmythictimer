@@ -6,6 +6,7 @@ Addon.localization.ADDELEMENT = "Add element" -- need correct
 
 Addon.localization.BACKGROUND = "背景"
 Addon.localization.BORDER     = "邊框"
+Addon.localization.BORDERLIST = "Select a border from the library" -- need correct
 Addon.localization.BRDERWIDTH = "邊框寬度"
 
 Addon.localization.CLEANDBBT  = "清理數據庫"
@@ -85,6 +86,10 @@ Addon.localization.HELP = {
 
 Addon.localization.ICONSIZE   = "圖示大小"
 
+Addon.localization.JUSTIFYH   = "Horizontal text justify" -- need correct
+
+Addon.localization.LAYER      = "Layer" -- need correct
+
 Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..
                                 "滑鼠左鍵（拖動）- 移動按鈕"
 Addon.localization.MAPBUTOPT  = "顯示/隱藏小地圖按鈕"
@@ -108,6 +113,7 @@ Addon.localization.SOURCE     = "資源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已載入。輸入 /ipmt 開啟選項。"
 
 Addon.localization.TEXTURE    = "材質"
+Addon.localization.TEXTURELST = "Select a texture from the library" -- need correct
 Addon.localization.TXTRINDENT = "材質縮排"
 Addon.localization.THEME      = "主題"
 Addon.localization.THEMEBUTNS = {

@@ -6,6 +6,7 @@ Addon.localization.ADDELEMENT = "Добавить элемент"
 
 Addon.localization.BACKGROUND = "Фон"
 Addon.localization.BORDER     = "Рамка"
+Addon.localization.BORDERLIST = "Выбрать рамку из библиотеки"
 Addon.localization.BRDERWIDTH = "Толщина рамки"
 
 Addon.localization.CLEANDBBT  = "Очистить базу мобов"
@@ -85,6 +86,10 @@ Addon.localization.HELP       = {
 
 Addon.localization.ICONSIZE   = "Размер иконки"
 
+Addon.localization.JUSTIFYH   = "Горизонтальное выравнивание текста"
+
+Addon.localization.LAYER      = "Слой"
+
 Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\n" ..
                                 "ЛКМ (зажать) - передвинуть иконку"
 Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку у миникарты"
@@ -108,6 +113,7 @@ Addon.localization.SOURCE     = "Источник"
 Addon.localization.STARTINFO  = "iP Mythic Timer загружен. Для вызова настроек наберите /ipmt."
 
 Addon.localization.TEXTURE    = "Текстура"
+Addon.localization.TEXTURELST = "Выбрать текстуру из библиотеки"
 Addon.localization.TXTRINDENT = "Отступ текстуры"
 Addon.localization.THEME      = "Тема"
 Addon.localization.THEMEBUTNS = {

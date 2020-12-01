@@ -63,6 +63,7 @@ function Addon:ToggleMapButton(show)
 end
 
 function Addon:ShowOptions()
+    Addon.opened.options = true
     if Addon.fOptions == nil then
         Addon:RenderOptions()
     end
@@ -99,13 +100,13 @@ function Addon:ShowOptions()
     if Addon.season.options and Addon.season.options.ShowOptions then
         Addon.season.options:ShowOptions()
     end
-    Addon.opened.options = true
 end
 
 function Addon:CloseOptions()
     if not Addon.opened.options then
         return
     end
+    Addon.opened.options = false
     Addon:CloseThemeEditor()
     Addon.fMain:SetMovable(false)
     Addon.fMain:EnableMouse(false)
@@ -119,7 +120,6 @@ function Addon:CloseOptions()
     Addon.fMain.deathTimer:EnableMouse(true)
     Addon.fMain.bosses:EnableMouse(true)
     Addon.fOptions:Hide()
-    Addon.opened.options = false
 end
 
 local hideMainMenu = false

@@ -37,11 +37,13 @@ function Addon:InitThemes()
         end
     end
 
-    for i, theme in ipairs(IPMTTheme) do
+    for themeID, theme in ipairs(IPMTTheme) do
         local decors = theme.decors
-        IPMTTheme[i] = Addon:CopyObject(Addon.theme[1], IPMTTheme[i])
+        IPMTTheme[themeID] = Addon:CopyObject(Addon.theme[1], IPMTTheme[themeID])
         if #decors then
-            IPMTTheme[i].decors = decors
+            for decorID, info in ipairs(decors) do
+                IPMTTheme[themeID].decors[decorID] = Addon:CopyObject(Addon.defaultDecor, info)
+            end
         end
     end
 end
@@ -65,6 +67,7 @@ local optionsSize = {
     },
 }
 function Addon:ShowThemeEditor()
+    Addon.opened.themes = true
     if Addon.fThemes == nil then
         Addon:RenderThemeEditor()
     end
@@ -79,7 +82,6 @@ function Addon:ShowThemeEditor()
     Addon.fOptions:SetSize(optionsSize.expanded.w, optionsSize.expanded.h)
     Addon.fOptions.editTheme.fTexture:SetVertexColor(1, 1, 1)
     Addon.fOptions.editTheme:SetBackdropColor(.25,.25,.25, 1)
-    Addon.opened.themes = true
 
     Addon:FillDummy()
     Addon:FillThemeEditor()
@@ -90,11 +92,11 @@ function Addon:CloseThemeEditor()
     if Addon.fThemes == nil then
         return
     end
+    Addon.opened.themes = false
     local theme = IPMTTheme[IPMTOptions.theme]
     Addon.fOptions:SetSize(optionsSize.collapsed.w, optionsSize.collapsed.h)
     Addon.fOptions.editTheme:SetBackdropColor(.175,.175,.175, 1)
     Addon.fThemes:Hide()
-    Addon.opened.themes = false
     for frame,info in pairs(theme.elements) do
         Addon:ToggleMovable(frame, false)
         if info.hidden then
@@ -150,10 +152,10 @@ function Addon:FillThemeEditor()
 
     Addon.fThemes.bg.width:SetText(theme.main.size.w)
     Addon.fThemes.bg.height:SetText(theme.main.size.h)
-    Addon.fThemes.bg.texture:SelectItem(theme.main.background.texture, true)
+    Addon.fThemes.bg.texture:SetText(theme.main.background.texture)
     Addon.fThemes.bg.color:ColorChange(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a, true)
     Addon.fThemes.bg.borderInset:SetValue(theme.main.border.inset)
-    Addon.fThemes.bg.border:SelectItem(theme.main.border.texture, true)
+    Addon.fThemes.bg.border:SetText(theme.main.border.texture)
     Addon.fThemes.bg.borderColor:ColorChange(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a, true)
     Addon.fThemes.bg.borderSize:SetValue(theme.main.border.size)
 
@@ -162,6 +164,9 @@ function Addon:FillThemeEditor()
         Addon:ToggleVisible(frame, true)
         if info.fontSize ~= nil then
             Addon.fThemes[frame].fontSize:SetValue(info.fontSize)
+        end
+        if info.justifyH ~= nil then
+            Addon.fThemes[frame].justifyH:SelectItem(info.justifyH, true)
         end
         if info.color ~= nil then
             if info.color.r ~= nil then
@@ -181,12 +186,13 @@ function Addon:FillThemeEditor()
         end
         Addon.fThemes.decors[decorID].width:SetText(info.size.w)
         Addon.fThemes.decors[decorID].height:SetText(info.size.h)
-        Addon.fThemes.decors[decorID].texture:SelectItem(info.background.texture, true)
+        Addon.fThemes.decors[decorID].texture:SetText(info.background.texture)
         Addon.fThemes.decors[decorID].color:ColorChange(info.background.color.r, info.background.color.g, info.background.color.b, info.background.color.a, true)
         Addon.fThemes.decors[decorID].borderInset:SetValue(info.border.inset)
-        Addon.fThemes.decors[decorID].border:SelectItem(info.border.texture, true)
+        Addon.fThemes.decors[decorID].border:SetText(info.border.texture)
         Addon.fThemes.decors[decorID].borderColor:ColorChange(info.border.color.r, info.border.color.g, info.border.color.b, info.border.color.a, true)
         Addon.fThemes.decors[decorID].borderSize:SetValue(info.border.size)
+        Addon.fThemes.decors[decorID].layer:SetValue(info.layer)
         Addon:ToggleVisible(decorID, true)
     end
 end
@@ -565,7 +571,7 @@ function Addon:ApplyTheme(themeID)
     IPMTOptions.theme = themeID
     local theme = IPMTTheme[IPMTOptions.theme]
 
-    Addon:ChangeMain(nil, nil, true)
+    Addon:ChangeDecor('main', nil, nil, true)
     Addon:SetFont(theme.font, true)
     for frame, info in pairs(theme.elements) do
         Addon:MoveElement(frame, nil, true)
@@ -590,12 +596,17 @@ function Addon:ApplyTheme(themeID)
         end
     end
     for decorID, info in ipairs(theme.decors) do
-        Addon:MoveElement(decorID, nil, true)
-        if info.hidden then
-            Addon.fMain[frame]:Hide()
-        else
-            Addon.fMain[frame]:Show()
+        Addon:RenderDecor(decorID)
+        Addon:RenderDecorEditor(decorID)
+    end
+    for decorID = #theme.decors+1, #Addon.fMain.decors do
+        Addon.fMain.decors[decorID]:Hide()
+        if Addon.opened.themes and Addon.fThemes.decors[decorID] ~= nil then
+            Addon.fThemes.decors[decorID]:Hide()
         end
+    end
+    if Addon.opened.themes and #theme.decors == 0 then
+        Addon:RecalcThemesHeight()
     end
     if Addon.opened.themes then
         Addon:FillThemeEditor()
@@ -656,4 +667,17 @@ end
 function Addon:BlurDecor(decorID, button)
     button.icon:SetAlpha(.5)
     GameTooltip:Hide()
+end
+
+function Addon:SetLayer(decorID, value, woSave)
+    Addon.fMain.decors[decorID]:SetFrameLevel(value)
+    if woSave ~= true then
+        IPMTTheme[IPMTOptions.theme].decors[decorID].layer = value
+    end
+end
+function Addon:SetJustifyH(frame, value, woSave)
+    Addon.fMain[frame].text:SetJustifyH(value)
+    if woSave ~= true then
+        IPMTTheme[IPMTOptions.theme].elements[frame].justifyH = value
+    end
 end

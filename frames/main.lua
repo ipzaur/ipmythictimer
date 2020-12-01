@@ -96,6 +96,7 @@ function Addon:RenderElement(info)
 
     Addon.fMain[frame] = CreateFrame("Frame", nil, Addon.fMain, BackdropTemplateMixin and "BackdropTemplate")
     Addon.fMain[frame]:SetSize(elemInfo.size.w, elemInfo.size.h)
+    Addon.fMain[frame]:ClearAllPoints()
     Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, elemInfo.position.x, elemInfo.position.y)
     Addon.fMain[frame]:SetBackdrop(Addon.backdrop)
     Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
@@ -254,12 +255,16 @@ function Addon:RenderDecor(decorID)
         },
     }
     Addon.fMain.decors[decorID]:SetSize(decorInfo.size.w, decorInfo.size.h)
+    Addon.fMain.decors[decorID]:ClearAllPoints()
     Addon.fMain.decors[decorID]:SetPoint(point, Addon.fMain, rPoint, decorInfo.position.x, decorInfo.position.y)
     Addon.fMain.decors[decorID]:SetBackdrop(backdrop)
     Addon.fMain.decors[decorID]:SetBackdropColor(decorInfo.background.color.r, decorInfo.background.color.g, decorInfo.background.color.b, decorInfo.background.color.a)
     Addon.fMain.decors[decorID]:SetBackdropBorderColor(decorInfo.border.color.r, decorInfo.border.color.g, decorInfo.border.color.b, decorInfo.border.color.a)
+    Addon.fMain.decors[decorID]:SetFrameLevel(decorInfo.layer)
 
     if decorInfo.hidden then
         Addon.fMain.decors[decorID]:Hide()
+    else
+        Addon.fMain.decors[decorID]:Show()
     end
 end
