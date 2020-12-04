@@ -31,6 +31,7 @@ seasons\season91.lua
 
 frames\main.lua
 frames\help.lua
+frames\import.lua
 frames\options.lua
 frames\elemEditor.lua
 frames\themes.lua
@@ -41,6 +42,7 @@ frames\debug.lua
 main.lua
 prognosis.lua
 help.lua
+import.lua
 options.lua
 deaths.lua
 elemEditor.lua

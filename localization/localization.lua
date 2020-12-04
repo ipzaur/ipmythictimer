@@ -116,8 +116,13 @@ Addon.localization.TEXTURE    = "Texture"
 Addon.localization.TEXTURELST = "Select a texture from the library"
 Addon.localization.TXTRINDENT = "Texture indent"
 Addon.localization.THEME      = "Theme"
+Addon.localization.THEMEADD   = {
+    NEW    = "Create new theme",
+    COPY   = "Duplicate current theme",
+    IMPORT = "Import theme",
+}
 Addon.localization.THEMEBUTNS = {
-    DUPLICATE   = "Duplicate current theme",
+    ADD         = "Add theme",
     DELETE      = "Delete current theme",
     RESTORE     = 'Restore theme "' .. Addon.localization.DEFAULT .. '" and select it',
     OPENEDITOR  = "Open theme editor",

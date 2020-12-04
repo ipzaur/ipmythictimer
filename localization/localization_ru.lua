@@ -116,8 +116,13 @@ Addon.localization.TEXTURE    = "Текстура"
 Addon.localization.TEXTURELST = "Выбрать текстуру из библиотеки"
 Addon.localization.TXTRINDENT = "Отступ текстуры"
 Addon.localization.THEME      = "Тема"
+Addon.localization.THEMEADD   = {
+    NEW    = "Создать новую тему",
+    COPY   = "Скопировать текущую тему",
+    IMPORT = "Импортировать тему",
+}
 Addon.localization.THEMEBUTNS = {
-    DUPLICATE   = "Создать тему на основе текущей",
+    ADD         = "Добавить тему",
     DELETE      = "Удалить тему",
     RESTORE     = 'Вернуть тему "' .. Addon.localization.DEFAULT .. '" в исходное состояние и применить её',
     OPENEDITOR  = "Открыть редактор темы",

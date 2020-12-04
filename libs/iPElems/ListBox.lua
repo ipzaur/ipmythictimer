@@ -44,6 +44,7 @@ function IPListBoxMixin:OnLoad()
     self.list = nil
     self.needScroll = false
     self.callback = nil
+    self.noSort = false
 
     self:SetBackdrop(backdrop)
     self:SetBackdropColor(.03,.03,.03, 1)
@@ -73,8 +74,9 @@ function IPListBoxMixin:OnLoad()
     self.fItem = {}
 end
 
-function IPListBoxMixin:SetList(list, current)
+function IPListBoxMixin:SetList(list, current, noSort)
     self.list = list
+    self.noSort = noSort
     if current then
         self:SelectItem(current, true)
     end
@@ -207,9 +209,11 @@ function IPListBoxMixin:RenderList(list)
             text = text,
         })
     end
-    table.sort(sorted, function(item1, item2)
-        return item1.text < item2.text
-    end)
+    if not self.noSort then
+        table.sort(sorted, function(item1, item2)
+            return item1.text < item2.text
+        end)
+    end
     for num, item in ipairs(sorted) do
         local selected = false
         if self.selected and self.selected == item.key then

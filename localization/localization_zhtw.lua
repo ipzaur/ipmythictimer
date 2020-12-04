@@ -116,7 +116,13 @@ Addon.localization.TEXTURE    = "材質"
 Addon.localization.TEXTURELST = "Select a texture from the library" -- need correct
 Addon.localization.TXTRINDENT = "材質縮排"
 Addon.localization.THEME      = "主題"
+Addon.localization.THEMEADD   = {
+    NEW    = "Create new theme", -- need correct
+    COPY   = "Duplicate current theme", -- need correct
+    IMPORT = "Import theme", -- need correct
+}
 Addon.localization.THEMEBUTNS = {
+    ADD         = "Add theme", -- need correct
     DUPLICATE   = "當前主題重複",
     DELETE      = "刪除當前主題",
     RESTORE     = '恢復主題"' .. Addon.localization.DEFAULT .. '"並選擇它',

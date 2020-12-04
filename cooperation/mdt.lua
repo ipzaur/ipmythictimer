@@ -1,6 +1,41 @@
 local AddonName, Addon = ...
 
 Addon.MDTdungeon = {
+-- SL
+    [1663] = 30, -- Halls of Atonement
+    [1664] = 30, -- Halls of Atonement
+    [1665] = 30, -- Halls of Atonement
+
+    [1666] = 35, -- The Necrotic Wake
+    [1667] = 35, -- The Necrotic Wake
+    [1668] = 35, -- The Necrotic Wake
+
+    [1669] = 31, -- Mists Of Tirna Scithe
+
+    [1674] = 32, -- Plaguefall
+    [1697] = 32, -- Plaguefall
+
+    [1675] = 33, -- Sanguine Depths
+    [1676] = 33, -- Sanguine Depths
+
+    [1677] = 29, -- De Other Side
+    [1678] = 29, -- De Other Side
+    [1679] = 29, -- De Other Side
+    [1680] = 29, -- De Other Side
+
+    [1683] = 36, -- Theater Of Pain
+    [1684] = 36, -- Theater Of Pain
+    [1685] = 36, -- Theater Of Pain
+    [1686] = 36, -- Theater Of Pain
+    [1687] = 36, -- Theater Of Pain
+
+    [1692] = 34, -- Spires Of Ascension
+    [1693] = 34, -- Spires Of Ascension
+    [1694] = 34, -- Spires Of Ascension
+    [1695] = 34, -- Spires Of Ascension
+
+
+-- BfA
     [934]  = 15, -- Atal Dazar
     [936]  = 16, -- Freehold
 

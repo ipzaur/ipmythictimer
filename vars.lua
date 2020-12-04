@@ -9,6 +9,10 @@ Addon.PROGRESS_FORMAT_FORCES  = 2
 Addon.PROGRESS_DIRECTION_ASC  = 1
 Addon.PROGRESS_DIRECTION_DESC = 2
 
+Addon.CREATE_THEME_NEW    = 1
+Addon.CREATE_THEME_COPY   = 2
+Addon.CREATE_THEME_IMPORT = 3
+
 Addon.season = {
     number   = 91,
     isActive = false,
@@ -183,5 +187,10 @@ Addon.optionList = {
     progress = {
         [Addon.PROGRESS_FORMAT_PERCENT] = Addon.localization.PROGFORMAT.percent,
         [Addon.PROGRESS_FORMAT_FORCES]  = Addon.localization.PROGFORMAT.forces,
+    },
+    createTheme = {
+        [Addon.CREATE_THEME_NEW]    = Addon.localization.THEMEADD.NEW,
+        [Addon.CREATE_THEME_COPY]   = Addon.localization.THEMEADD.COPY,
+        [Addon.CREATE_THEME_IMPORT] = Addon.localization.THEMEADD.IMPORT,
     }
 }

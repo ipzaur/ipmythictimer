@@ -108,6 +108,7 @@ function Addon:CloseOptions()
     end
     Addon.opened.options = false
     Addon:CloseThemeEditor()
+    Addon:CloseImport()
     Addon.fMain:SetMovable(false)
     Addon.fMain:EnableMouse(false)
     if not IPMTDungeon.keyActive then
@@ -156,4 +157,81 @@ function Addon:InitOptions()
     if globalVars ~= nil then
         IPMTOptions.global = globalVars
     end
+end
+
+function Addon:AddTheme(method)
+    if method == Addon.CREATE_THEME_COPY then
+        Addon:DuplicateTheme(IPMTTheme[IPMTOptions.theme])
+    elseif method == Addon.CREATE_THEME_IMPORT then
+        Addon:ShowImport()
+    else
+        Addon:DuplicateTheme(IPMTTheme[1])
+    end
+end
+
+function Addon:DuplicateTheme(theme)
+    local newTheme = Addon:CopyObject(theme)
+    newTheme.name = newTheme.name .. " (" .. Addon.localization.COPY .. ")"
+    table.insert(IPMTTheme, newTheme)
+    Addon.fOptions.theme:SelectItem(#IPMTTheme)
+end
+
+function Addon:ApplyTheme(themeID)
+    IPMTOptions.theme = themeID
+    local theme = IPMTTheme[IPMTOptions.theme]
+
+    Addon:ChangeDecor('main', nil, nil, true)
+    Addon:SetFont(theme.font, true)
+    for frame, info in pairs(theme.elements) do
+        Addon:MoveElement(frame, nil, true)
+        if info.fontSize ~= nil then
+            Addon:SetFontSize(frame, info.fontSize, true)
+            if info.color ~= nil then
+                if info.color.r ~= nil then
+                    Addon:SetColor(frame, info.color, nil, true)
+                else
+                    Addon:SetColor(frame, info.color[0], nil, true)
+                end
+            end
+        end
+        if info.iconSize then
+            Addon:SetIconSize(frame, info.iconSize, true)
+        end
+        if info.hidden then
+            Addon.fMain[frame]:Hide()
+        else
+            Addon.fMain[frame]:Show()
+            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+        end
+    end
+    for decorID, info in ipairs(theme.decors) do
+        Addon:RenderDecor(decorID)
+        Addon:RenderDecorEditor(decorID)
+    end
+    for decorID = #theme.decors+1, #Addon.fMain.decors do
+        Addon.fMain.decors[decorID]:Hide()
+        if Addon.opened.themes and Addon.fThemes.decors[decorID] ~= nil then
+            Addon.fThemes.decors[decorID]:Hide()
+        end
+    end
+    if Addon.opened.themes and #theme.decors == 0 then
+        Addon:RecalcThemesHeight()
+    end
+    if Addon.opened.themes then
+        Addon:FillThemeEditor()
+    end
+    Addon.fOptions.removeTheme:ToggleDisabled(IPMTOptions.theme == 1)
+end
+
+function Addon:RemoveTheme(themeID)
+    if themeID == 1 then
+        return
+    end
+    table.remove(IPMTTheme, themeID)
+    Addon.fOptions.theme:SelectItem(1)
+end
+
+function Addon:RestoreDefaultTheme()
+    IPMTTheme[1] = Addon:CopyObject(Addon.theme[1])
+    Addon.fOptions.theme:SelectItem(1)
 end
