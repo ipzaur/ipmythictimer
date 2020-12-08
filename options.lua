@@ -159,19 +159,25 @@ function Addon:InitOptions()
     end
 end
 
-function Addon:AddTheme(method)
-    if method == Addon.CREATE_THEME_COPY then
+function Addon:ThemeAction(action)
+    if action == Addon.THEME_ACTIONS_COPY then
         Addon:DuplicateTheme(IPMTTheme[IPMTOptions.theme])
-    elseif method == Addon.CREATE_THEME_IMPORT then
+    elseif action == Addon.THEME_ACTIONS_IMPORT then
         Addon:ShowImport()
+    elseif action == Addon.THEME_ACTIONS_EXPORT then
+        Addon:ShowExport()
     else
         Addon:DuplicateTheme(IPMTTheme[1])
     end
 end
 
-function Addon:DuplicateTheme(theme)
+function Addon:DuplicateTheme(theme, import)
     local newTheme = Addon:CopyObject(theme)
-    newTheme.name = newTheme.name .. " (" .. Addon.localization.COPY .. ")"
+    local source = Addon.localization.COPY
+    if import == true then
+        source = Addon.localization.IMPORT
+    end
+    newTheme.name = newTheme.name .. " (" .. source .. ")"
     table.insert(IPMTTheme, newTheme)
     Addon.fOptions.theme:SelectItem(#IPMTTheme)
 end

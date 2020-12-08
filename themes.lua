@@ -6,7 +6,7 @@ function Addon:InitThemes()
             [1] = {}
         }
         -- copy params from prev 1.1.x and 1.2.x
-        if IPMTOptions.font then
+        if IPMTOptions and IPMTOptions.font then
             IPMTTheme[1] = {
                 font = IPMTOptions.font,
                 main = {
@@ -40,7 +40,7 @@ function Addon:InitThemes()
     for themeID, theme in ipairs(IPMTTheme) do
         local decors = theme.decors
         IPMTTheme[themeID] = Addon:CopyObject(Addon.theme[1], IPMTTheme[themeID])
-        if #decors then
+        if decors ~= nil and #decors then
             for decorID, info in ipairs(decors) do
                 IPMTTheme[themeID].decors[decorID] = Addon:CopyObject(Addon.defaultDecor, info)
             end
@@ -104,6 +104,9 @@ function Addon:CloseThemeEditor()
         elseif IPMTDungeon.keyActive and frame == 'deathTimer' then
             Addon.deaths:Update()
         end
+    end
+    for decorID, info in ipairs(theme.decors) do
+        Addon:ToggleMovable(decorID, false)
     end
     Addon:CloseElemEditor()
     Addon.fOptions.editTheme:OnLeave()
@@ -441,6 +444,7 @@ function Addon:ToggleMovable(frame, enable)
             element:SetBackdropColor(1,1,1, .25)
         end
         editorElement.moveMode.icon:SetAlpha(1)
+        editorElement.moveMode.icon:SetScale(1.2)
     else
         if type(frame) ~= "number" then
             if elemInfo.hidden then
@@ -460,6 +464,7 @@ function Addon:ToggleMovable(frame, enable)
             alpha = .5
         end
         editorElement.moveMode.icon:SetAlpha(alpha)
+        editorElement.moveMode.icon:SetScale(1)
     end
     element:EnableMouse(element.isMovable)
     element:SetMovable(element.isMovable)

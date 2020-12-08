@@ -6,4 +6,6 @@
     <Script file="libs\LibDataBroker-1.1\LibDataBroker-1.1.lua"/>
     <Include file="libs\LibDBIcon-1.0\lib.xml"/>
     <Include file="libs\iPElems\ipelems.xml"/>
+    <Include file="libs\LibDeflate\LibDeflate.lua"/>
+    <Include file="libs\LibSerialize\LibSerialize.lua"/>
 </Ui>

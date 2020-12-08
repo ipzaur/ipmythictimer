@@ -2,11 +2,11 @@ if GetLocale() ~= "zhCN" then return end
 
 local AddonName, Addon = ...
 
-Addon.localization.ADDELEMENT = "Add element" -- need correct
+Addon.localization.ADDELEMENT = "添加元素"
 
 Addon.localization.BACKGROUND = "背景"
 Addon.localization.BORDER     = "边框"
-Addon.localization.BORDERLIST = "Select a border from the library" -- need correct
+Addon.localization.BORDERLIST = "从库中选择一个边框"
 Addon.localization.BRDERWIDTH = "边框宽度"
 
 Addon.localization.CLEANDBBT  = "清除数据库"
@@ -35,12 +35,12 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "伤害"
-Addon.localization.DECORELEMS = "Decor elements" -- need correct
+Addon.localization.DECORELEMS = "装饰元素"
 Addon.localization.DEFAULT    = "默认"
 Addon.localization.DEATHCOUNT = "死亡"
 Addon.localization.DEATHSHOW  = "点击查看详细信息"
 Addon.localization.DEATHTIME  = "浪费时间"
-Addon.localization.DELETDECOR = "Delete decorative element" -- need correct
+Addon.localization.DELETDECOR = "删除装饰元素"
 Addon.localization.DIRECTION  = "进度变化"
 Addon.localization.DIRECTIONS = {
     asc  = "升序 (0% -> 100%)",
@@ -85,10 +85,11 @@ Addon.localization.HELP = {
 }
 
 Addon.localization.ICONSIZE   = "图标大小"
+Addon.localization.IMPORT     = "导入"
 
-Addon.localization.JUSTIFYH   = "Horizontal text justify" -- need correct
+Addon.localization.JUSTIFYH   = "水平文本对齐"
 
-Addon.localization.LAYER      = "Layer" -- need correct
+Addon.localization.LAYER      = "层"
 
 Addon.localization.MAPBUT     = "鼠标左键(单击)- 切换选项\n" ..
                                 "鼠标左键(拖动)- 移动按钮"
@@ -113,16 +114,17 @@ Addon.localization.SOURCE     = "资源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已载入。键入 /ipmt 开启选项。"
 
 Addon.localization.TEXTURE    = "纹理"
-Addon.localization.TEXTURELST = "Select a texture from the library" -- need correct
+Addon.localization.TEXTURELST = "从库中选择一个纹理"
 Addon.localization.TXTRINDENT = "纹理缩进"
 Addon.localization.THEME      = "主题"
-Addon.localization.THEMEADD   = {
-    NEW    = "Create new theme", -- need correct
-    COPY   = "Duplicate current theme", -- need correct
-    IMPORT = "Import theme", -- need correct
+Addon.localization.THEMEACTN  = {
+    NEW    = "创建新主题",
+    COPY   = "复制当前主题",
+    IMPORT = "导入主题",
+    EXPORT = "导出主题",
 }
 Addon.localization.THEMEBUTNS = {
-    ADD         = "Add theme", -- need correct
+    ACTIONS     = "应用当前主题",
     DUPLICATE   = "复制当前主题",
     DELETE      = "删除当前主题",
     RESTORE     = '恢复主题 "' .. Addon.localization.DEFAULT .. '" 并选择它',

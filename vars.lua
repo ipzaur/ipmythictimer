@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-Addon.version = 1300
+Addon.version = 1301
 
 Addon.AFFIX_TEEMING = 5
 
@@ -9,9 +9,10 @@ Addon.PROGRESS_FORMAT_FORCES  = 2
 Addon.PROGRESS_DIRECTION_ASC  = 1
 Addon.PROGRESS_DIRECTION_DESC = 2
 
-Addon.CREATE_THEME_NEW    = 1
-Addon.CREATE_THEME_COPY   = 2
-Addon.CREATE_THEME_IMPORT = 3
+Addon.THEME_ACTIONS_NEW    = 1
+Addon.THEME_ACTIONS_COPY   = 2
+Addon.THEME_ACTIONS_IMPORT = 3
+Addon.THEME_ACTIONS_EXPORT = 4
 
 Addon.season = {
     number   = 91,
@@ -189,8 +190,9 @@ Addon.optionList = {
         [Addon.PROGRESS_FORMAT_FORCES]  = Addon.localization.PROGFORMAT.forces,
     },
     createTheme = {
-        [Addon.CREATE_THEME_NEW]    = Addon.localization.THEMEADD.NEW,
-        [Addon.CREATE_THEME_COPY]   = Addon.localization.THEMEADD.COPY,
-        [Addon.CREATE_THEME_IMPORT] = Addon.localization.THEMEADD.IMPORT,
+        [Addon.THEME_ACTIONS_NEW]    = Addon.localization.THEMEACTN.NEW,
+        [Addon.THEME_ACTIONS_COPY]   = Addon.localization.THEMEACTN.COPY,
+        [Addon.THEME_ACTIONS_IMPORT] = Addon.localization.THEMEACTN.IMPORT,
+        [Addon.THEME_ACTIONS_EXPORT] = Addon.localization.THEMEACTN.EXPORT,
     }
 }

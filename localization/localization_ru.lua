@@ -85,6 +85,7 @@ Addon.localization.HELP       = {
 }
 
 Addon.localization.ICONSIZE   = "Размер иконки"
+Addon.localization.IMPORT     = "Импорт"
 
 Addon.localization.JUSTIFYH   = "Горизонтальное выравнивание текста"
 
@@ -116,13 +117,14 @@ Addon.localization.TEXTURE    = "Текстура"
 Addon.localization.TEXTURELST = "Выбрать текстуру из библиотеки"
 Addon.localization.TXTRINDENT = "Отступ текстуры"
 Addon.localization.THEME      = "Тема"
-Addon.localization.THEMEADD   = {
+Addon.localization.THEMEACTN = {
     NEW    = "Создать новую тему",
     COPY   = "Скопировать текущую тему",
     IMPORT = "Импортировать тему",
+    EXPORT = "Экспортировать тему",
 }
 Addon.localization.THEMEBUTNS = {
-    ADD         = "Добавить тему",
+    ACTIONS     = "Действия с темой",
     DELETE      = "Удалить тему",
     RESTORE     = 'Вернуть тему "' .. Addon.localization.DEFAULT .. '" в исходное состояние и применить её',
     OPENEDITOR  = "Открыть редактор темы",

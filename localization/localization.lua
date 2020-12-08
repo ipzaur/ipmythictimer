@@ -85,6 +85,7 @@ Addon.localization.HELP       = {
 }
 
 Addon.localization.ICONSIZE   = "Icon size"
+Addon.localization.IMPORT     = "Import"
 
 Addon.localization.JUSTIFYH   = "Horizontal text justify"
 
@@ -116,13 +117,14 @@ Addon.localization.TEXTURE    = "Texture"
 Addon.localization.TEXTURELST = "Select a texture from the library"
 Addon.localization.TXTRINDENT = "Texture indent"
 Addon.localization.THEME      = "Theme"
-Addon.localization.THEMEADD   = {
+Addon.localization.THEMEACTN  = {
     NEW    = "Create new theme",
     COPY   = "Duplicate current theme",
     IMPORT = "Import theme",
+    EXPORT = "Export theme",
 }
 Addon.localization.THEMEBUTNS = {
-    ADD         = "Add theme",
+    ACTIONS     = "Actions with theme",
     DELETE      = "Delete current theme",
     RESTORE     = 'Restore theme "' .. Addon.localization.DEFAULT .. '" and select it',
     OPENEDITOR  = "Open theme editor",
