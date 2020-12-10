@@ -1,29 +1,15 @@
 local AddonName, Addon = ...
 
-Addon.DECOR_FONT = Addon.FONT_ROBOTO
-Addon.DECOR_FONTSIZE_DELTA = 0
-if GetLocale() == "zhTW" or GetLocale() == "zhCN" then
-    Addon.DECOR_FONT = "Arial"
-    Addon.DECOR_FONTSIZE_DELTA = -2
-end
-
 function Addon:Round(number, decimals)
     return (("%%.%df"):format(decimals)):format(number)
 end
 
-Addon.backdrop = {
-    bgFile   = "Interface\\Buttons\\WHITE8X8",
-    edgeFile = nil,
-    tile     = true,
-    tileSize = 32,
-}
-
-function Addon:StartDragging(self, button)
+function Addon:StartDragging(self, elem)
     self:StartMoving()
     self.isMoving = true
 end
 
-function Addon:StopDragging(self, button)
+function Addon:StopDragging(self, elem)
     self:StopMovingOrSizing()
     self.isMoving = false
 end
@@ -55,3 +41,22 @@ function Addon:PrintObject(data, prefix, toText)
     end
 end
 
+function Addon:CopyObject(template, filled)
+    local result = {}
+    for key,value in pairs(template) do
+        if type(value) == 'table' then
+            if filled ~= nil and type(filled[key]) == 'table' then
+                result[key] = Addon:CopyObject(value, filled[key])
+            else
+                result[key] = Addon:CopyObject(value)
+            end
+        else
+            if filled and filled[key] ~= nil and type(filled[key]) ~= 'table' then
+                result[key] = filled[key]
+            else
+                result[key] = value
+            end
+        end
+    end
+    return result
+end

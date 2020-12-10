@@ -7,7 +7,7 @@ function Addon.deaths:Toggle(show)
         show = not Addon.fDeaths:IsShown()
     end
     if show then
-        if not Addon.fOptions:IsShown() then
+        if not Addon.opened.options then
             Addon.deaths:Show()
         end
     else
@@ -80,7 +80,7 @@ function Addon.deaths:ShowTooltip(self)
         return false
     end
 
-    if not Addon.fOptions:IsShown() then
+    if not Addon.opened.options then
         local deathes, timeLost = C_ChallengeMode.GetDeathCount()
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(Addon.localization.DEATHCOUNT .. " : " .. deathes, 1, 1, 1)
@@ -127,8 +127,10 @@ function Addon.deaths:Update()
     local deathes, timeLost = C_ChallengeMode.GetDeathCount()
     if deathes > 0 then
         Addon.fMain.deathTimer.text:SetText("-" .. SecondsToClock(timeLost) .. " [" .. deathes .. "]")
-        Addon.fMain.deathTimer:Show()
-    else
+        if Addon.opened.themes or not IPMTTheme[IPMTOptions.theme].elements.deathTimer.hidden then
+            Addon.fMain.deathTimer:Show()
+        end
+    elseif not Addon.opened.themes then
         Addon.fMain.deathTimer:Hide()
     end
 end

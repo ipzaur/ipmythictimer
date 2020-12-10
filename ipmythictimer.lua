@@ -27,8 +27,9 @@ local function OnTooltipSetUnit(tooltip)
 end
 
 local function PrintDebug()
-    local text = Addon:PrintObject(IPMTDungeon, 'dungeon.', true)
+--[[    local text = Addon:PrintObject(IPMTDungeon, 'dungeon.', true)
     text = text .. "\n\n" .. Addon:PrintObject(IPMTOptions, 'IPMTOptions.', true)
+    
     text = text .. "\n\n FRAMES \n\n"
     for frame, info in pairs(Addon.frameInfo) do
         if info.text ~= nil then
@@ -37,7 +38,13 @@ local function PrintDebug()
             text = text .. frame .. ".font = '" .. fontName .. "'\n"
             text = text .. frame .. ".size = " .. fontSize .. "\n"
         end
-    end
+    end--]]
+
+
+    local text = Addon:PrintObject(Addon.theme, 'Addon.theme.', true)
+    text = text .. "\n\n" .. Addon:PrintObject(IPMTTheme, 'IPMTTheme.', true)
+
+
     print('debug')
     Addon.fDebug:Show()
     Addon.fDebug.textarea:SetText(text)
@@ -56,6 +63,7 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
     Addon.fMain:RegisterEvent("PLAYER_ENTERING_WORLD")
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
+    Addon.fMain:RegisterEvent("VARIABLES_LOADED")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
     Addon:elvUIFix()

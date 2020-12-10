@@ -15,7 +15,7 @@ local function GrabPrognosis()
 
     if inCombat then
         for _, nameplate in pairs(C_NamePlate.GetNamePlates()) do
-            if nameplate.UnitFrame.unitExists then
+            if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.unitExists then
                 local unitName = nameplate.UnitFrame.displayedUnit
                 if UnitCanAttack("player", unitName) and not UnitIsDead(unitName) then
                     local threat = UnitThreatSituation("player", unitName) or -1
@@ -72,7 +72,7 @@ function Addon:ShowPrognosis()
             Addon.fMain.prognosis.text:SetText(progress)
         end
         Addon.fMain.prognosis:Show()
-    elseif not Addon.isCustomizing then
+    elseif not Addon.opened.themes then
         Addon.fMain.prognosis:Hide()
     end
 end

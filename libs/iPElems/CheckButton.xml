@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="CheckButton.lua"/>
+
+    <CheckButton name="IPCheckButton" virtual="true" mixin="IPCheckButtonMixin" inherits="BackdropTemplate">
+        <Size>
+            <AbsDimension x="20" y="20" />
+        </Size>
+        <Scripts>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnClick method="OnClick"/>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </CheckButton>
+</Ui>

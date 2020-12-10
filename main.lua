@@ -1,31 +1,7 @@
 local AddonName, Addon = ...
 
 function Addon:ResetDungeon()
-    IPMTDungeon = {
-        id          = 0,
-        keyActive   = false,
-        time        = 0,
-        affixes     = {},
-        level       = 0,
-        players     = {},
-        prognosis   = {},
-        isTeeming   = false,
-        timeLimit   = {
-            [2] = nil,
-            [1] = nil,
-            [0] = nil,
-        },
-        trash       = {
-            total   = 0,
-            current = 0,
-            killed  = 0,
-        },
-        combat      = {
-            boss   = false,
-            killed = {},
-        },
-        deathes     = {},
-    }
+    IPMTDungeon = Addon:CopyObject(Addon.cleanDungeon)
 end
 
 function Addon:GetEnemyForces(npcID, progressFormat)
@@ -181,21 +157,13 @@ function Addon:UpdateProgress()
 end
 
 function Addon:OnTimerEnter(self)
-    if not Addon.fOptions:IsShown() then
+    if not Addon.opened.options then
         GameTooltip:SetOwner(self, "ANCHOR_LEFT")
         GameTooltip:SetText(Addon.localization.TIMERCHCKP, 1, 1, 1)
         GameTooltip:AddLine(" ")
+        local theme = IPMTTheme[IPMTOptions.theme]
         for level = 2,0,-1 do
-            local r, g, b = 0, 0, 0
             local keyText = '+' .. level + 1
-            if level > 0 then
-                g = 1
-                if level < 2 then
-                    r = 1
-                end
-            else
-                r, g, b = 1, 1, 1
-            end
             local timeText
             if level == 2 then
                 timeText = SecondsToClock(IPMTDungeon.timeLimit[0]) .. ' - ' .. SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[2])
@@ -204,14 +172,15 @@ function Addon:OnTimerEnter(self)
             else
                 timeText = SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[1]) .. ' - 0:00'
             end
-            GameTooltip:AddDoubleLine(keyText, timeText, r, g, b, r, g, b)
+            local color = theme.elements.timer.color[level]
+            GameTooltip:AddDoubleLine(keyText, timeText, color.r, color.g, color.b, color.r, color.g, color.b)
         end
         GameTooltip:Show()
     end
 end
 
 function Addon:OnBossesEnter(self)
-    if not Addon.fOptions:IsShown() then
+    if not Addon.opened.options then
         GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
         GameTooltip:SetText(Addon.localization.HELP.BOSSES, 1, 1, 1)
         GameTooltip:AddLine(" ")
@@ -227,7 +196,7 @@ function Addon:OnBossesEnter(self)
 end
 
 function Addon:OnAffixEnter(self, iconNum)
-    if not Addon.fOptions:IsShown() then
+    if not Addon.opened.options then
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         local affixNum = #IPMTDungeon.affixes - iconNum + 1
         GameTooltip:SetText(IPMTDungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
@@ -248,13 +217,16 @@ function Addon:OnUpdate(elapsed)
 end
 
 local function UpdateTime(block, elapsedTime)
+    local theme = IPMTTheme[IPMTOptions.theme]
     if not IPMTDungeon.keyActive then
         return
     end
     local timeCoef = {0.8, 0.6}
     local plusLevel = 0
     local plusTimer = 0
-    local r, g, b = 0, 0, 0
+    local timeText = ''
+    local plusTimeText = nil
+    local color = nil
 
     if IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[0] == nil then
         IPMTDungeon.timeLimit = {
@@ -269,33 +241,32 @@ local function UpdateTime(block, elapsedTime)
             if elapsedTime < IPMTDungeon.timeLimit[level] then
                 plusLevel = level
                 plusTimer = IPMTDungeon.timeLimit[level] - elapsedTime
+                plusTimeText = SecondsToClock(plusTimer)
                 break
             end
         end
-        Addon.fMain.timer.text:SetText(SecondsToClock(block.timeLimit - elapsedTime))
-        Addon.fMain.timer.text:SetTextColor(0, 1, 0)
-        if plusTimer > 0 then
-            Addon.fMain.plusTimer.text:SetText(SecondsToClock(plusTimer))
-            Addon.fMain.plusTimer:Show()
-            g = 1
-            if plusLevel < 2 then
-                r = 1
-            end
-        else
-            Addon.fMain.plusTimer:Hide()
-            r, g, b = 1, 1, 1
-        end
+        timeText = SecondsToClock(block.timeLimit - elapsedTime)
+        plusTimer = SecondsToClock(plusTimer)
+        color = theme.elements.timer.color[plusLevel]
         plusLevel = "+" .. plusLevel+1
     else
         plusLevel = "-1"
-        Addon.fMain.timer.text:SetText(SecondsToClock(elapsedTime - block.timeLimit))
-        Addon.fMain.plusTimer.text:SetText(SecondsToClock(elapsedTime))
-        Addon.fMain.plusTimer:Show()
-        r = 1
+        timeText = SecondsToClock(elapsedTime - block.timeLimit)
+        color = theme.elements.timer.color[-1]
+        plusTimeText = SecondsToClock(elapsedTime)
     end
     IPMTDungeon.time = elapsedTime
-    Addon.fMain.timer.text:SetTextColor(r, g, b)
+
     Addon.fMain.plusLevel.text:SetText(plusLevel)
+    Addon.fMain.timer.text:SetText(timeText)
+    Addon.fMain.timer.text:SetTextColor(color.r, color.g, color.b)
+    Addon.fMain.timer.text:SetAlpha(color.a)
+    if Addon.opened.themes or not theme.elements.plusTimer.hidden and plusTimeText ~= nil then
+        Addon.fMain.plusTimer.text:SetText(plusTimeText)
+        Addon.fMain.plusTimer:Show()
+    else
+        Addon.fMain.plusTimer:Hide()
+    end
 end
 hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
 
@@ -374,8 +345,6 @@ local function ShowTimer()
         Addon.deaths:Update()
         Addon:UpdateProgress()
         Addon.fMain:Show()
-        Addon.fMain.progress.text:SetTextColor(1,1,1)
-        Addon.fMain.prognosis.text:SetTextColor(1,1,1)
 
         local dungeonName = C_Scenario.GetInfo()
         Addon.fMain.dungeonname.text:SetText(dungeonName)
@@ -387,16 +356,13 @@ local function ShowTimer()
         if Addon.season.ShowTimer then
             Addon.season:ShowTimer()
         end
-        Addon:RecalcElem()
-        Addon:CloseOptions()
-
         ObjectiveTracker_Collapse()
     end
 end
 hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowTimer)
 
 local function HideTimer()
-    if not Addon.fOptions:IsShown() then
+    if not Addon.opened.options then
         Addon.fMain:Hide()
     end
     Addon.keyActive = false
@@ -473,10 +439,16 @@ function Addon:OnEvent(self, event, ...)
         IPMTDungeon.combat.boss = true
     elseif event == "ENCOUNTER_END" then
         EncounterEnd(arg2, arg5)
+    elseif event == "VARIABLES_LOADED" then
+        Addon:InitVars()
+        Addon:Render()
     end
 end
 
-function Addon:Init()
+function Addon:InitVars()
+    Addon:InitThemes()
+    Addon:InitOptions()
+
     if IPMTDB == nil then
         IPMTDB = {}
     end
@@ -487,6 +459,19 @@ function Addon:Init()
             IPMTDB = {}
         end
     end
+end
+
+function Addon:Render()
+    Addon:RenderMain()
+
+    if IPMTOptions.version == 0 then
+        Addon:ShowOptions()
+        Addon:ShowHelp()
+        IPMTOptions.version = Addon.version
+    end
+end
+
+function Addon:Init()
     Addon.DB = LibStub("AceDB-3.0"):New("IPMTOptions", {
         global = {
             minimap = {
@@ -494,16 +479,8 @@ function Addon:Init()
             },
         },
     })
-
-    Addon.isCustomizing = false
-    Addon:LoadOptions()
     Addon:InitIcon()
 end
 
 function Addon:OnShow()
-    Addon.fOptions:ClearAllPoints()
-    Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
-    Addon.fMain:ClearAllPoints()
-    Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
-    Addon:SetFont(IPMTOptions.font) -- may be it fix some bug ^_^
 end

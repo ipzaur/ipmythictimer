@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="ListBox.lua"/>
+
+    <Button name="IPListBox" enableMouse="true" virtual="true" mixin="IPListBoxMixin" inherits="BackdropTemplate">
+        <Size>
+            <AbsDimension x="150" y="16" />
+        </Size>
+        <Scripts>
+            <OnClick method="OnClick"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+            <OnLoad method="OnLoad"/>
+        </Scripts>
+    </Button>
+</Ui>

@@ -1,0 +1,11 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Script file="EditBox.lua"/>
+
+    <EditBox name="IPEditBox" virtual="true" mixin="IPEditBoxMixin" inherits="BackdropTemplate">
+        <Scripts>
+            <OnLoad method="OnLoad"/>
+            <OnEnter method="OnEnter"/>
+            <OnLeave method="OnLeave"/>
+        </Scripts>
+    </EditBox>
+</Ui>
