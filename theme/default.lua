@@ -14,7 +14,10 @@ Addon.theme[1] = {
             texture = "Interface\\Buttons\\WHITE8X8",
             color   = {r=0, g=0, b=0, a=.4},
             coords  = {0, 1, 0, 1},
-            texSize = nil,
+            texSize = {
+                w = 0,
+                h = 0,
+            },
             inset   = 0,
         },
         border  = {
@@ -207,7 +210,10 @@ Addon.defaultDecor = {
         texture = "Interface\\Buttons\\WHITE8X8",
         color   = {r=1, g=1, b=1, a=1},
         coords  = {0, 1, 0, 1},
-        texSize = nil,
+        texSize = {
+            w = 0,
+            h = 0,
+        },
         inset   = 0,
     },
     border  = {

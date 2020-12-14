@@ -71,7 +71,9 @@ function Addon:RenderTextureEditor()
     Addon.fTextureEditor.width:SetNumeric(true)
     Addon.fTextureEditor.width:SetMaxLetters(5)
     Addon.fTextureEditor.width:SetScript('OnTextChanged', function(self)
-        Addon:SetTextureSettings()
+        if self:HasFocus() then
+            Addon:SetTextureSettings()
+        end
     end)
     -- Height caption
     Addon.fTextureEditor.heightCaption = Addon.fTextureEditor:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -88,7 +90,9 @@ function Addon:RenderTextureEditor()
     Addon.fTextureEditor.height:SetNumeric(true)
     Addon.fTextureEditor.height:SetMaxLetters(5)
     Addon.fTextureEditor.height:SetScript('OnTextChanged', function(self)
-        Addon:SetTextureSettings()
+        if self:HasFocus() then
+            Addon:SetTextureSettings()
+        end
     end)
 
     -- Crop caption
@@ -109,7 +113,9 @@ function Addon:RenderTextureEditor()
     Addon.fTextureEditor.cropTop:SetNumeric(true)
     Addon.fTextureEditor.cropTop:SetMaxLetters(4)
     Addon.fTextureEditor.cropTop:SetScript('OnTextChanged', function(self)
-        Addon:SetTextureSettings()
+        if self:HasFocus() then
+            Addon:SetTextureSettings()
+        end
     end)
     -- Top caption
     Addon.fTextureEditor.cropTopCaption = Addon.fTextureEditor:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -128,7 +134,9 @@ function Addon:RenderTextureEditor()
     Addon.fTextureEditor.cropLeft:SetNumeric(true)
     Addon.fTextureEditor.cropLeft:SetMaxLetters(4)
     Addon.fTextureEditor.cropLeft:SetScript('OnTextChanged', function(self)
-        Addon:SetTextureSettings()
+        if self:HasFocus() then
+            Addon:SetTextureSettings()
+        end
     end)
     -- Left caption
     Addon.fTextureEditor.cropLeftCaption = Addon.fTextureEditor:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -146,7 +154,9 @@ function Addon:RenderTextureEditor()
     Addon.fTextureEditor.cropRight:SetNumeric(true)
     Addon.fTextureEditor.cropRight:SetMaxLetters(4)
     Addon.fTextureEditor.cropRight:SetScript('OnTextChanged', function(self)
-        Addon:SetTextureSettings()
+        if self:HasFocus() then
+            Addon:SetTextureSettings()
+        end
     end)
     -- Right caption
     Addon.fTextureEditor.cropRightCaption = Addon.fTextureEditor:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -165,7 +175,9 @@ function Addon:RenderTextureEditor()
     Addon.fTextureEditor.cropBottom:SetNumeric(true)
     Addon.fTextureEditor.cropBottom:SetMaxLetters(4)
     Addon.fTextureEditor.cropBottom:SetScript('OnTextChanged', function(self)
-        Addon:SetTextureSettings()
+        if self:HasFocus() then
+            Addon:SetTextureSettings()
+        end
     end)
     -- Bottom caption
     Addon.fTextureEditor.cropBottomCaption = Addon.fTextureEditor:CreateFontString(nil, "BACKGROUND", "GameFontNormal")

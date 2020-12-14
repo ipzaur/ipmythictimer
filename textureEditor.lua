@@ -27,22 +27,20 @@ function Addon:ShowTextureEditor(decorID)
         elemInfo = IPMTTheme[IPMTOptions.theme].decors[currentDecorID]
     end
 
-    local width
-    local height
-    if elemInfo.background.texSize ~= nil then
-        width  = elemInfo.background.texSize.w
-        height = elemInfo.background.texSize.h
-    else
+    local width = elemInfo.background.texSize.w
+    local height = elemInfo.background.texSize.h
+    if width == 0 and height == 0 then
         width  = elemInfo.size.w
         height = elemInfo.size.h
     end
-    Addon.fTextureEditor.width:SetText(width)
-    Addon.fTextureEditor.height:SetText(height)
 
     local left = width * elemInfo.background.coords[1]
     local right = width - width * elemInfo.background.coords[2]
     local top = height * elemInfo.background.coords[3]
     local bottom = height - height * elemInfo.background.coords[4]
+
+    Addon.fTextureEditor.width:SetText(width)
+    Addon.fTextureEditor.height:SetText(height)
     Addon.fTextureEditor.cropLeft:SetText(left)
     Addon.fTextureEditor.cropRight:SetText(right)
     Addon.fTextureEditor.cropTop:SetText(top)

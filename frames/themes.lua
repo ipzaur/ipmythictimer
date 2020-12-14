@@ -80,7 +80,10 @@ local function RenderTextureBlock(decorID, subTop, textureType)
                 },
             }
             if textureType == 'background' then
-                params.background.texSize = nil
+                params.background.texSize = {
+                    w = 0,
+                    h = 0,
+                }
                 params.background.coords  = {0, 1, 0, 1}
                 Addon:CloseTextureEditor()
             end
@@ -137,7 +140,10 @@ local function RenderTextureBlock(decorID, subTop, textureType)
             },
         }
         if textureType == 'background' and self:HasFocus() then
-            params.background.texSize = nil
+            params.background.texSize = {
+                w = 0,
+                h = 0,
+            }
             params.background.coords  = {0, 1, 0, 1}
             Addon:CloseTextureEditor()
         end
