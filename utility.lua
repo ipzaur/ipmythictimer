@@ -42,6 +42,9 @@ function Addon:PrintObject(data, prefix, toText)
 end
 
 function Addon:CopyObject(template, filled)
+    if template == nil then
+        return nil
+    end
     local result = {}
     for key,value in pairs(template) do
         if type(value) == 'table' then

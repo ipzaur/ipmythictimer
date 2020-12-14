@@ -18,16 +18,10 @@ function Addon:RenderMain()
         borderTexture = theme.main.border.texture
     end
     local backdrop = {
-        bgFile   = theme.main.background.texture,
+        bgFile   = nil,
         edgeFile = borderTexture,
         tile     = false,
         edgeSize = theme.main.border.size,
-        insets   = {
-            left   = theme.main.border.inset,
-            right  = theme.main.border.inset,
-            top    = theme.main.border.inset,
-            bottom = theme.main.border.inset,
-        },
     }
     Addon.fMain:ClearAllPoints()
     Addon.fMain:SetPoint(IPMTOptions.position.main.point, IPMTOptions.position.main.x, IPMTOptions.position.main.y)
@@ -35,7 +29,6 @@ function Addon:RenderMain()
     Addon.fMain:SetScale(1 + IPMTOptions.scale / 100)
     Addon.fMain:SetSize(theme.main.size.w, theme.main.size.h)
     Addon.fMain:SetBackdrop(backdrop)
-    Addon.fMain:SetBackdropColor(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a)
     Addon.fMain:SetBackdropBorderColor(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a)
     Addon.fMain:EnableMouse(false)
     Addon.fMain:SetMovable(false)
@@ -64,6 +57,17 @@ function Addon:RenderMain()
         Addon:OnShow()
     end)
     Addon.fMain:Hide()
+
+
+    Addon.fMain.background = Addon.fMain:CreateTexture(nil, "BACKGROUND")
+    Addon.fMain.background:SetAllPoints(Addon.fMain)
+    Addon.fMain.background:SetTexture(theme.main.background.texture)
+    Addon.fMain.background:SetTexCoord(theme.main.background.coords[1], theme.main.background.coords[2], theme.main.background.coords[3], theme.main.background.coords[4])
+    Addon.fMain.background:ClearAllPoints()
+    Addon.fMain.background:SetPoint("TOPLEFT", Addon.fMain, "TOPLEFT", theme.main.background.inset, -theme.main.background.inset)
+    Addon.fMain.background:SetPoint("BOTTOMRIGHT", Addon.fMain, "BOTTOMRIGHT", -theme.main.background.inset, theme.main.background.inset)
+    Addon.fMain.background:SetVertexColor(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a)
+
 
     for i, info in ipairs(Addon.frames) do
         Addon:RenderElement(info)
@@ -226,45 +230,26 @@ function Addon:RenderDecor(decorID)
         Addon.fMain.decors[decorID]:SetScript("OnLeave", function(self, event, ...)
             GameTooltip:Hide()
         end)
+        Addon.fMain.decors[decorID].background = Addon.fMain.decors[decorID]:CreateTexture(nil, "BACKGROUND")
+        Addon.fMain.decors[decorID].background:SetAllPoints(Addon.fMain.decors[decorID])
     end
 
     local decorInfo = IPMTTheme[IPMTOptions.theme].decors[decorID]
-    local point = decorInfo.position.point
-    if point == nil then
-        point = 'LEFT'
-    end
-    local rPoint = decorInfo.position.rPoint
-    if rPoint == nil then
-        rPoint = 'TOPLEFT'
-    end
-
-    local borderTexture = nil
-    if decorInfo.border.texture ~= 'none' then
-        borderTexture = decorInfo.border.texture
-    end
-    local backdrop = {
-        bgFile   = decorInfo.background.texture,
-        edgeFile = borderTexture,
-        tile     = false,
-        edgeSize = decorInfo.border.size,
-        insets   = {
-            left   = decorInfo.border.inset,
-            right  = decorInfo.border.inset,
-            top    = decorInfo.border.inset,
-            bottom = decorInfo.border.inset,
-        },
-    }
-    Addon.fMain.decors[decorID]:SetSize(decorInfo.size.w, decorInfo.size.h)
-    Addon.fMain.decors[decorID]:ClearAllPoints()
-    Addon.fMain.decors[decorID]:SetPoint(point, Addon.fMain, rPoint, decorInfo.position.x, decorInfo.position.y)
-    Addon.fMain.decors[decorID]:SetBackdrop(backdrop)
-    Addon.fMain.decors[decorID]:SetBackdropColor(decorInfo.background.color.r, decorInfo.background.color.g, decorInfo.background.color.b, decorInfo.background.color.a)
-    Addon.fMain.decors[decorID]:SetBackdropBorderColor(decorInfo.border.color.r, decorInfo.border.color.g, decorInfo.border.color.b, decorInfo.border.color.a)
-    Addon.fMain.decors[decorID]:SetFrameLevel(decorInfo.layer)
-
     if decorInfo.hidden then
         Addon.fMain.decors[decorID]:Hide()
     else
+        local point = decorInfo.position.point
+        if point == nil then
+            point = 'LEFT'
+        end
+        local rPoint = decorInfo.position.rPoint
+        if rPoint == nil then
+            rPoint = 'TOPLEFT'
+        end
+        Addon.fMain.decors[decorID]:ClearAllPoints()
+        Addon.fMain.decors[decorID]:SetPoint(point, Addon.fMain, rPoint, decorInfo.position.x, decorInfo.position.y)
+        Addon.fMain.decors[decorID]:SetFrameLevel(decorInfo.layer)
+        Addon:ChangeDecor(decorID, decorInfo, true)
         Addon.fMain.decors[decorID]:Show()
     end
 end

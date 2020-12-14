@@ -186,7 +186,7 @@ function Addon:ApplyTheme(themeID)
     IPMTOptions.theme = themeID
     local theme = IPMTTheme[IPMTOptions.theme]
 
-    Addon:ChangeDecor('main', nil, nil, true)
+    Addon:ChangeDecor('main', theme.main, true)
     Addon:SetFont(theme.font, true)
     for frame, info in pairs(theme.elements) do
         Addon:MoveElement(frame, nil, true)
@@ -212,21 +212,15 @@ function Addon:ApplyTheme(themeID)
     end
     for decorID, info in ipairs(theme.decors) do
         Addon:RenderDecor(decorID)
-        Addon:RenderDecorEditor(decorID)
     end
     for decorID = #theme.decors+1, #Addon.fMain.decors do
         Addon.fMain.decors[decorID]:Hide()
-        if Addon.opened.themes and Addon.fThemes.decors[decorID] ~= nil then
-            Addon.fThemes.decors[decorID]:Hide()
-        end
-    end
-    if Addon.opened.themes and #theme.decors == 0 then
-        Addon:RecalcThemesHeight()
     end
     if Addon.opened.themes then
         Addon:FillThemeEditor()
     end
     Addon.fOptions.removeTheme:ToggleDisabled(IPMTOptions.theme == 1)
+    Addon.themeApplying = false
 end
 
 function Addon:RemoveTheme(themeID)

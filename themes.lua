@@ -5,7 +5,7 @@ function Addon:InitThemes()
         IPMTTheme = {
             [1] = {}
         }
-        -- copy params from prev 1.1.x and 1.2.x
+        -- convert params from prev 1.1.x and 1.2.x
         if IPMTOptions and IPMTOptions.font then
             IPMTTheme[1] = {
                 font = IPMTOptions.font,
@@ -15,7 +15,7 @@ function Addon:InitThemes()
                         h = IPMTOptions.size[1],
                     },
                     background = {
-                        color   = {r=0, g=0, b=0, a=IPMTOptions.opacity},
+                        color = {r=0, g=0, b=0, a=IPMTOptions.opacity},
                     },
                 },
                 elements = {},
@@ -39,9 +39,15 @@ function Addon:InitThemes()
 
     for themeID, theme in ipairs(IPMTTheme) do
         local decors = theme.decors
+        if IPMTTheme[themeID].main.border.inset then -- convert old format
+            IPMTTheme[themeID].main.background.inset = IPMTTheme[themeID].main.border.inset
+        end
         IPMTTheme[themeID] = Addon:CopyObject(Addon.theme[1], IPMTTheme[themeID])
         if decors ~= nil and #decors then
             for decorID, info in ipairs(decors) do
+                if info.border.inset then -- convert old format
+                    info.background.inset = info.border.inset
+                end
                 IPMTTheme[themeID].decors[decorID] = Addon:CopyObject(Addon.defaultDecor, info)
             end
         end
@@ -129,11 +135,6 @@ function Addon:FillDummy()
                     Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
                 end
             end
-            if frame ~= 'dungeonname' then
-                local width = Addon.fMain[frame].text:GetStringWidth()
-                local height = Addon.fMain[frame].text:GetStringHeight()
-                Addon.fMain[frame]:SetSize(width, height)
-            end
         end
     end
 
@@ -155,9 +156,9 @@ function Addon:FillThemeEditor()
 
     Addon.fThemes.bg.width:SetText(theme.main.size.w)
     Addon.fThemes.bg.height:SetText(theme.main.size.h)
-    Addon.fThemes.bg.texture:SetText(theme.main.background.texture)
-    Addon.fThemes.bg.color:ColorChange(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a, true)
-    Addon.fThemes.bg.borderInset:SetValue(theme.main.border.inset)
+    Addon.fThemes.bg.background:SetText(theme.main.background.texture)
+    Addon.fThemes.bg.backgroundColor:ColorChange(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a, true)
+    Addon.fThemes.bg.backgroundInset:SetValue(theme.main.background.inset)
     Addon.fThemes.bg.border:SetText(theme.main.border.texture)
     Addon.fThemes.bg.borderColor:ColorChange(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a, true)
     Addon.fThemes.bg.borderSize:SetValue(theme.main.border.size)
@@ -182,21 +183,16 @@ function Addon:FillThemeEditor()
         end
     end
     for decorID, info in ipairs(theme.decors) do
-        if not info.hidden then
-            Addon.fMain.decors[decorID]:Show()
-        else
-            Addon.fMain.decors[decorID]:Hide()
-        end
-        Addon.fThemes.decors[decorID].width:SetText(info.size.w)
-        Addon.fThemes.decors[decorID].height:SetText(info.size.h)
-        Addon.fThemes.decors[decorID].texture:SetText(info.background.texture)
-        Addon.fThemes.decors[decorID].color:ColorChange(info.background.color.r, info.background.color.g, info.background.color.b, info.background.color.a, true)
-        Addon.fThemes.decors[decorID].borderInset:SetValue(info.border.inset)
-        Addon.fThemes.decors[decorID].border:SetText(info.border.texture)
-        Addon.fThemes.decors[decorID].borderColor:ColorChange(info.border.color.r, info.border.color.g, info.border.color.b, info.border.color.a, true)
-        Addon.fThemes.decors[decorID].borderSize:SetValue(info.border.size)
-        Addon.fThemes.decors[decorID].layer:SetValue(info.layer)
+        Addon:RenderDecorEditor(decorID)
         Addon:ToggleVisible(decorID, true)
+    end
+    for decorID = #theme.decors+1, #Addon.fThemes.decors do
+        if Addon.fThemes.decors[decorID] ~= nil then
+            Addon.fThemes.decors[decorID]:Hide()
+        end
+    end
+    if #theme.decors == 0 then
+        Addon:RecalcThemesHeight()
     end
 end
 
@@ -277,64 +273,117 @@ function Addon:BlurVisible(frame, button)
     GameTooltip:Hide()
 end
 
-function Addon:ChangeDecor(decorID, param, value, woSave)
-    local theme = IPMTTheme[IPMTOptions.theme]
-
+function Addon:ChangeDecor(decorID, params, woSave)
     local element
-    local params
+    local elemInfo
     if decorID == "main" then
         element = Addon.fMain
-        params = Addon:CopyObject(theme.main)
+        elemInfo = IPMTTheme[IPMTOptions.theme].main
     else
         element = Addon.fMain.decors[decorID]
-        params = Addon:CopyObject(theme.decors[decorID])
+        elemInfo = IPMTTheme[IPMTOptions.theme].decors[decorID]
     end
 
-    if param == 'width' and value ~= '' then
-        params.size.w = value
-    elseif param == 'height' and value ~= '' then
-        params.size.h = value
-    elseif param == 'color' then
-        params.background.color = Addon:CopyObject(value)
-    elseif param == 'borderColor' then
-        params.border.color = Addon:CopyObject(value)
-    elseif param == 'texture' then
-        params.background.texture = value
-    elseif param == 'border' then
-        params.border.texture = value
-    elseif param == 'borderSize' then
-        params.border.size = value
-    elseif param == 'borderInset' then
-        params.border.inset = value
-    end
-
-    local backdrop = {
-        bgFile   = params.background.texture,
-        edgeFile = params.border.texture,
-        tile     = false,
-        edgeSize = params.border.size,
-        insets   = {
-            left   = params.border.inset,
-            right  = params.border.inset,
-            top    = params.border.inset,
-            bottom = params.border.inset,
-        },
-    }
-    if backdrop.edgeFile == 'none' then
-        backdrop.edgeFile = nil
-    end
-
-    element:SetSize(params.size.w, params.size.h)
-    element:SetBackdrop(backdrop)
-    element:SetBackdropColor(params.background.color.r, params.background.color.g, params.background.color.b, params.background.color.a)
-    element:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
-
-    if woSave ~= true then
-        if decorID == "main" then
-            theme.main = Addon:CopyObject(params)
-        else
-            theme.decors[decorID] = Addon:CopyObject(params)
+    if params.size then
+        if params.size.w ~= nil then
+            element:SetWidth(params.size.w)
+            if woSave ~= true then
+                elemInfo.size.w = params.size.w
+            end
         end
+        if params.size.h ~= nil then
+            element:SetHeight(params.size.h)
+            if woSave ~= true then
+                elemInfo.size.h = params.size.h
+            end
+        end
+    end
+
+    if params.background then
+        if params.background.texture ~= nil then
+            element.background:SetTexture(params.background.texture)
+            if woSave ~= true then
+                elemInfo.background.texture = params.background.texture
+            end
+        end
+        if params.background.color ~= nil then
+            element.background:SetVertexColor(params.background.color.r, params.background.color.g, params.background.color.b, params.background.color.a)
+            if woSave ~= true then
+                elemInfo.background.color = Addon:CopyObject(params.background.color)
+            end
+        end
+        if params.background.texSize ~= nil and woSave ~= true then
+            elemInfo.background.texSize = Addon:CopyObject(params.background.texSize)
+        end
+        if params.background.coords ~= nil then
+            element.background:SetTexCoord(params.background.coords[1], params.background.coords[2], params.background.coords[3], params.background.coords[4])
+            if woSave ~= true then
+                elemInfo.background.coords = Addon:CopyObject(params.background.coords)
+            end
+        end
+        if params.background.inset then
+            element.background:ClearAllPoints()
+            element.background:SetPoint("TOPLEFT", element, "TOPLEFT", params.background.inset, -params.background.inset)
+            element.background:SetPoint("BOTTOMRIGHT", element, "BOTTOMRIGHT", -params.background.inset, params.background.inset)
+            if woSave ~= true then
+                elemInfo.background.inset = params.background.inset
+            end
+        end
+    end
+
+    if params.border then 
+        if params.border.color ~= nil then
+            element:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
+            if woSave ~= true then
+                elemInfo.border.color = Addon:CopyObject(params.border.color)
+            end
+        end
+        if params.border.texture ~= nil or params.border.size ~= nil then
+            local backdrop = {
+                bgFile   = nil,
+                edgeFile = elemInfo.border.texture,
+                tile     = false,
+                edgeSize = elemInfo.border.size,
+            }
+            if params.border.texture ~= nil then
+                backdrop.edgeFile = params.border.texture
+                if woSave ~= true then
+                    elemInfo.border.texture = params.border.texture
+                end
+            end
+            if params.border.size ~= nil then
+                backdrop.edgeSize = params.border.size
+                if woSave ~= true then
+                    elemInfo.border.size = params.border.size
+                end
+            end
+            if backdrop.edgeFile == 'none' then
+                backdrop.edgeFile = nil
+            end
+            element:SetBackdrop(backdrop)
+        end
+    end
+end
+
+local function RecalcElem(frame)
+    local oldText = Addon.fMain[frame].text:GetText()
+    local checkText
+    for i, info in ipairs(Addon.frames) do
+        if info.label == frame then
+            checkText = info.dummy.checker
+        end 
+    end
+
+    Addon.fMain[frame].text:SetSize(150, 60)
+    if checkText then
+        Addon.fMain[frame].text:SetText(checkText)
+    end
+    local width = Addon.fMain[frame].text:GetStringWidth() + 4
+    local height = Addon.fMain[frame].text:GetStringHeight()
+    Addon.fMain[frame]:SetSize(width, height)
+    Addon.fMain[frame].text:SetSize(width, height)
+    if checkText then
+        Addon.fMain[frame].text:SetText(oldText)
     end
 end
 
@@ -350,9 +399,7 @@ function Addon:SetFont(filepath, woSave)
         elseif info.hasText then
             Addon.fMain[frameName].text:SetFont(filepath, elemInfo.fontSize)
             if frameName ~= "dungeonname" then
-                local width = Addon.fMain[frameName].text:GetStringWidth()
-                local height = Addon.fMain[frameName].text:GetStringHeight()
-                Addon.fMain[frameName]:SetSize(width, height)
+                RecalcElem(frameName)
             end
         end
     end
@@ -370,9 +417,7 @@ function Addon:SetFontSize(frame, value, woSave)
     else
         Addon.fMain[frame].text:SetFont(theme.font, value)
         if frame ~= "dungeonname" then
-            local width = Addon.fMain[frame].text:GetStringWidth()
-            local height = Addon.fMain[frame].text:GetStringHeight()
-            Addon.fMain[frame]:SetSize(width, height)
+            RecalcElem(frame)
         end
     end
     if woSave ~= true then
