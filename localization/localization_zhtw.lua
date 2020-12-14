@@ -7,6 +7,7 @@ Addon.localization.ADDELEMENT = "加入元素"
 Addon.localization.BACKGROUND = "背景"
 Addon.localization.BORDER     = "邊框"
 Addon.localization.BORDERLIST = "從函數庫中選擇一個邊框"
+Addon.localization.BOTTOM     = "Bottom" -- need correct
 Addon.localization.BRDERWIDTH = "邊框寬度"
 
 Addon.localization.CLEANDBBT  = "清理數據庫"
@@ -90,6 +91,7 @@ Addon.localization.IMPORT     = "匯入"
 Addon.localization.JUSTIFYH   = "水平文字對齊"
 
 Addon.localization.LAYER      = "層級"
+Addon.localization.LEFT       = "Left" -- need correct
 
 Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..
                                 "滑鼠左鍵（拖動）- 移動按鈕"
@@ -107,6 +109,7 @@ Addon.localization.PROGFORMAT = {
 Addon.localization.PROGRESS   = "進度格式"
 
 Addon.localization.RELPOINT   = "相對位置"
+Addon.localization.RIGHT      = "Right" -- need correct
 
 Addon.localization.SCALE      = "縮放"
 Addon.localization.SEASONOPTS = "賽季選項"
@@ -115,7 +118,9 @@ Addon.localization.STARTINFO  = "iP Mythic Timer已載入。輸入 /ipmt 開啟�
 
 Addon.localization.TEXTURE    = "材質"
 Addon.localization.TEXTURELST = "從函數庫中選擇一個材質"
+Addon.localization.TXTCROP    = "Crop texture" -- need correct
 Addon.localization.TXTRINDENT = "材質縮排"
+Addon.localization.TXTSETTING = "Advanced texture settings" -- need correct
 Addon.localization.THEME      = "主題"
 Addon.localization.THEMEACTN  = {
     NEW    = "建立新主題",
@@ -133,6 +138,7 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "編輯主題"
 Addon.localization.THEMENAME  = "主題名稱"
+Addon.localization.TOP        = "Top" -- need correct
 Addon.localization.TIME       = "時間"
 Addon.localization.TIMERCHCKP = "計時器檢查點"
 

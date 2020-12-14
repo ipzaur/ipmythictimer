@@ -55,6 +55,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = '24',
+            checker = '30',
         },
     },
     {
@@ -63,6 +64,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = '+2',
+            checker = '+2',
         },
     },
     {
@@ -78,6 +80,7 @@ Addon.frames = {
         dummy = {
             text = '27:31',
             colorId = 1,
+            checker = '02:00:00',
         },
     },
     {
@@ -86,6 +89,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = '04:19',
+            checker = '02:00:00',
         },
     },
     {
@@ -94,6 +98,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = '-00:15 [3]',
+            checker = '-00:00 [00]',
         },
     },
     {
@@ -102,6 +107,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = {"57.32%", "134/286"},
+            checker = '000.00%',
         },
     },
     {
@@ -110,6 +116,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = {"63.46%", "148"},
+            checker = '000.00%',
         },
     },
     {
@@ -118,6 +125,7 @@ Addon.frames = {
         hasText = true,
         dummy = {
             text = '3/5',
+            checker = '0/0',
         },
     },
     {

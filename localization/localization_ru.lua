@@ -7,6 +7,7 @@ Addon.localization.ADDELEMENT = "Добавить элемент"
 Addon.localization.BACKGROUND = "Фон"
 Addon.localization.BORDER     = "Рамка"
 Addon.localization.BORDERLIST = "Выбрать рамку из библиотеки"
+Addon.localization.BOTTOM     = "Снизу"
 Addon.localization.BRDERWIDTH = "Толщина рамки"
 
 Addon.localization.CLEANDBBT  = "Очистить базу мобов"
@@ -90,6 +91,7 @@ Addon.localization.IMPORT     = "Импорт"
 Addon.localization.JUSTIFYH   = "Горизонтальное выравнивание текста"
 
 Addon.localization.LAYER      = "Слой"
+Addon.localization.LEFT       = "Слева"
 
 Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\n" ..
                                 "ЛКМ (зажать) - передвинуть иконку"
@@ -107,6 +109,7 @@ Addon.localization.PROGFORMAT = {
 Addon.localization.PROGRESS   = "Формат прогресса"
 
 Addon.localization.RELPOINT   = "Точка зависимости"
+Addon.localization.RIGHT      = "Справа"
 
 Addon.localization.SCALE      = "Масштаб"
 Addon.localization.SEASONOPTS = "Настройки для сезона"
@@ -115,7 +118,9 @@ Addon.localization.STARTINFO  = "iP Mythic Timer загружен. Для выз
 
 Addon.localization.TEXTURE    = "Текстура"
 Addon.localization.TEXTURELST = "Выбрать текстуру из библиотеки"
+Addon.localization.TXTCROP    = "Обрезать текстуру"
 Addon.localization.TXTRINDENT = "Отступ текстуры"
+Addon.localization.TXTSETTING = "Расширенные настройки текстуры"
 Addon.localization.THEME      = "Тема"
 Addon.localization.THEMEACTN = {
     NEW    = "Создать новую тему",
@@ -132,6 +137,7 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "Редактирование темы"
 Addon.localization.THEMENAME  = "Название темы"
+Addon.localization.TOP        = "Сверху"
 Addon.localization.TIME       = "Время"
 Addon.localization.TIMERCHCKP = "Контрольные точки"
 

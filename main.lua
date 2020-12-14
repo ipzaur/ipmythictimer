@@ -288,10 +288,11 @@ local function InitBossesInfo()
             if (mapID ~= 1490 and map.mapID ~= 1490) or (mapID == 1490 and map.mapID == 1490) then
                 local encounters = C_EncounterJournal.GetEncountersOnMap(map.mapID)
                 for e, encounter in ipairs(encounters) do
-                    local name = EJ_GetEncounterInfo(encounter.encounterID)
+                    local name, _, _, _, _, _, dungeonEncounterID = EJ_GetEncounterInfo(encounter.encounterID)
                     table.insert(IPMTDungeon.bosses, {
-                        name   = name,
-                        killed = false,
+                        encounterID = dungeonEncounterID,
+                        name        = name,
+                        killed      = false,
                     })
                 end
             end
@@ -371,10 +372,10 @@ local function HideTimer()
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
 end
 
-local function EncounterEnd(encounterName, success)
+local function EncounterEnd(encounterID, success)
     if success == 1 then
         for b, boss in ipairs(IPMTDungeon.bosses) do
-            if boss.name == encounterName then
+            if boss.encounterID == encounterID then
                 boss.killed = true
                 IPMTDungeon.bossesKilled = IPMTDungeon.bossesKilled + 1
                 Addon.fMain.bosses.text:SetText(IPMTDungeon.bossesKilled .. "/" .. #IPMTDungeon.bosses)
@@ -438,7 +439,7 @@ function Addon:OnEvent(self, event, ...)
     elseif event == "ENCOUNTER_START" then
         IPMTDungeon.combat.boss = true
     elseif event == "ENCOUNTER_END" then
-        EncounterEnd(arg2, arg5)
+        EncounterEnd(arg1, arg5)
     elseif event == "VARIABLES_LOADED" then
         Addon:InitVars()
         Addon:Render()

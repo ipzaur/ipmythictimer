@@ -8,31 +8,32 @@ local justifyList = {
     RIGHT  = 'RIGHT',
 }
 
-local function GetTextureList()
-    local textureList = LSM:List('background')
-    local list = {}
-    for i,texture in pairs(textureList) do
-        local filepath = LSM:Fetch('background', texture)
-        if filepath then
-            list[filepath] = texture
+local GetTextureList = {
+    background = function()
+        local textureList = LSM:List('background')
+        local list = {}
+        for i,texture in pairs(textureList) do
+            local filepath = LSM:Fetch('background', texture)
+            if filepath then
+                list[filepath] = texture
+            end
         end
-    end
-    return list
-end
-
-local function GetBorderList()
-    local borderList = LSM:List('border')
-    local list = {
-        none = 'None',
-    }
-    for i,border in pairs(borderList) do
-        local filepath = LSM:Fetch('border', border)
-        if filepath then
-            list[filepath] = border
+        return list
+    end,
+    border = function()
+        local borderList = LSM:List('border')
+        local list = {
+            none = 'None',
+        }
+        for i,border in pairs(borderList) do
+            local filepath = LSM:Fetch('border', border)
+            if filepath then
+                list[filepath] = border
+            end
         end
-    end
-    return list
-end
+        return list
+    end,
+}
 
 local function GetFontList()
     local fontList = LSM:List('font')
@@ -46,11 +47,22 @@ end
 
 local top = 0
 
-local function RenderTextureBlock(parent, decorID, subTop, textureType, observeVar, hoverText)
+local function RenderTextureBlock(decorID, subTop, textureType)
+    local parent
+    if decorID == 'main' then
+        parent = Addon.fThemes.bg
+    else
+        parent = Addon.fThemes.decors[decorID]
+    end
     local listName = textureType .. 'List'
-    local colorName = 'color'
-    if textureType == 'border' then
-        colorName = 'borderColor'
+    local colorName = textureType .. 'Color'
+    local marginRight = 0
+    local hoverText
+    if textureType == 'background' then
+        hoverText = Addon.localization.TEXTURELST
+        marginRight = 29
+    else
+        hoverText = Addon.localization.BORDERLIST
     end
     parent[listName] = CreateFrame("Button", nil, parent, "IPListBox")
     parent[listName]:SetSize(20, 30)
@@ -59,26 +71,48 @@ local function RenderTextureBlock(parent, decorID, subTop, textureType, observeV
     parent[listName].fTriangle:SetPoint("CENTER", parent[listName], "CENTER", 0, 0)
     parent[listName].fTriangle:SetSize(8, 8)
     parent[listName]:SetPoint("LEFT", parent, "TOPLEFT", 10, subTop)
-    if textureType == 'texture' then
-        parent[listName]:SetList(GetTextureList)
-    else
-        parent[listName]:SetList(GetBorderList)
-    end
+    parent[listName]:SetList(GetTextureList[textureType])
     parent[listName]:SetCallback({
         OnHoverItem = function(self, fItem, key, text)
-            Addon:ChangeDecor(decorID, textureType, key, true)
+            local params = {
+                [textureType] = {
+                    texture = key,
+                },
+            }
+            if textureType == 'background' then
+                params.background.texSize = nil
+                params.background.coords  = {0, 1, 0, 1}
+                Addon:CloseTextureEditor()
+            end
+            Addon:ChangeDecor(decorID, params, true)
         end,
         OnCancel = function(self)
             local original
-            if textureType == 'texture' then
-                original = observeVar.background.texture
+            if decorID == 'main' then
+                original = IPMTTheme[IPMTOptions.theme].main[textureType]
             else
-                original = observeVar.border.texture
+                original = IPMTTheme[IPMTOptions.theme].decors[decorID][textureType]
             end
-            Addon:ChangeDecor(decorID, textureType, original)
+            local params = {
+                [textureType] = {
+                    texture = original.texture,
+                },
+            }
+            if textureType == 'background' then
+                params.background.texSize = original.texSize
+                params.background.coords  = original.coords
+            end
+            Addon:ChangeDecor(decorID, params)
         end,
         OnSelect = function(self, key, text)
+            local byUser = (textureType == 'texture') and parent[listName].opened
+            if byUser then
+                parent[textureType]:SetFocus()
+            end
             parent[textureType]:SetText(key)
+            if byUser then
+                parent[textureType]:ClearFocus()
+            end
         end,
     })
     parent[listName]:HookScript("OnEnter", function(self)
@@ -94,24 +128,70 @@ local function RenderTextureBlock(parent, decorID, subTop, textureType, observeV
     parent[textureType] = CreateFrame("EditBox", nil, parent, "IPEditBox")
     parent[textureType]:SetAutoFocus(false)
     parent[textureType]:SetPoint("LEFT", parent, "TOPLEFT", 30, subTop)
-    parent[textureType]:SetPoint("RIGHT", parent, "TOPRIGHT", -40, subTop)
+    parent[textureType]:SetPoint("RIGHT", parent, "TOPRIGHT", -40 - marginRight, subTop)
     parent[textureType]:SetHeight(30)
     parent[textureType]:SetScript('OnTextChanged', function(self)
-        Addon:ChangeDecor(decorID, textureType, self:GetText())
+        local params = {
+            [textureType] = {
+                texture = self:GetText(),
+            },
+        }
+        if textureType == 'background' and self:HasFocus() then
+            params.background.texSize = nil
+            params.background.coords  = {0, 1, 0, 1}
+            Addon:CloseTextureEditor()
+        end
+        Addon:ChangeDecor(decorID, params)
     end)
     parent[textureType]:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
     -- Background color picker
     parent[colorName] = CreateFrame("Button", nil, parent, "IPColorButton")
-    parent[colorName]:SetPoint("RIGHT", parent, "TOPRIGHT", -10, subTop)
+    parent[colorName]:SetPoint("RIGHT", parent, "TOPRIGHT", -10 - marginRight, subTop)
     parent[colorName]:SetBackdropColor(.5,0,0, 1)
     parent[colorName]:SetCallback(function(self, r, g, b, a)
-        Addon:ChangeDecor(decorID, colorName, {r=r, g=g, b=b, a=a})
+        Addon:ChangeDecor(decorID, {
+            [textureType] = {
+                color = {r=r, g=g, b=b, a=a},
+            },
+        })
     end)
     parent[colorName]:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
+
+    if textureType == 'background' then
+        local backdrop = {
+            bgFile   = nil,
+            edgeFile = nil,
+            tile     = false,
+            edgeSize = 0,
+        }
+        -- Texture coords editor toggler
+        parent.textureCoords = CreateFrame("Button", nil, parent, "IPButton")
+        parent.textureCoords:SetPoint("RIGHT", parent, "TOPRIGHT", -10, subTop)
+        parent.textureCoords:SetSize(20, 20)
+        parent.textureCoords:SetBackdrop(backdrop)
+        parent.textureCoords:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+        parent.textureCoords.fTexture:SetSize(20, 20)
+        parent.textureCoords.fTexture:SetTexCoord(0, .25, .5, 1)
+        parent.textureCoords.fTexture:SetVertexColor(.75, .75, .75)
+        parent.textureCoords:SetScript("OnClick", function(self)
+            Addon:ToggleTextureEditor(decorID)
+        end)
+        parent.textureCoords:HookScript("OnEnter", function(self)
+            self.fTexture:SetVertexColor(1, 1, 1)
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetText(Addon.localization.TXTSETTING, .9, .9, 0, 1, true)
+            GameTooltip:Show()
+            self:GetParent():OnEnter()
+        end)
+        parent.textureCoords:HookScript("OnLeave", function(self)
+            self.fTexture:SetVertexColor(.75, .75, .75)
+            GameTooltip:Hide()
+        end)
+    end
 end
 
 function Addon:RenderThemeEditor()
@@ -214,7 +294,14 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.bg.width:SetNumeric(true)
     Addon.fThemes.bg.width:SetMaxLetters(4)
     Addon.fThemes.bg.width:SetScript('OnTextChanged', function(self)
-        Addon:ChangeDecor('main', 'width', self:GetText())
+        Addon:ChangeDecor('main', {
+            size = {
+                w = self:GetText(),
+            },
+        })
+    end)
+    Addon.fThemes.bg.width:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
     end)
     -- Background height caption
     Addon.fThemes.bg.heightCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -231,7 +318,14 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.bg.height:SetNumeric(true)
     Addon.fThemes.bg.height:SetMaxLetters(4)
     Addon.fThemes.bg.height:SetScript('OnTextChanged', function(self)
-        Addon:ChangeDecor('main', 'height', self:GetText())
+        Addon:ChangeDecor('main', {
+            size = {
+                h = self:GetText(),
+            },
+        })
+    end)
+    Addon.fThemes.bg.height:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
     end)
 
     -- Background texture caption
@@ -245,26 +339,30 @@ function Addon:RenderThemeEditor()
 
     -- Background texture selector
     subTop = subTop - 24
-    RenderTextureBlock(Addon.fThemes.bg, 'main', subTop, 'texture', theme.main, Addon.localization.TEXTURELST)
+    RenderTextureBlock('main', subTop, 'background')
 
     -- BackgroundBorder Inset slider
     subTop = subTop - 46
-    Addon.fThemes.bg.borderInset = CreateFrame("Slider", nil, Addon.fThemes.bg, "IPOptionsSlider")
-    Addon.fThemes.bg.borderInset:SetPoint("LEFT", Addon.fThemes.bg, "TOPLEFT", 10, subTop)
-    Addon.fThemes.bg.borderInset:SetPoint("RIGHT", Addon.fThemes.bg, "TOPRIGHT", -10, subTop)
-    Addon.fThemes.bg.borderInset:SetOrientation('HORIZONTAL')
-    Addon.fThemes.bg.borderInset:SetMinMaxValues(0, 30)
-    Addon.fThemes.bg.borderInset:SetValueStep(1.0)
-    Addon.fThemes.bg.borderInset:EnableMouseWheel(0)
-    Addon.fThemes.bg.borderInset:SetObeyStepOnDrag(true)
-    Addon.fThemes.bg.borderInset.Low:SetText('0')
-    Addon.fThemes.bg.borderInset.High:SetText('30')
-    Addon.fThemes.bg.borderInset:SetScript('OnValueChanged', function(self)
+    Addon.fThemes.bg.backgroundInset = CreateFrame("Slider", nil, Addon.fThemes.bg, "IPOptionsSlider")
+    Addon.fThemes.bg.backgroundInset:SetPoint("LEFT", Addon.fThemes.bg, "TOPLEFT", 10, subTop)
+    Addon.fThemes.bg.backgroundInset:SetPoint("RIGHT", Addon.fThemes.bg, "TOPRIGHT", -10, subTop)
+    Addon.fThemes.bg.backgroundInset:SetOrientation('HORIZONTAL')
+    Addon.fThemes.bg.backgroundInset:SetMinMaxValues(0, 30)
+    Addon.fThemes.bg.backgroundInset:SetValueStep(1.0)
+    Addon.fThemes.bg.backgroundInset:EnableMouseWheel(0)
+    Addon.fThemes.bg.backgroundInset:SetObeyStepOnDrag(true)
+    Addon.fThemes.bg.backgroundInset.Low:SetText('0')
+    Addon.fThemes.bg.backgroundInset.High:SetText('30')
+    Addon.fThemes.bg.backgroundInset:SetScript('OnValueChanged', function(self)
         local value = self:GetValue()
-        Addon.fThemes.bg.borderInset.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
-        Addon:ChangeDecor('main', 'borderInset', value)
+        Addon.fThemes.bg.backgroundInset.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
+        Addon:ChangeDecor('main', {
+            background = {
+                inset = value,
+            }
+        })
     end)
-    Addon.fThemes.bg.borderInset:HookScript("OnEnter", function(self)
+    Addon.fThemes.bg.backgroundInset:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
 
@@ -279,7 +377,7 @@ function Addon:RenderThemeEditor()
 
     -- BackgroundBorder texture selector
     subTop = subTop - 24
-    RenderTextureBlock(Addon.fThemes.bg, 'main', subTop, 'border', theme.main, Addon.localization.BORDERLIST)
+    RenderTextureBlock('main', subTop, 'border')
 
     -- BackgroundBorder Size slider
     subTop = subTop - 46
@@ -296,7 +394,11 @@ function Addon:RenderThemeEditor()
     Addon.fThemes.bg.borderSize:SetScript('OnValueChanged', function(self)
         local value = self:GetValue()
         Addon.fThemes.bg.borderSize.Text:SetText(Addon.localization.BRDERWIDTH .. " (" .. value .. ")")
-        Addon:ChangeDecor('main', 'borderSize', value)
+        Addon:ChangeDecor('main', {
+            border = {
+                size = value,
+            },
+        })
     end)
     Addon.fThemes.bg.borderSize:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
@@ -540,10 +642,10 @@ end
 
 
 function Addon:RenderDecorEditor(decorID)
-    local decorInfo = IPMTTheme[IPMTOptions.theme].decors[decorID]
     if not Addon.opened.themes then
         return
     end
+    local decorInfo = IPMTTheme[IPMTOptions.theme].decors[decorID]
     if Addon.fThemes.decors[decorID] == nil then
         local decorTop = top - (decorOuterHeight + 47) * (decorID - 1)
         Addon.fThemes.decors[decorID] = CreateFrame("Frame", nil, Addon.fThemes.fContent, "IPFieldSet")
@@ -643,7 +745,11 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].width:SetNumeric(true)
         Addon.fThemes.decors[decorID].width:SetMaxLetters(4)
         Addon.fThemes.decors[decorID].width:SetScript('OnTextChanged', function(self)
-            Addon:ChangeDecor(decorID, 'width', self:GetText())
+            Addon:ChangeDecor(decorID, {
+                size = {
+                    w = self:GetText(),
+                },
+            })
         end)
         Addon.fThemes.decors[decorID].width:HookScript("OnEnter", function(self)
             self:GetParent():OnEnter()
@@ -663,7 +769,11 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].height:SetNumeric(true)
         Addon.fThemes.decors[decorID].height:SetMaxLetters(4)
         Addon.fThemes.decors[decorID].height:SetScript('OnTextChanged', function(self)
-            Addon:ChangeDecor(decorID, 'height', self:GetText())
+            Addon:ChangeDecor(decorID, {
+                size = {
+                    h = self:GetText(),
+                },
+            })
         end)
         Addon.fThemes.decors[decorID].height:HookScript("OnEnter", function(self)
             self:GetParent():OnEnter()
@@ -680,29 +790,33 @@ function Addon:RenderDecorEditor(decorID)
 
         -- Background texture selector
         subTop = subTop - 24
-        RenderTextureBlock(Addon.fThemes.decors[decorID], decorID, subTop, 'texture', decorInfo, Addon.localization.TEXTURELST)
+        RenderTextureBlock(decorID, subTop, 'background')
 
         -- BackgroundBorder Inset slider
         subTop = subTop - 46
-        Addon.fThemes.decors[decorID].borderInset = CreateFrame("Slider", nil, Addon.fThemes.decors[decorID], "IPOptionsSlider")
-        Addon.fThemes.decors[decorID].borderInset:SetPoint("LEFT", Addon.fThemes.decors[decorID], "TOPLEFT", 10, subTop)
-        Addon.fThemes.decors[decorID].borderInset:SetPoint("RIGHT", Addon.fThemes.decors[decorID], "TOPRIGHT", -10, subTop)
-        Addon.fThemes.decors[decorID].borderInset:SetOrientation('HORIZONTAL')
-        Addon.fThemes.decors[decorID].borderInset:SetMinMaxValues(0, 30)
-        Addon.fThemes.decors[decorID].borderInset:SetValueStep(1.0)
-        Addon.fThemes.decors[decorID].borderInset:EnableMouseWheel(0)
-        Addon.fThemes.decors[decorID].borderInset:SetObeyStepOnDrag(true)
-        Addon.fThemes.decors[decorID].borderInset.Low:SetText('0')
-        Addon.fThemes.decors[decorID].borderInset.High:SetText('30')
-        Addon.fThemes.decors[decorID].borderInset:SetScript('OnValueChanged', function(self)
+        Addon.fThemes.decors[decorID].backgroundInset = CreateFrame("Slider", nil, Addon.fThemes.decors[decorID], "IPOptionsSlider")
+        Addon.fThemes.decors[decorID].backgroundInset:SetPoint("LEFT", Addon.fThemes.decors[decorID], "TOPLEFT", 10, subTop)
+        Addon.fThemes.decors[decorID].backgroundInset:SetPoint("RIGHT", Addon.fThemes.decors[decorID], "TOPRIGHT", -10, subTop)
+        Addon.fThemes.decors[decorID].backgroundInset:SetOrientation('HORIZONTAL')
+        Addon.fThemes.decors[decorID].backgroundInset:SetMinMaxValues(0, 30)
+        Addon.fThemes.decors[decorID].backgroundInset:SetValueStep(1.0)
+        Addon.fThemes.decors[decorID].backgroundInset:EnableMouseWheel(0)
+        Addon.fThemes.decors[decorID].backgroundInset:SetObeyStepOnDrag(true)
+        Addon.fThemes.decors[decorID].backgroundInset.Low:SetText('0')
+        Addon.fThemes.decors[decorID].backgroundInset.High:SetText('30')
+        Addon.fThemes.decors[decorID].backgroundInset:SetScript('OnValueChanged', function(self)
             local value = self:GetValue()
             self.Text:SetText(Addon.localization.TXTRINDENT .. " (" .. value .. ")")
-            Addon:ChangeDecor(decorID, 'borderInset', value)
+            Addon:ChangeDecor(decorID, {
+                background = {
+                    inset = value,
+                }
+            })
         end)
-        Addon.fThemes.decors[decorID].borderInset:HookScript("OnEnter", function(self)
+        Addon.fThemes.decors[decorID].backgroundInset:HookScript("OnEnter", function(self)
             self:GetParent():OnEnter()
         end)
-        Addon.fThemes.decors[decorID].borderInset:SetValue(decorInfo.border.inset)
+        Addon.fThemes.decors[decorID].backgroundInset:SetValue(decorInfo.background.inset)
 
         -- BackgroundBorder texture caption
         subTop = subTop - 30
@@ -715,7 +829,7 @@ function Addon:RenderDecorEditor(decorID)
 
         -- BackgroundBorder texture selector
         subTop = subTop - 24
-        RenderTextureBlock(Addon.fThemes.decors[decorID], decorID, subTop, 'border', decorInfo, Addon.localization.BORDERLIST)
+        RenderTextureBlock(decorID, subTop, 'border')
 
         -- BackgroundBorder Size slider
         subTop = subTop - 46
@@ -732,7 +846,11 @@ function Addon:RenderDecorEditor(decorID)
         Addon.fThemes.decors[decorID].borderSize:SetScript('OnValueChanged', function(self)
             local value = self:GetValue()
             Addon.fThemes.decors[decorID].borderSize.Text:SetText(Addon.localization.BRDERWIDTH .. " (" .. value .. ")")
-            Addon:ChangeDecor(decorID, 'borderSize', value)
+            Addon:ChangeDecor(decorID, {
+                border = {
+                    size = value,
+                },
+            })
         end)
         Addon.fThemes.decors[decorID].borderSize:HookScript("OnEnter", function(self)
             self:GetParent():OnEnter()
@@ -766,14 +884,15 @@ function Addon:RenderDecorEditor(decorID)
     end
 
     Addon.fThemes.decors[decorID]:Show()
-    Addon.fThemes.decors[decorID].texture:SetText(decorInfo.background.texture)
-    Addon.fThemes.decors[decorID].color:ColorChange(decorInfo.background.color.r, decorInfo.background.color.g, decorInfo.background.color.b, decorInfo.background.color.a, true)
-    Addon.fThemes.decors[decorID].border:SetText(decorInfo.border.texture)
-    Addon.fThemes.decors[decorID].borderInset:SetValue(decorInfo.border.inset)
-    Addon.fThemes.decors[decorID].borderSize:SetValue(decorInfo.border.size)
-    Addon.fThemes.decors[decorID].borderColor:ColorChange(decorInfo.border.color.r, decorInfo.border.color.g, decorInfo.border.color.b, decorInfo.border.color.a, true)
     Addon.fThemes.decors[decorID].width:SetText(decorInfo.size.w)
     Addon.fThemes.decors[decorID].height:SetText(decorInfo.size.h)
+    Addon.fThemes.decors[decorID].background:SetText(decorInfo.background.texture)
+    Addon.fThemes.decors[decorID].backgroundColor:ColorChange(decorInfo.background.color.r, decorInfo.background.color.g, decorInfo.background.color.b, decorInfo.background.color.a, true)
+    Addon.fThemes.decors[decorID].backgroundInset:SetValue(decorInfo.background.inset)
+    Addon.fThemes.decors[decorID].border:SetText(decorInfo.border.texture)
+    Addon.fThemes.decors[decorID].borderSize:SetValue(decorInfo.border.size)
+    Addon.fThemes.decors[decorID].borderColor:ColorChange(decorInfo.border.color.r, decorInfo.border.color.g, decorInfo.border.color.b, decorInfo.border.color.a, true)
+    Addon.fThemes.decors[decorID].layer:SetValue(decorInfo.layer)
 
     Addon:ToggleVisible(decorID, true)
     Addon:RecalcThemesHeight()

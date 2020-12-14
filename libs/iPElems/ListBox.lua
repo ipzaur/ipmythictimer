@@ -150,10 +150,10 @@ function IPListBoxMixin:SelectItem(key, woCallback)
     end
     self.selected = key
     self.fText:SetText(list[self.selected])
-    self:ToggleList(false)
     if woCallback ~= true and self.callback and self.callback.OnSelect then
         self.callback:OnSelect(self.selected, list[self.selected])
     end
+    self:ToggleList(false)
 end
 
 function IPListBoxMixin:RenderItem(num, key, text, selected)

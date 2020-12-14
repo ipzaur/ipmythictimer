@@ -7,6 +7,7 @@ Addon.localization.ADDELEMENT = "Add element"
 Addon.localization.BACKGROUND = "Background"
 Addon.localization.BORDER     = "Border"
 Addon.localization.BORDERLIST = "Select a border from the library"
+Addon.localization.BOTTOM     = "Bottom"
 Addon.localization.BRDERWIDTH = "Border width"
 
 Addon.localization.CLEANDBBT  = "Clean database"
@@ -90,6 +91,7 @@ Addon.localization.IMPORT     = "Import"
 Addon.localization.JUSTIFYH   = "Horizontal text justify"
 
 Addon.localization.LAYER      = "Layer"
+Addon.localization.LEFT       = "Left"
 
 Addon.localization.MAPBUT     = "LMB (click) - toggle options\n" ..
                                 "LMB (drag) - move button"
@@ -107,6 +109,7 @@ Addon.localization.PROGFORMAT = {
 Addon.localization.PROGRESS   = "Progress format"
 
 Addon.localization.RELPOINT   = "Relative point"
+Addon.localization.RIGHT      = "Right"
 
 Addon.localization.SCALE      = "Scale"
 Addon.localization.SEASONOPTS = "Season options"
@@ -115,7 +118,9 @@ Addon.localization.STARTINFO  = "iP Mythic Timer loaded. Type /ipmt for options.
 
 Addon.localization.TEXTURE    = "Texture"
 Addon.localization.TEXTURELST = "Select a texture from the library"
+Addon.localization.TXTCROP    = "Crop texture"
 Addon.localization.TXTRINDENT = "Texture indent"
+Addon.localization.TXTSETTING = "Advanced texture settings"
 Addon.localization.THEME      = "Theme"
 Addon.localization.THEMEACTN  = {
     NEW    = "Create new theme",
@@ -132,6 +137,7 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "Edit theme"
 Addon.localization.THEMENAME  = "Theme name"
+Addon.localization.TOP        = "Top"
 Addon.localization.TIME       = "Time"
 Addon.localization.TIMERCHCKP = "Timer checkpoints"
 
