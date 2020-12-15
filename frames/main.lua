@@ -61,20 +61,13 @@ function Addon:RenderMain()
 
     Addon.fMain.background = Addon.fMain:CreateTexture(nil, "BACKGROUND")
     Addon.fMain.background:SetAllPoints(Addon.fMain)
-    Addon.fMain.background:SetTexture(theme.main.background.texture)
-    Addon.fMain.background:SetTexCoord(theme.main.background.coords[1], theme.main.background.coords[2], theme.main.background.coords[3], theme.main.background.coords[4])
-    Addon.fMain.background:ClearAllPoints()
-    Addon.fMain.background:SetPoint("TOPLEFT", Addon.fMain, "TOPLEFT", theme.main.background.inset, -theme.main.background.inset)
-    Addon.fMain.background:SetPoint("BOTTOMRIGHT", Addon.fMain, "BOTTOMRIGHT", -theme.main.background.inset, theme.main.background.inset)
-    Addon.fMain.background:SetVertexColor(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a)
-
-
+    Addon:ChangeDecor('main', theme.main, true)
     for i, info in ipairs(Addon.frames) do
         Addon:RenderElement(info)
     end
     Addon.fMain.decors = {}
-    if #IPMTTheme[IPMTOptions.theme].decors then
-        for decorID, info in ipairs(IPMTTheme[IPMTOptions.theme].decors) do
+    if #theme.decors then
+        for decorID, info in ipairs(theme.decors) do
             Addon:RenderDecor(decorID)
         end
     end

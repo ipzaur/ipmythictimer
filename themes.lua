@@ -273,6 +273,29 @@ function Addon:BlurVisible(frame, button)
     GameTooltip:Hide()
 end
 
+function Addon:SetDungeonArtwork(element)
+    local texture = Addon.cleanDungeon.artwork
+    if IPMTDungeon.keyActive then
+        texture = IPMTDungeon.artwork
+    end
+    if element ~= nil then
+        element.background:SetTexture(texture)
+    else
+        local theme = IPMTTheme[IPMTOptions.theme]
+        if theme.main.background.texture == Addon.DUNGEON_ARTWORK then
+            Addon.fMain.background:SetTexture(texture)
+        end
+
+        if #theme.decors then
+            for decorID, info in ipairs(theme.decors) do
+                if info.background.texture == Addon.DUNGEON_ARTWORK then
+                    Addon.fMain.decors[decorID].background:SetTexture(texture)
+                end
+            end
+        end
+    end
+end
+
 function Addon:ChangeDecor(decorID, params, woSave)
     local element
     local elemInfo
@@ -301,7 +324,17 @@ function Addon:ChangeDecor(decorID, params, woSave)
 
     if params.background then
         if params.background.texture ~= nil then
-            element.background:SetTexture(params.background.texture)
+            local texture = params.background.texture
+            if texture == Addon.DUNGEON_ARTWORK then
+                params.background.texSize = {
+                    w = 256,
+                    h = 128,
+                }
+                params.background.coords = Addon:convertCoords(256, 128, 5, 87, 5, 37)
+                Addon:SetDungeonArtwork(element)
+            else
+                element.background:SetTexture(texture)
+            end
             if woSave ~= true then
                 elemInfo.background.texture = params.background.texture
             end

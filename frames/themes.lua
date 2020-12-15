@@ -11,7 +11,9 @@ local justifyList = {
 local GetTextureList = {
     background = function()
         local textureList = LSM:List('background')
-        local list = {}
+        local list = {
+            [Addon.DUNGEON_ARTWORK] = ' Dungeon artwork',
+        }
         for i,texture in pairs(textureList) do
             local filepath = LSM:Fetch('background', texture)
             if filepath then
@@ -23,7 +25,7 @@ local GetTextureList = {
     border = function()
         local borderList = LSM:List('border')
         local list = {
-            none = 'None',
+            none = ' None',
         }
         for i,border in pairs(borderList) do
             local filepath = LSM:Fetch('border', border)

@@ -54,6 +54,32 @@ function Addon:CloseTextureEditor()
     end
 end
 
+function Addon:convertCoords(width, height, left, right, top, bottom)
+    local result = {}
+
+    if left == nil then
+        left = 0
+    end
+    table.insert(result, left / width)
+
+    if right == nil then
+        right = 0
+    end
+    table.insert(result, (width - right) / width)
+
+    if top == nil then
+        top = 0
+    end
+    table.insert(result, top / height)
+
+    if bottom == nil then
+        bottom = 0
+    end
+    table.insert(result, (height - bottom) / height)
+
+    return result
+end
+
 function Addon:SetTextureSettings()
     local width = tonumber(Addon.fTextureEditor.width:GetText())
     if width == nil then
@@ -64,34 +90,18 @@ function Addon:SetTextureSettings()
         height = 0
     end
 
-    local left = tonumber(Addon.fTextureEditor.cropLeft:GetText())
-    if left == nil then
-        left = 0
-    end
-    left = left / width
-    local right = tonumber(Addon.fTextureEditor.cropRight:GetText())
-    if right == nil then
-        right = 0
-    end
-    right = (width - right) / width
-    local top = tonumber(Addon.fTextureEditor.cropTop:GetText())
-    if top == nil then
-        top = 0
-    end
-    top = top / height
-    local bottom = tonumber(Addon.fTextureEditor.cropBottom:GetText())
-    if bottom == nil then
-        bottom = 0
-    end
-    bottom = (height - bottom) / height
-
     Addon:ChangeDecor(currentDecorID, {
         background = {
             texSize = {
                 w = width,
                 h = height,
             },
-            coords = {left,right,top,bottom},
+            coords = Addon:convertCoords(width, height,
+                tonumber(Addon.fTextureEditor.cropLeft:GetText()),
+                tonumber(Addon.fTextureEditor.cropRight:GetText()),
+                tonumber(Addon.fTextureEditor.cropTop:GetText()),
+                tonumber(Addon.fTextureEditor.cropBottom:GetText())
+            ),
         },
     })
 end

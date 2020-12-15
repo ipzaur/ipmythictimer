@@ -288,12 +288,13 @@ local function InitBossesInfo()
             if (mapID ~= 1490 and map.mapID ~= 1490) or (mapID == 1490 and map.mapID == 1490) then
                 local encounters = C_EncounterJournal.GetEncountersOnMap(map.mapID)
                 for e, encounter in ipairs(encounters) do
-                    local name, _, _, _, _, _, dungeonEncounterID = EJ_GetEncounterInfo(encounter.encounterID)
+                    local name, _, _, _, _, journalInstanceID, dungeonEncounterID = EJ_GetEncounterInfo(encounter.encounterID)
                     table.insert(IPMTDungeon.bosses, {
                         encounterID = dungeonEncounterID,
                         name        = name,
                         killed      = false,
                     })
+                    IPMTDungeon.artwork = select(4, EJ_GetInstanceInfo(journalInstanceID))
                 end
             end
         end
@@ -354,6 +355,7 @@ local function ShowTimer()
         Addon.fMain:RegisterEvent("ENCOUNTER_END")
         Addon.fMain:RegisterEvent("ENCOUNTER_START")
         IPMTDungeon.keyActive = true
+        Addon:SetDungeonArtwork()
         if Addon.season.ShowTimer then
             Addon.season:ShowTimer()
         end
@@ -366,7 +368,7 @@ local function HideTimer()
     if not Addon.opened.options then
         Addon.fMain:Hide()
     end
-    Addon.keyActive = false
+    IPMTDungeon.keyActive = false
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.fMain:UnregisterEvent("ENCOUNTER_END")
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
