@@ -73,29 +73,7 @@ function Addon:ShowOptions()
     Addon.fMain:SetMovable(true)
     Addon.fMain:EnableMouse(true)
 
-    local theme = IPMTTheme[IPMTOptions.theme]
-    if IPMTDungeon and not IPMTDungeon.keyActive then
-        for i, info in ipairs(Addon.frames) do
-            local frame = info.label
-            if info.hasText and info.dummy ~= nil then
-                local text = info.dummy.text
-                if frame == "progress" or frame == "prognosis" then
-                    text = text[IPMTOptions.progress]
-                end
-                Addon.fMain[frame].text:SetText(text)
-                if info.dummy.colorId then
-                    local color = theme.elements[frame].color[info.dummy.colorId]
-                    Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
-                end
-            end
-        end
-
-        local name, description, filedataid = C_ChallengeMode.GetAffixInfo(117) -- Reaping icon
-        for i = 1,4 do
-            SetPortraitToTexture(Addon.fMain.affix[i].Portrait, filedataid)
-            Addon.fMain.affix[i]:Show()
-        end
-    end
+    Addon:FillDummy(true)
 
     if Addon.season.options and Addon.season.options.ShowOptions then
         Addon.season.options:ShowOptions()

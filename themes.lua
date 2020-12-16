@@ -1,6 +1,7 @@
 local AddonName, Addon = ...
 
 function Addon:InitThemes()
+    local needInsetConvert = false
     if IPMTTheme == nil then
         IPMTTheme = {
             [1] = {}
@@ -35,17 +36,19 @@ function Addon:InitThemes()
                 [1] = {}
             }
         end
+    elseif IPMTTheme[1] and IPMTTheme[1].main ~= nil then
+        needInsetConvert = true
     end
 
     for themeID, theme in ipairs(IPMTTheme) do
         local decors = theme.decors
-        if IPMTTheme[themeID].main.border.inset then -- convert old format
+        if needInsetConvert and IPMTTheme[themeID].main.border.inset then -- convert old format
             IPMTTheme[themeID].main.background.inset = IPMTTheme[themeID].main.border.inset
         end
         IPMTTheme[themeID] = Addon:CopyObject(Addon.theme[1], IPMTTheme[themeID])
         if decors ~= nil and #decors then
             for decorID, info in ipairs(decors) do
-                if info.border.inset then -- convert old format
+                if needInsetConvert and info.border.inset then -- convert old format
                     info.background.inset = info.border.inset
                 end
                 IPMTTheme[themeID].decors[decorID] = Addon:CopyObject(Addon.defaultDecor, info)
@@ -118,18 +121,20 @@ function Addon:CloseThemeEditor()
     Addon.fOptions.editTheme:OnLeave()
 end
 
-function Addon:FillDummy()
+function Addon:FillDummy(onlyText)
     local theme = IPMTTheme[IPMTOptions.theme]
     for i, info in ipairs(Addon.frames) do
         local frame = info.label
         if info.hasText and info.dummy ~= nil then
-            if not IPMTDungeon.keyActive or Addon.fMain[frame].text:GetText() == nil then
+            if IPMTDungeon == nil or not IPMTDungeon.keyActive or Addon.fMain[frame].text:GetText() == nil then
                 local text = info.dummy.text
                 if frame == "progress" or frame == "prognosis" then
                     text = text[IPMTOptions.progress]
                 end
                 Addon.fMain[frame].text:SetText(text)
-                Addon.fMain[frame]:Show()
+                if onlyText ~= true then
+                    Addon.fMain[frame]:Show()
+                end
                 if info.dummy.colorId then
                     local color = theme.elements[frame].color[info.dummy.colorId]
                     Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
@@ -138,7 +143,7 @@ function Addon:FillDummy()
         end
     end
 
-    if not IPMTDungeon.keyActive then
+    if IPMTDungeon == nil or not IPMTDungeon.keyActive then
         local name, description, filedataid = C_ChallengeMode.GetAffixInfo(117) -- Reaping icon
         for i = 1,4 do
             SetPortraitToTexture(Addon.fMain.affix[i].Portrait, filedataid)
