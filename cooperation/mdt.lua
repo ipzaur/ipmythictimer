@@ -101,3 +101,7 @@ function Addon:GetForcesFromMDT(npcID, wsave)
     end
     return nil
 end
+
+function Addon:MDTHasDB()
+    return #MDT.dungeonEnemies[33] > 0
+end

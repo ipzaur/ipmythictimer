@@ -145,4 +145,4 @@ Addon.localization.UNKNOWN    = "Неизвестно"
 
 Addon.localization.WHODIED    = "Кто умер"
 Addon.localization.WIDTH      = "Ширина"
-Addon.localization.WAVEALERT  = "Оповещать перед 20%"
+Addon.localization.WAVEALERT  = "Оповещать каждые {percent}%"

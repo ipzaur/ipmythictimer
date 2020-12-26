@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-Addon.version = 1301
+Addon.version = 1306
 
 Addon.AFFIX_TEEMING = 5
 
@@ -160,8 +160,7 @@ Addon.defaultOption = {
             y = -50,
         },
     },
-    wavealert = true,
-    wavesound = Addon.ACOUSTIC_STRING_X3,
+    MDTversion = 0,
 }
 
 Addon.cleanDungeon = {

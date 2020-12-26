@@ -143,6 +143,6 @@ Addon.localization.TIMERCHCKP = "Timer checkpoints"
 
 Addon.localization.UNKNOWN    = "Unknown"
 
-Addon.localization.WAVEALERT  = "Alert every 20%"
+Addon.localization.WAVEALERT  = "Alert every {percent}%"
 Addon.localization.WIDTH      = "Width"
 Addon.localization.WHODIED    = "Who died"

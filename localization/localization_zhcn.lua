@@ -7,7 +7,7 @@ Addon.localization.ADDELEMENT = "添加元素"
 Addon.localization.BACKGROUND = "背景"
 Addon.localization.BORDER     = "边框"
 Addon.localization.BORDERLIST = "从库中选择一个边框"
-Addon.localization.BOTTOM     = "Bottom" -- need correct
+Addon.localization.BOTTOM     = "底部"
 Addon.localization.BRDERWIDTH = "边框宽度"
 
 Addon.localization.CLEANDBBT  = "清除数据库"
@@ -91,7 +91,7 @@ Addon.localization.IMPORT     = "导入"
 Addon.localization.JUSTIFYH   = "水平文本对齐"
 
 Addon.localization.LAYER      = "层"
-Addon.localization.LEFT       = "Left" -- need correct
+Addon.localization.LEFT       = "左"
 
 Addon.localization.MAPBUT     = "鼠标左键(单击)- 切换选项\n" ..
                                 "鼠标左键(拖动)- 移动按钮"
@@ -109,7 +109,7 @@ Addon.localization.PROGFORMAT = {
 Addon.localization.PROGRESS   = "进度格式"
 
 Addon.localization.RELPOINT   = '相对点'
-Addon.localization.RIGHT      = "Right" -- need correct
+Addon.localization.RIGHT      = "右"
 
 Addon.localization.SCALE      = "比例"
 Addon.localization.SEASONOPTS = '赛季选项'
@@ -118,9 +118,9 @@ Addon.localization.STARTINFO  = "iP Mythic Timer已载入。键入 /ipmt 开启�
 
 Addon.localization.TEXTURE    = "纹理"
 Addon.localization.TEXTURELST = "从库中选择一个纹理"
-Addon.localization.TXTCROP    = "Crop texture" -- need correct
+Addon.localization.TXTCROP    = "裁剪纹理"
 Addon.localization.TXTRINDENT = "纹理缩进"
-Addon.localization.TXTSETTING = "Advanced texture settings" -- need correct
+Addon.localization.TXTSETTING = "高级纹理设置"
 Addon.localization.THEME      = "主题"
 Addon.localization.THEMEACTN  = {
     NEW    = "创建新主题",
@@ -138,12 +138,12 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "编辑主题"
 Addon.localization.THEMENAME  = "主题名称"
-Addon.localization.TOP        = "Top" -- need correct
+Addon.localization.TOP        = "顶部"
 Addon.localization.TIME       = "时间"
 Addon.localization.TIMERCHCKP = "计时器检查点"
 
 Addon.localization.UNKNOWN    = "未知"
 
-Addon.localization.WAVEALERT  = '每20%提醒'
+Addon.localization.WAVEALERT  = '每{percent}%提醒'
 Addon.localization.WIDTH      = "宽度"
 Addon.localization.WHODIED    = "谁死了"

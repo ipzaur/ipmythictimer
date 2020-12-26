@@ -1,5 +1,9 @@
 local AddonName, Addon = ...
 
+local ignoredNPC = {
+    [174773] = true, -- shadows from Spiteful affix
+}
+
 function Addon:ResetDungeon()
     IPMTDungeon = Addon:CopyObject(Addon.cleanDungeon)
 end
@@ -11,7 +15,7 @@ function Addon:GetEnemyForces(npcID, progressFormat)
         forces = Addon.season:GetForces(npcID, IPMTDungeon.isTeeming)
     end
 
-    if forces == nil then
+    if forces == nil and ignoredNPC[npcID] == nil then
         if IPMTDB and IPMTDB[npcID] and type(IPMTDB[npcID]) == 'table' and IPMTDB[npcID][IPMTDungeon.isTeeming] then
             forces = IPMTDB[npcID][IPMTDungeon.isTeeming]
         else
@@ -457,9 +461,14 @@ function Addon:InitVars()
     end
     if MDT then
         local MDTversion = GetAddOnMetadata('MDT', 'Version')
-        if not IPMTOptions.MDTversion or (IPMTOptions.MDTversion ~= MDTversion) then
-            IPMTOptions.MDTversion = MDTversion
-            IPMTDB = {}
+        if MDTversion == nil then
+            MDTversion = GetAddOnMetadata('MythicDungeonTools', 'Version')
+        end
+        if MDTversion ~= nil and (not IPMTOptions.MDTversion or (IPMTOptions.MDTversion ~= MDTversion)) then
+            if Addon:MDTHasDB() then
+                IPMTOptions.MDTversion = MDTversion
+                IPMTDB = {}
+            end
         end
     end
 end
