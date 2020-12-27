@@ -20,6 +20,7 @@ utility.lua
 
 cooperation\mdt.lua
 cooperation\elvUI.lua
+cooperation\NamePlateKAI.lua
 
 theme\default.lua
 themes.lua

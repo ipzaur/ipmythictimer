@@ -1,5 +1,14 @@
 local AddonName, Addon = ...
 
+function Addon:GetNameplateInfo(nameplate)
+    local unitName, unitExists = nil, nil
+    if nameplate and nameplate.UnitFrame then
+        unitExists = nameplate.UnitFrame.unitExists
+        unitName = nameplate.UnitFrame.displayedUnit
+    end
+    return unitName, unitExists
+end
+
 local function GrabPrognosis()
     local inCombat = false
     if UnitAffectingCombat("player") then
@@ -15,21 +24,19 @@ local function GrabPrognosis()
 
     if inCombat then
         for _, nameplate in pairs(C_NamePlate.GetNamePlates()) do
-            if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.unitExists then
-                local unitName = nameplate.UnitFrame.displayedUnit
-                if UnitCanAttack("player", unitName) and not UnitIsDead(unitName) then
-                    local threat = UnitThreatSituation("player", unitName) or -1
-                    if threat >= 0 or UnitPlayerControlled(unitName .. "target") then
-                        local guID = UnitGUID(unitName)
-                        local _, _, _, _, _, npcID, spawnID = strsplit("-", guID)
-                        if spawnID ~= nil and npcID ~= nil then
-                            local npcUID = spawnID .. "_" .. npcID
-                            if not IPMTDungeon.prognosis[npcUID] then
-                                npcID = tonumber(npcID)
-                                local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
-                                if forces then
-                                    IPMTDungeon.prognosis[npcUID] = forces
-                                end
+            local unitName, unitExists = Addon:GetNameplateInfo(nameplate)
+            if unitExists and UnitCanAttack("player", unitName) and not UnitIsDead(unitName) then
+                local threat = UnitThreatSituation("player", unitName) or -1
+                if threat >= 0 or UnitPlayerControlled(unitName .. "target") then
+                    local guID = UnitGUID(unitName)
+                    local _, _, _, _, _, npcID, spawnID = strsplit("-", guID)
+                    if spawnID ~= nil and npcID ~= nil then
+                        local npcUID = spawnID .. "_" .. npcID
+                        if not IPMTDungeon.prognosis[npcUID] then
+                            npcID = tonumber(npcID)
+                            local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
+                            if forces then
+                                IPMTDungeon.prognosis[npcUID] = forces
                             end
                         end
                     end

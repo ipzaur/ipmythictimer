@@ -416,8 +416,12 @@ end
 
 function Addon:OnEvent(self, event, ...)
     local arg1, arg2, arg3, arg4, arg5 = ...
-    if event == "ADDON_LOADED" and arg1 == AddonName then
-        Addon:Init()
+    if event == "ADDON_LOADED" then
+        if arg1 == AddonName then
+            Addon:Init()
+        elseif arg1 == 'NamePlateKAI' then
+            Addon:NamePlateKAIfix()
+        end
     elseif event == "CHALLENGE_MODE_DEATH_COUNT_UPDATED" then
         Addon.deaths:Update()
     elseif event == "SCENARIO_CRITERIA_UPDATE" then
