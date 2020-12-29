@@ -363,6 +363,7 @@ local function ShowTimer()
         if Addon.season.ShowTimer then
             Addon.season:ShowTimer()
         end
+        Addon:KalielsTrackerFix()
         ObjectiveTracker_Collapse()
     end
 end

@@ -313,13 +313,15 @@ function Addon:ChangeDecor(decorID, params, woSave)
     end
 
     if params.size then
-        if params.size.w ~= nil then
+        params.size.w = tonumber(params.size.w)
+        if params.size.w ~= nil and params.size.w > 0 then
             element:SetWidth(params.size.w)
             if woSave ~= true then
                 elemInfo.size.w = params.size.w
             end
         end
-        if params.size.h ~= nil then
+        params.size.h = tonumber(params.size.h)
+        if params.size.h ~= nil and params.size.h > 0 then
             element:SetHeight(params.size.h)
             if woSave ~= true then
                 elemInfo.size.h = params.size.h
