@@ -10,6 +10,7 @@ local function CheckExpandedOT()
 end
 
 local hooked = false
+local trying = 0
 function Addon:KalielsTrackerFix()
     if not hooked and IsAddOnLoaded('!KalielsTracker') then
         local KTMinBut = _G["!KalielsTrackerMinimizeButton"]
@@ -21,6 +22,11 @@ function Addon:KalielsTrackerFix()
                 script(KTMinBut)
                 OTClicked = false
             end)
+            ObjectiveTracker_MinimizeButton_OnClick()
+            hooked = true
+        end
+        trying = trying + 1
+        if trying > 3 then
             hooked = true
         end
     end

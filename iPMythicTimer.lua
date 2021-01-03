@@ -66,7 +66,6 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("VARIABLES_LOADED")
 
     GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
-    Addon:elvUIFix()
 
     DEFAULT_CHAT_FRAME:AddMessage(Addon.localization.STARTINFO)
 end

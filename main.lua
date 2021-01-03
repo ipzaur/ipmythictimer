@@ -345,6 +345,8 @@ local function ShowTimer()
         local level = C_ChallengeMode.GetActiveKeystoneInfo()
         IPMTDungeon.level = level
         Addon.fMain.level.text:SetText(IPMTDungeon.level)
+        Addon.fMain.prognosis.text:SetTextColor(1,1,1)
+        Addon.fMain.progress.text:SetTextColor(1,1,1)
 
         InitBossesInfo()
         initAffixes()
@@ -476,6 +478,7 @@ function Addon:InitVars()
             end
         end
     end
+
 end
 
 function Addon:Render()
@@ -497,6 +500,7 @@ function Addon:Init()
         },
     })
     Addon:InitIcon()
+    Addon:elvUIFix()
 end
 
 function Addon:OnShow()
