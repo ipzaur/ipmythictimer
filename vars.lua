@@ -204,5 +204,13 @@ Addon.optionList = {
         [Addon.THEME_ACTIONS_COPY]   = Addon.localization.THEMEACTN.COPY,
         [Addon.THEME_ACTIONS_IMPORT] = Addon.localization.THEMEACTN.IMPORT,
         [Addon.THEME_ACTIONS_EXPORT] = Addon.localization.THEMEACTN.EXPORT,
+    },
+    fontStyle = {
+        [''] = Addon.localization.FONTSTYLES.NORMAL,
+        ['OUTLINE'] = Addon.localization.FONTSTYLES.OUTLINE,
+        ['MONOCHROME'] = Addon.localization.FONTSTYLES.MONO,
+        ['THICKOUTLINE'] = Addon.localization.FONTSTYLES.THOUTLN,
+        ['OUTLINE,MONOCHROME'] = Addon.localization.FONTSTYLES.OUTLINE .. ' + ' .. Addon.localization.FONTSTYLES.MONO,
+        ['THICKOUTLINE, MONOCHROME'] = Addon.localization.FONTSTYLES.THOUTLN .. ' + ' .. Addon.localization.FONTSTYLES.MONO,
     }
 }

@@ -276,6 +276,37 @@ function Addon:RenderThemeEditor()
         end,
     })
 
+    -- Font style caption
+    top = top - 34
+    Addon.fThemes.fontStyleCaption = Addon.fThemes.fContent:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    Addon.fThemes.fontStyleCaption:SetPoint("CENTER", Addon.fThemes.fContent, "TOP", 0, top)
+    Addon.fThemes.fontStyleCaption:SetJustifyH("CENTER")
+    Addon.fThemes.fontStyleCaption:SetSize(200, 20)
+    Addon.fThemes.fontStyleCaption:SetTextColor(1, 1, 1)
+    Addon.fThemes.fontStyleCaption:SetText(Addon.localization.FONTSTYLE)
+    -- Font style selector
+    top = top - 24
+    Addon.fThemes.fFontStyle = CreateFrame("Button", nil, Addon.fThemes.fContent, "IPListBox")
+    Addon.fThemes.fFontStyle:SetHeight(30)
+    Addon.fThemes.fFontStyle:SetPoint("LEFT", Addon.fThemes.fContent, "TOPLEFT", 20, top)
+    Addon.fThemes.fFontStyle:SetPoint("RIGHT", Addon.fThemes.fContent, "TOPRIGHT", -20, top)
+    Addon.fThemes.fFontStyle:SetList(Addon.optionList.fontStyle, theme.fontStyle, true)
+    Addon.fThemes.fFontStyle:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetFontStyle(key, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetFontStyle(theme.fontStyle)
+        end,
+        OnSelect = function(self, key, text)
+            Addon.fThemes.fFontStyle.fText:SetFont(theme.font, 12, key)
+            Addon:SetFontStyle(key)
+        end,
+        OnRenderItem = function(self, fItem, key, text)
+            fItem.fText:SetFont(theme.font, 12, key)
+        end,
+    })
+
     -- Background caption
     top = top - 60
     Addon.fThemes.bg = CreateFrame("Frame", nil, Addon.fThemes.fContent, "IPFieldSet")

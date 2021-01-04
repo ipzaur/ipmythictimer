@@ -71,6 +71,13 @@ Addon.localization.ELEMPOS    = "元素位置"
 
 Addon.localization.FONT       = "字体"
 Addon.localization.FONTSIZE   = "字体大小"
+Addon.localization.FONTSTYLE  = "Font style" -- need correct
+Addon.localization.FONTSTYLES = {
+    NORMAL  = "Normal", -- need correct
+    OUTLINE = "Outline", -- need correct
+    MONO    = "Monochrome", -- need correct
+    THOUTLN = "Thick outline", -- need correct
+}
 
 Addon.localization.HEIGHT     = "高度"
 Addon.localization.HELP = {

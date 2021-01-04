@@ -71,6 +71,13 @@ Addon.localization.ELEMPOS    = "Позиция элемента"
 
 Addon.localization.FONT       = "Шрифт"
 Addon.localization.FONTSIZE   = "Размер шрифта"
+Addon.localization.FONTSTYLE  = "Стиль шрифта"
+Addon.localization.FONTSTYLES  = {
+    NORMAL  = "Обычный",
+    OUTLINE = "Контур",
+    MONO    = "Монохромный",
+    THOUTLN = "Толстый контур",
+}
 
 Addon.localization.HEIGHT     = "Высота"
 Addon.localization.HELP       = {

@@ -166,6 +166,7 @@ function Addon:ApplyTheme(themeID)
 
     Addon:ChangeDecor('main', theme.main, true)
     Addon:SetFont(theme.font, true)
+    Addon:SetFontStyle(theme.fontStyle, true)
     for frame, info in pairs(theme.elements) do
         Addon:MoveElement(frame, nil, true)
         if info.fontSize ~= nil then

@@ -159,6 +159,9 @@ function Addon:FillThemeEditor()
     Addon.fThemes.fFonts:SelectItem(theme.font, true)
     Addon.fThemes.fFonts.fText:SetFont(theme.font, 12)
 
+    Addon.fThemes.fFontStyle:SelectItem(theme.fontStyle, true)
+    Addon.fThemes.fFontStyle.fText:SetFont(theme.font, 12)
+
     Addon.fThemes.bg.width:SetText(theme.main.size.w)
     Addon.fThemes.bg.height:SetText(theme.main.size.h)
     Addon.fThemes.bg.background:SetText(theme.main.background.texture)
@@ -419,7 +422,7 @@ local function RecalcElem(frame)
         Addon.fMain[frame].text:SetText(checkText)
     end
     local width = Addon.fMain[frame].text:GetStringWidth() + 4
-    local height = Addon.fMain[frame].text:GetStringHeight()
+    local height = Addon.fMain[frame].text:GetStringHeight() + 2
     Addon.fMain[frame]:SetSize(width, height)
     Addon.fMain[frame].text:SetSize(width, height)
     if checkText then
@@ -434,10 +437,10 @@ function Addon:SetFont(filepath, woSave)
         local elemInfo = theme.elements[frameName]
         if frameName == Addon.season.frameName then
             if Addon.season.SetFont then
-                Addon.season:SetFont(filepath, elemInfo.fontSize)
+                Addon.season:SetFont(filepath, elemInfo.fontSize, elemInfo.fontStyle)
             end
         elseif info.hasText then
-            Addon.fMain[frameName].text:SetFont(filepath, elemInfo.fontSize)
+            Addon.fMain[frameName].text:SetFont(filepath, elemInfo.fontSize, elemInfo.fontStyle)
             if frameName ~= "dungeonname" then
                 RecalcElem(frameName)
             end
@@ -445,6 +448,35 @@ function Addon:SetFont(filepath, woSave)
     end
     if woSave ~= true then
         theme.font = filepath
+    elseif Addon.opened.themes then
+        for i,fItem in ipairs(Addon.fThemes.fFontStyle.fItem) do
+            local _, _, style = fItem.fText:GetFont()
+            fItem.fText:SetFont(filepath, 12, style)
+            fItem.fText:SetWidth(250)
+            local width = math.ceil(fItem.fText:GetStringWidth()) + 20
+            fItem.fText:SetWidth(width)
+        end
+    end
+end
+
+function Addon:SetFontStyle(fontStyle, woSave)
+    local theme = IPMTTheme[IPMTOptions.theme]
+    for i, info in ipairs(Addon.frames) do
+        local frameName = info.label
+        local elemInfo = theme.elements[frameName]
+        if frameName == Addon.season.frameName then
+            if Addon.season.SetFont then
+                Addon.season:SetFont(theme.font, elemInfo.fontSize, fontStyle)
+            end
+        elseif info.hasText then
+            Addon.fMain[frameName].text:SetFont(theme.font, elemInfo.fontSize, fontStyle)
+            if frameName ~= "dungeonname" then
+                RecalcElem(frameName)
+            end
+        end
+    end
+    if woSave ~= true then
+        theme.fontStyle = fontStyle
     end
 end
 

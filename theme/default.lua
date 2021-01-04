@@ -3,8 +3,9 @@ local AddonName, Addon = ...
 Addon.theme = {}
 
 Addon.theme[1] = {
-    name    = Addon.localization.DEFAULT,
-    font    = Addon.FONT_ROBOTO,
+    name      = Addon.localization.DEFAULT,
+    font      = Addon.FONT_ROBOTO,
+    fontStyle = '',
     main = {
         size = {
             w = 180,
