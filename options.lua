@@ -99,6 +99,7 @@ function Addon:CloseOptions()
     Addon.fMain.deathTimer:EnableMouse(true)
     Addon.fMain.bosses:EnableMouse(true)
     Addon.fOptions:Hide()
+    Addon:HideHelp()
 end
 
 local hideMainMenu = false

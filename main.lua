@@ -367,6 +367,7 @@ local function ShowTimer()
         end
         Addon:KalielsTrackerFix()
         ObjectiveTracker_Collapse()
+        Addon:HideHelp()
     end
 end
 hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowTimer)
