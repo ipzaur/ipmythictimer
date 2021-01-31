@@ -20,19 +20,19 @@ local function ColorChange(restore)
         r, g, b, a = unpack(restore)
     else
         r, g, b = ColorPickerFrame:GetColorRGB()
-        a = OpacitySliderFrame:GetValue()
+        a = 1 - OpacitySliderFrame:GetValue()
     end
     currentButton:ColorChange(r, g, b, a)
 end
 local function ShowColorPicker(button)
     ColorPickerFrame.hasOpacity = true
-    ColorPickerFrame.opacity = currentButton.a
+    ColorPickerFrame.opacity = 1 - currentButton.a
     ColorPickerFrame.previousValues = {currentButton.r, currentButton.g, currentButton.b, currentButton.a}
     ColorPickerFrame.func        = ColorChange
     ColorPickerFrame.opacityFunc = ColorChange
     ColorPickerFrame.cancelFunc  = ColorChange
     ColorPickerFrame:SetColorRGB(currentButton.r, currentButton.g, currentButton.b)
-    OpacitySliderFrame:SetValue(currentButton.a)
+    OpacitySliderFrame:SetValue(1 - currentButton.a)
 
     ColorPickerFrame:Show()
 end

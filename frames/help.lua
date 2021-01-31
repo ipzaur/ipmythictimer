@@ -227,7 +227,7 @@ local helpInfo = {
 }
 
 function Addon:HideHelp()
-    if Addon.fOptions.help.glow:IsShown() then
+    if Addon.fOptions ~= nil and Addon.fOptions.help.glow:IsShown() then
         Addon.fOptions.help.icon:SetSize(16, 16)
         Addon.fOptions.help.glow:Hide()
 
