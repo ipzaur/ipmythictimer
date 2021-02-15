@@ -417,14 +417,13 @@ local function RecalcElem(frame)
         end 
     end
 
-    Addon.fMain[frame].text:SetSize(150, 60)
+    Addon.fMain[frame]:SetSize(150, 60)
     if checkText then
         Addon.fMain[frame].text:SetText(checkText)
     end
     local width = Addon.fMain[frame].text:GetStringWidth() + 4
     local height = Addon.fMain[frame].text:GetStringHeight() + 2
     Addon.fMain[frame]:SetSize(width, height)
-    Addon.fMain[frame].text:SetSize(width, height)
     if checkText then
         Addon.fMain[frame].text:SetText(oldText)
     end

@@ -1,5 +1,8 @@
 local AddonName, Addon = ...
 
+local STONEBORN_ID = 174175
+local STONEBORN_SPELL = 342171
+
 function Addon:GetNameplateInfo(nameplate)
     local unitName, unitExists = nil, nil
     if nameplate and nameplate.UnitFrame then
@@ -32,7 +35,7 @@ local function GrabPrognosis()
                     local _, _, _, _, _, npcID, spawnID = strsplit("-", guID)
                     if spawnID ~= nil and npcID ~= nil then
                         local npcUID = spawnID .. "_" .. npcID
-                        if not IPMTDungeon.prognosis[npcUID] then
+                        if not IPMTDungeon.checkmobs[npcUID] and not IPMTDungeon.prognosis[npcUID] then
                             npcID = tonumber(npcID)
                             local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
                             if forces then
@@ -81,5 +84,19 @@ function Addon:ShowPrognosis()
         Addon.fMain.prognosis:Show()
     elseif not Addon.opened.themes then
         Addon.fMain.prognosis:Hide()
+    end
+end
+
+function Addon:PrognosisCheck()
+    local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, x12, x13, x14, x15 = CombatLogGetCurrentEventInfo()
+
+    if event == "SPELL_AURA_APPLIED" then
+        local _, _, _, _, _, npcID, spawnID = strsplit("-", destGUID)
+        -- Loyal Stoneborn mind control by Ventyr's
+        if tonumber(npcID) == STONEBORN_ID and tonumber(x12) == STONEBORN_SPELL then
+            local npcUID = spawnID .. "_" .. npcID
+            IPMTDungeon.prognosis[npcUID] = 0
+            IPMTDungeon.checkmobs[npcUID] = true
+        end
     end
 end

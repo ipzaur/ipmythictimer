@@ -188,6 +188,7 @@ Addon.cleanDungeon = {
         killed = {},
     },
     deathes     = {},
+    checkmobs   = {},
 }
 
 Addon.optionList = {

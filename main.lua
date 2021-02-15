@@ -89,6 +89,8 @@ end
 function Addon:CombatLogEvent()
     local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, x12, x13, x14, x15 = CombatLogGetCurrentEventInfo()
 
+    Addon:PrognosisCheck()
+
     if event == "UNIT_DIED" then
         if bit.band(destFlags, COMBATLOG_OBJECT_TYPE_NPC) > 0
             and bit.band(destFlags, COMBATLOG_OBJECT_CONTROL_NPC) > 0
@@ -479,12 +481,11 @@ function Addon:InitVars()
             end
         end
     end
-
 end
 
 function Addon:Render()
     Addon:RenderMain()
-
+    
     if IPMTOptions.version == 0 then
         Addon:ShowOptions()
         Addon:ShowHelp()
@@ -504,5 +505,10 @@ function Addon:Init()
     Addon:elvUIFix()
 end
 
+local themeApplied = false
 function Addon:OnShow()
+    if not themeApplied then
+        Addon:ApplyTheme(IPMTOptions.theme)
+        themeApplied = true
+    end
 end

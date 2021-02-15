@@ -166,12 +166,11 @@ function Addon:ApplyTheme(themeID)
     local theme = IPMTTheme[IPMTOptions.theme]
 
     Addon:ChangeDecor('main', theme.main, true)
-    Addon:SetFont(theme.font, true)
-    Addon:SetFontStyle(theme.fontStyle, true)
     for frame, info in pairs(theme.elements) do
         Addon:MoveElement(frame, nil, true)
         if info.fontSize ~= nil then
             Addon:SetFontSize(frame, info.fontSize, true)
+            Addon:SetJustifyH(frame, info.justifyH, true)
             if info.color ~= nil then
                 if info.color.r ~= nil then
                     Addon:SetColor(frame, info.color, nil, true)
@@ -190,6 +189,8 @@ function Addon:ApplyTheme(themeID)
             Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
         end
     end
+    Addon:SetFont(theme.font, true)
+    Addon:SetFontStyle(theme.fontStyle, true)
     for decorID, info in ipairs(theme.decors) do
         Addon:RenderDecor(decorID)
     end
@@ -199,7 +200,9 @@ function Addon:ApplyTheme(themeID)
     if Addon.opened.themes then
         Addon:FillThemeEditor()
     end
-    Addon.fOptions.removeTheme:ToggleDisabled(IPMTOptions.theme == 1)
+    if Addon.fOptions ~= nil then
+        Addon.fOptions.removeTheme:ToggleDisabled(IPMTOptions.theme == 1)
+    end
     Addon.themeApplying = false
 end
 

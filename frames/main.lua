@@ -6,10 +6,6 @@ Addon.fMain:SetScript("OnEvent", function(self, event, ...)
 end)
 
 function Addon:RenderMain()
-    local affixSize = {
-        
-    }
-
     local theme = IPMTTheme[IPMTOptions.theme]
 
     -- Main Frame
@@ -58,7 +54,6 @@ function Addon:RenderMain()
     end)
     Addon.fMain:Hide()
 
-
     Addon.fMain.background = Addon.fMain:CreateTexture(nil, "BACKGROUND")
     Addon.fMain.background:SetAllPoints(Addon.fMain)
     Addon:ChangeDecor('main', theme.main, true)
@@ -102,26 +97,12 @@ function Addon:RenderElement(info)
         if (justify == nil) then
             justify = 'LEFT'
         end
-        local color = elemInfo.color
-        if (color == nil) then
-            color = {
-                [0] = 1,
-                [1] = 1,
-                [2] = 1,
-            }
-        end
         Addon.fMain[frame].text = Addon.fMain[frame]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-        Addon.fMain[frame].text:ClearAllPoints()
-        Addon.fMain[frame].text:SetPoint(justify, 0, 0)
-        Addon.fMain[frame].text:SetJustifyH(justify)
+        Addon.fMain[frame].text:SetAllPoints(Addon.fMain[frame])
         if elemInfo.justifyV then
             Addon.fMain[frame].text:SetJustifyV(elemInfo.justifyV)
         end
-        if frame == "dungeonname" then
-            Addon.fMain[frame].text:SetAllPoints(Addon.fMain[frame])
-        end
         Addon.fMain[frame].text:SetFont(theme.font, elemInfo.fontSize)
-        Addon.fMain[frame].text:SetTextColor(color.r, color.g, color.b)
         Addon.fMain[frame].text:SetText("")
     end
 
