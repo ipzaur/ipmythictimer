@@ -358,6 +358,7 @@ local function ShowTimer()
 
         local dungeonName = C_Scenario.GetInfo()
         Addon.fMain.dungeonname.text:SetText(dungeonName)
+        Addon.fMain.dungeonname:EnableMouse(false)
 
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         Addon.fMain:RegisterEvent("ENCOUNTER_END")
