@@ -25,8 +25,11 @@ function Addon:SetProgressFormat(value)
     if IPMTOptions.progress ~= value then
         IPMTOptions.progress = value
         if not IPMTDungeon.keyActive then
-            Addon.fMain.progress.text:SetText(nonCombatContent.progress.content[IPMTOptions.progress])
-            Addon.fMain.prognosis.text:SetText(nonCombatContent.prognosis.content[IPMTOptions.progress])
+            for i, info in ipairs(Addon.frames) do
+                if info.label == 'progress' or info.label == 'prognosis' then
+                    Addon.fMain[info.label].text:SetText(info.dummy.text[IPMTOptions.progress])
+                end
+            end
         else
             Addon:UpdateProgress()
         end
