@@ -1,0 +1,184 @@
+Version 1.3.13:
+  - The timer now show correctly after inserting a key, exiting the dungeon and re-entering
+
+Version 1.3.12:
+  - Summoned Stonewall Gargon percents fixed
+
+Version 1.3.11:
+  - Fixed bug of prognosis when "loyal stoneborn" mind controled (Halls of Atonement)
+  - Now theme applying correct on start
+  - Some minor bugs fixed
+
+Version 1.3.10:
+  - Bug with opacity fixed
+
+Version 1.3.9:
+  - Some minor fixes
+
+Version 1.3.8:
+  - Added the ability to change the font style (outline, monochrome, thick outline)
+
+Version 1.3.7:
+  - Addon now work fine with NameplateKAI
+  - Fixed periodicaly Kaliel's Tracker expanding
+  - Fixed empty "width" and "height" fields of background in theme editor
+
+Version 1.3.6:
+  - Now can change value of percents for alert affix mob
+  - Inner monster database fixed
+  - Some minors fixes
+
+Version 1.3.5:
+  - Spiteful mobs percents fixed
+
+Version 1.3.4:
+  - Advanced texture settings for elements
+  - The dungeon artwork can be set as a background
+
+Version 1.3.3:
+  - Bosses death counter fixed
+
+Version 1.3.2:
+  - Fixed some minor bugs
+
+Version 1.3.1:
+  - More customize added
+  - Export, import themes added
+
+Version 1.3.0:
+  - Refactoring
+  - Themes added
+
+Version 1.2.2:
+  - Fixed some bug after refactoring
+  - znCN default font sizes fixed
+
+Version 1.2.1:
+  - Fixed some bug
+
+Version 1.2.0:
+  - 9.0.1 supported
+
+Version 1.1.28:
+  - Refactoring
+  - Obelisk cost in SotS fixed (nice :D )
+
+Version 1.1.27:
+  - Auto expand (with elvUI) Objective Tracker fixed
+
+Version 1.1.26:
+  - Objective Tracker now collapsing instead hide
+
+Version 1.1.25:
+  - Mobs costs fixed after MDT rename
+
+Version 1.1.24:
+  - Obelisk cost in TolDagor fixed
+
+Version 1.1.23:
+  - Now the "trash prognosis" works better
+
+Version 1.1.22:
+  - znCN localization added
+  - Corruption icons in 9- keys are not displayed now after going to 10+ keys
+
+Version 1.1.21:
+  - Added cost of mobs in counter corrupted lieutenants
+  - Fixed some bugs
+
+Version 1.1.20:
+  - Reworked bosses tooltip
+  - Fixed some bugs
+
+Version 1.1.19:
+  - Close options by "escape" key
+  - Counter for corrupted lieutenants
+
+Version 1.1.18:
+  - Added inserting key function
+  - Opacity and scale values show in options
+  - Fixed some bugs
+
+Version 1.1.17:
+  - Added "X" button for close options
+  - Added dungeon name
+
+Version 1.1.16:
+  - Scroll added to font family listbox
+
+Version 1.1.15:
+  - Prognosis percent for corrupted lieutenants fixed
+
+Version 1.1.14:
+  - Mechagon linked with MDT
+  - Change of direction for progress changing available now (from 0% to 100% or from 100% to 0% and same for enemy forces)
+  - Fixed font for some captions for zhTW
+  - Corrected texts for zhTW (thanks bns333)
+
+Version 1.1.13:
+  - 8.3 supported
+
+Version 1.1.12:
+  - Added help button with descriptions of frame elements
+
+Version 1.1.11:
+  - Fixed some bugs with grabbing info of death if falling
+
+Version 1.1.10:
+  - Fixed some bugs with bosses progress
+
+Version 1.1.9:
+  - Fixed some bugs with Font Size change
+
+Version 1.1.8:
+  - "Roboto Regular" font added and installed by default
+  - Now can change the format of progress (percent or force of monster)
+  - Show/Hide elements now available
+  - Added details of the killed bosses
+
+Version 1.1.7:
+  - Now deathes info available after complete key
+
+Version 1.1.6:
+  - Detailed info about deaths
+
+Version 1.1.5:
+  - Death info in the tooltip by hover on count of deaths
+
+Version 1.1.4:
+  - 8.2.5 supported
+  - Show/Hide minimap button
+
+Version 1.1.3:
+  - Add minimap button
+  - Fixed some bugs
+
+Version 1.1.2:
+  - Add button for clean addon database with info of monters percents
+
+Version 1.1.1:
+  - Fixed bug if MDT not active
+
+Version 1.1.0:
+  - 8.2 supported
+
+Version 1.0.9:
+  - Full customization
+  - Main frame start on right side by default
+
+Version 1.0.7:
+  - zhTW localization added
+
+Version 1.0.6:
+  - Fix bug with affix tooltip
+
+Version 1.0.5:
+  - Button for restore default settings and frames position
+  - Disable dragging timer frame while key active. But draggable while settings shown
+
+Version 1.0.4:
+  - Fix tooltip for affixes
+  - Save frame position globaly
+
+Version 1.0.3:
+  - Settings added (scale and opacity)

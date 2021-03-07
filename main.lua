@@ -212,17 +212,6 @@ function Addon:OnAffixEnter(self, iconNum)
     end
 end
 
-local updateTimer = 0 
-function Addon:OnUpdate(elapsed)
-    if IPMTDungeon and IPMTDungeon.keyActive then
-        updateTimer = updateTimer + elapsed * 1000
-        if updateTimer >= 300 then
-            updateTimer = 0
-            Addon:ShowPrognosis()
-        end
-    end
-end
-
 local function UpdateTime(block, elapsedTime)
     local theme = IPMTTheme[IPMTOptions.theme]
     if not IPMTDungeon.keyActive then
@@ -281,6 +270,9 @@ local function InitBossesInfo()
     IPMTDungeon.bossesKilled = 0
     if IPMTDungeon.bosses == nil then
         local mapID = C_Map.GetBestMapForUnit("player")
+        if mapID == nil then
+            return
+        end
         local uiMapGroupID = C_Map.GetMapGroupID(mapID)
         local mapGroup = {}
         if uiMapGroupID == nil or mapID == 1490 then
@@ -313,6 +305,20 @@ local function InitBossesInfo()
         end
     end
     Addon.fMain.bosses.text:SetText(IPMTDungeon.bossesKilled .. "/" .. #IPMTDungeon.bosses)
+end
+
+local updateTimer = 0 
+function Addon:OnUpdate(elapsed)
+    if IPMTDungeon and IPMTDungeon.keyActive then
+        updateTimer = updateTimer + elapsed * 1000
+        if updateTimer >= 300 then
+            updateTimer = 0
+            Addon:ShowPrognosis()
+            if IPMTDungeon.bosses == nil then
+                InitBossesInfo()
+            end
+        end
+    end
 end
 
 local function initAffixes()
