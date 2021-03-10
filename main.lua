@@ -1,8 +1,9 @@
 local AddonName, Addon = ...
 
 local ignoredNPC = {
-    [174773] = true, -- shadows from Spiteful affix
     [168457] = true, -- Summoned Stonewall Gargon (corridor before last boss of Sanguine Depths)
+    [168837] = true, -- Summoned Stealthling spiders (Plaguefall)
+    [174773] = true, -- Shadows from Spiteful affix
 }
 
 function Addon:ResetDungeon()

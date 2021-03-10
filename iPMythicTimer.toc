@@ -1,9 +1,9 @@
-## Interface: 90002
+## Interface: 90005
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Ключей
 ## Author: iP
-## Version: 1.3.13
+## Version: 1.3.14
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon, IPMTTheme
 ## X-eMail: ipzaur@gmail.com
