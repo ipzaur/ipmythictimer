@@ -324,18 +324,6 @@ function Addon:RenderOptions()
     Addon.fOptions.closeX.icon:SetPoint("CENTER", Addon.fOptions.closeX, "CENTER", 0, 0)
     Addon.fOptions.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\x-close")
 
-    -- Frame for settings in global options panel
-    Addon.panel = CreateFrame("Frame", "IPMTOptionsPanel", UIParent)
-    Addon.panel.name = AddonName
-    Addon.panel.fShowOptions = CreateFrame("Button", nil, Addon.panel, "UIPanelButtonTemplate")
-    Addon.panel.fShowOptions:SetPoint("CENTER", Addon.panel, "TOP", 0, -140)
-    Addon.panel.fShowOptions:SetSize(200, 30)
-    Addon.panel.fShowOptions:SetText(Addon.localization.OPTIONS)
-    Addon.panel.fShowOptions:SetScript("OnClick", function(self)
-        Addon:OpenSettingsFromPanel()
-    end)
-    InterfaceOptions_AddCategory(Addon.panel)
-
     if Addon.season.options and Addon.season.options.Render then
         local top = (-400)
         Addon.fOptions.season = {}
@@ -353,6 +341,16 @@ function Addon:RenderOptions()
         Addon.fOptions.common:SetHeight(height + addHeight)
         Addon.fOptions:SetHeight(height + addHeight + 20)
     end
-
-
 end
+
+-- Frame for settings in global options panel
+Addon.panel = CreateFrame("Frame", "IPMTOptionsPanel", UIParent)
+Addon.panel.name = AddonName
+Addon.panel.fShowOptions = CreateFrame("Button", nil, Addon.panel, "UIPanelButtonTemplate")
+Addon.panel.fShowOptions:SetPoint("CENTER", Addon.panel, "TOP", 0, -140)
+Addon.panel.fShowOptions:SetSize(200, 30)
+Addon.panel.fShowOptions:SetText(Addon.localization.OPTIONS)
+Addon.panel.fShowOptions:SetScript("OnClick", function(self)
+    Addon:OpenSettingsFromPanel()
+end)
+InterfaceOptions_AddCategory(Addon.panel)

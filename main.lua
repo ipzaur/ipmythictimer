@@ -8,6 +8,9 @@ local ignoredNPC = {
 
 function Addon:ResetDungeon()
     IPMTDungeon = Addon:CopyObject(Addon.cleanDungeon)
+    if Addon.fool ~= nil then
+        IPMTDungeon.fool = 0
+    end
 end
 
 function Addon:GetEnemyForces(npcID, progressFormat)
@@ -233,7 +236,13 @@ local function UpdateTime(block, elapsedTime)
             IPMTDungeon.timeLimit[level] = timeCoef[level] * block.timeLimit
         end
     end
+    if Addon.fool ~= nil and IPMTDungeon.fool ~= nil and IPMTDungeon.fool > 0 then
+        elapsedTime = elapsedTime - IPMTDungeon.fool
+    end
     if elapsedTime < block.timeLimit then
+        if Addon.fool ~= nil then
+            Addon:HideFool()
+        end
         for level = 2,1,-1 do
             if elapsedTime < IPMTDungeon.timeLimit[level] then
                 plusLevel = level
@@ -247,6 +256,9 @@ local function UpdateTime(block, elapsedTime)
         color = theme.elements.timer.color[plusLevel]
         plusLevel = "+" .. plusLevel+1
     else
+        if Addon.fool ~= nil then
+            Addon:ShowFool()
+        end
         plusLevel = "-1"
         timeText = SecondsToClock(elapsedTime - block.timeLimit)
         color = theme.elements.timer.color[-1]
