@@ -61,6 +61,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "已擊殺小怪",
     PROGNOSIS = "擊殺拉怪後的百分比",
     TIMER     = "鑰石計時器",
+    TORMENT   = "Torment lieutenants", -- need correct
 }
 Addon.localization.ELEMACTION =  {
     SHOW = "顯示元素",
@@ -146,6 +147,12 @@ Addon.localization.THEMEBUTNS = {
 Addon.localization.THEMEDITOR = "編輯主題"
 Addon.localization.THEMENAME  = "主題名稱"
 Addon.localization.TOP        = "頂部"
+Addon.localization.TORMENTED  = {
+    [179891] = "Soggodon the Breaker (鏈條)", -- need correct
+    [179890] = "Executioner Varruth (害怕)", -- need correct
+    [179892] = "Oros Coldheart (寒冷的)", -- need correct
+    [179446] = "Incinerator Arkolath (火)", -- need correct
+}
 Addon.localization.TIME       = "時間"
 Addon.localization.TIMERCHCKP = "計時器檢查點"
 

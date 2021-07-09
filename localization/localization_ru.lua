@@ -61,6 +61,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Убито противников",
     PROGNOSIS = "Проценты после боя",
     TIMER     = "Время ключа",
+    TORMENT   = "Истязающие лейтенанты",
 }
 Addon.localization.ELEMACTION =  {
     SHOW = "Показать элемент",
@@ -102,7 +103,7 @@ Addon.localization.LEFT       = "Слева"
 
 Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\n" ..
                                 "ЛКМ (зажать) - передвинуть иконку"
-Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку у миникарты"
+Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку около миникарты"
 Addon.localization.MELEEATACK = "Ближний бой"
 
 Addon.localization.OPTIONS    = "Настройки"
@@ -145,6 +146,12 @@ Addon.localization.THEMEBUTNS = {
 Addon.localization.THEMEDITOR = "Редактирование темы"
 Addon.localization.THEMENAME  = "Название темы"
 Addon.localization.TOP        = "Сверху"
+Addon.localization.TORMENTED  = {
+    [179891] = "Соггодон Ломатель (Цепи)",
+    [179890] = "Палач Варрут (Страх)",
+    [179892] = "Орос Бессердечный (Лёд)",
+    [179446] = "Испепелитель Арколат (Огонь)",
+}
 Addon.localization.TIME       = "Время"
 Addon.localization.TIMERCHCKP = "Контрольные точки"
 

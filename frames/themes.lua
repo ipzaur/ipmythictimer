@@ -555,48 +555,48 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
     Addon.fThemes[frame].moveMode.icon:SetAlpha(.5)
     Addon.fThemes[frame].moveMode.icon:SetTexCoord(.25, .5, .5, 1)
 
-    if frameParams.hasText then
-        if elemInfo.color ~= nil then
-            local colorInfo = Addon:CopyObject(elemInfo.color)
-            if colorInfo.r ~= nil then
-                colorInfo = {
-                    [-1] = colorInfo,
-                }
-            end
-            Addon.fThemes[frame].colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-            Addon.fThemes[frame].colorCaption:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
-            Addon.fThemes[frame].colorCaption:SetJustifyH("LEFT")
-            Addon.fThemes[frame].colorCaption:SetSize(65, 20)
-            Addon.fThemes[frame].colorCaption:SetTextColor(1, 1, 1)
-            Addon.fThemes[frame].colorCaption:SetText(Addon.localization.COLOR)
-            -- Color
-            Addon.fThemes[frame].color = {}
-            for i = -1,2 do
-                if colorInfo[i] ~= nil then
-                    Addon.fThemes[frame].color[i] = CreateFrame("Button", nil, Addon.fThemes[frame], "IPColorButton")
-                    Addon.fThemes[frame].color[i]:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 90 + (i+1)*30, subTop)
-                    Addon.fThemes[frame].color[i]:SetBackdropColor(.5,0,0, 1)
-                    Addon.fThemes[frame].color[i]:SetCallback(function(self, r, g, b, a)
-                        Addon:SetColor(frame, {r=r, g=g, b=b, a=a}, i)
-                    end)
-                    Addon.fThemes[frame].color[i]:ColorChange(colorInfo[i].r, colorInfo[i].g, colorInfo[i].b, colorInfo[i].a, true)
-                    Addon.fThemes[frame].color[i]:HookScript("OnEnter", function(self)
-                        Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
-                        if frameParams.colors ~= nil and frameParams.colors[i] ~= nil then
-                            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                            GameTooltip:SetText(frameParams.colors[i], .9, .9, 0, 1, true)
-                            GameTooltip:Show()
-                        end
-                    end)
+    if (frameParams.hasText or frameParams.colors) and elemInfo.color ~= nil then
+        local colorInfo = Addon:CopyObject(elemInfo.color)
+        if colorInfo.r ~= nil then
+            colorInfo = {
+                [-1] = colorInfo,
+            }
+        end
+        Addon.fThemes[frame].colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+        Addon.fThemes[frame].colorCaption:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
+        Addon.fThemes[frame].colorCaption:SetJustifyH("LEFT")
+        Addon.fThemes[frame].colorCaption:SetSize(65, 20)
+        Addon.fThemes[frame].colorCaption:SetTextColor(1, 1, 1)
+        Addon.fThemes[frame].colorCaption:SetText(Addon.localization.COLOR)
+        -- Color
+        Addon.fThemes[frame].color = {}
+        for i = -1,2 do
+            if colorInfo[i] ~= nil then
+                Addon.fThemes[frame].color[i] = CreateFrame("Button", nil, Addon.fThemes[frame], "IPColorButton")
+                Addon.fThemes[frame].color[i]:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 90 + (i+1)*30, subTop)
+                Addon.fThemes[frame].color[i]:SetBackdropColor(.5,0,0, 1)
+                Addon.fThemes[frame].color[i]:SetCallback(function(self, r, g, b, a)
+                    Addon:SetColor(frame, {r=r, g=g, b=b, a=a}, i)
+                end)
+                Addon.fThemes[frame].color[i]:ColorChange(colorInfo[i].r, colorInfo[i].g, colorInfo[i].b, colorInfo[i].a, true)
+                Addon.fThemes[frame].color[i]:HookScript("OnEnter", function(self)
+                    Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
                     if frameParams.colors ~= nil and frameParams.colors[i] ~= nil then
-                        Addon.fThemes[frame].color[i]:HookScript("OnLeave", function(self)
-                            GameTooltip:Hide()
-                        end)
+                        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                        GameTooltip:SetText(frameParams.colors[i], .9, .9, 0, 1, true)
+                        GameTooltip:Show()
                     end
+                end)
+                if frameParams.colors ~= nil and frameParams.colors[i] ~= nil then
+                    Addon.fThemes[frame].color[i]:HookScript("OnLeave", function(self)
+                        GameTooltip:Hide()
+                    end)
                 end
             end
         end
+    end
 
+    if frameParams.hasText then
         -- FontSize
         subTop = subTop - 46
         Addon.fThemes[frame].fontSize = CreateFrame("Slider", nil, Addon.fThemes[frame], "IPOptionsSlider")

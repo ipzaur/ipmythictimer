@@ -61,6 +61,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Enemy killed",
     PROGNOSIS = "Percents after pull",
     TIMER     = "Key timer",
+    TORMENT   = "Torment lieutenants",
 }
 Addon.localization.ELEMACTION =  {
     SHOW = "Show element",
@@ -145,6 +146,12 @@ Addon.localization.THEMEBUTNS = {
 Addon.localization.THEMEDITOR = "Edit theme"
 Addon.localization.THEMENAME  = "Theme name"
 Addon.localization.TOP        = "Top"
+Addon.localization.TORMENTED  = {
+    [179891] = "Soggodon the Breaker (Chains)",
+    [179890] = "Executioner Varruth (Fear)",
+    [179892] = "Oros Coldheart (Cold)",
+    [179446] = "Incinerator Arkolath (Fire)",
+}
 Addon.localization.TIME       = "Time"
 Addon.localization.TIMERCHCKP = "Timer checkpoints"
 
