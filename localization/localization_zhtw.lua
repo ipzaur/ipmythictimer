@@ -61,7 +61,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "已擊殺小怪",
     PROGNOSIS = "擊殺拉怪後的百分比",
     TIMER     = "鑰石計時器",
-    TORMENT   = "Torment lieutenants", -- need correct
+    TORMENT   = "折磨副官",
 }
 Addon.localization.ELEMACTION =  {
     SHOW = "顯示元素",
@@ -72,12 +72,12 @@ Addon.localization.ELEMPOS    = "元素位置"
 
 Addon.localization.FONT       = "字型"
 Addon.localization.FONTSIZE   = "字體大小"
-Addon.localization.FONTSTYLE  = "Font style" -- need correct
+Addon.localization.FONTSTYLE  = "字體樣式"
 Addon.localization.FONTSTYLES = {
-    NORMAL  = "Normal", -- need correct
-    OUTLINE = "Outline", -- need correct
-    MONO    = "Monochrome", -- need correct
-    THOUTLN = "Thick outline", -- need correct
+    NORMAL  = "普通",
+    OUTLINE = "外框",
+    MONO    = "單色",
+    THOUTLN = "粗外框",
 }
 
 Addon.localization.HEIGHT     = "高度"
@@ -148,10 +148,10 @@ Addon.localization.THEMEDITOR = "編輯主題"
 Addon.localization.THEMENAME  = "主題名稱"
 Addon.localization.TOP        = "頂部"
 Addon.localization.TORMENTED  = {
-    [179891] = "Soggodon the Breaker (鏈條)", -- need correct
-    [179890] = "Executioner Varruth (害怕)", -- need correct
-    [179892] = "Oros Coldheart (寒冷的)", -- need correct
-    [179446] = "Incinerator Arkolath (火)", -- need correct
+    [179891] = "『破壞者』索格登 (鎖鏈)",
+    [179890] = "『處刑者』瓦魯斯 (恐懼)",
+    [179892] = "『無情』歐洛斯 (寒冰)",
+    [179446] = "『焚化者』阿寇拉斯 (烈焰)",
 }
 Addon.localization.TIME       = "時間"
 Addon.localization.TIMERCHCKP = "計時器檢查點"

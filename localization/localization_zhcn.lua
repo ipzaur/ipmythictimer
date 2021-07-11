@@ -61,7 +61,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "敌方被击杀",
     PROGNOSIS = "拉怪后百分比",
     TIMER     = "钥匙计时器",
-    TORMENT   = "Torment lieutenants", -- need correct
+    TORMENT   = "磨难怪",
 }
 Addon.localization.ELEMACTION =  {
     SHOW = "显示元素",
@@ -148,10 +148,10 @@ Addon.localization.THEMEDITOR = "编辑主题"
 Addon.localization.THEMENAME  = "主题名称"
 Addon.localization.TOP        = "顶部"
 Addon.localization.TORMENTED  = {
-    [179891] = "Soggodon the Breaker (链条)", -- need correct
-    [179890] = "Executioner Varruth (害怕)", -- need correct
-    [179892] = "Oros Coldheart (寒冷的)", -- need correct
-    [179446] = "Incinerator Arkolath (火)", -- need correct
+    [179891] = "粉碎者索苟冬 (锁链)",
+    [179890] = "刽子手瓦卢斯 (恐惧)",
+    [179892] = "淞心之欧罗斯 (冰)",
+    [179446] = "焚化者阿蔻拉斯 (火)",
 }
 Addon.localization.TIME       = "时间"
 Addon.localization.TIMERCHCKP = "计时器检查点"
