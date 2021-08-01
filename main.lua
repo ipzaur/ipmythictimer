@@ -173,18 +173,35 @@ function Addon:OnTimerEnter(self)
         GameTooltip:SetText(Addon.localization.TIMERCHCKP, 1, 1, 1)
         GameTooltip:AddLine(" ")
         local theme = IPMTTheme[IPMTOptions.theme]
-        for level = 2,0,-1 do
-            local keyText = '+' .. level + 1
-            local timeText
-            if level == 2 then
-                timeText = SecondsToClock(IPMTDungeon.timeLimit[0]) .. ' - ' .. SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[2])
-            elseif level == 1 then
-                timeText = SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[2]) .. ' - ' .. SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[1])
-            else
-                timeText = SecondsToClock(IPMTDungeon.timeLimit[0] - IPMTDungeon.timeLimit[1]) .. ' - 0:00'
+        local timeLimit = IPMTDungeon.timeLimit[IPMTOptions.timerDir]
+        if IPMTOptions.timerDir == Addon.TIMER_DIRECTION_DESC then
+            for level = 2,0,-1 do
+                local keyText = '+' .. level + 1
+                local timeText
+                if level == 2 then
+                    timeText = SecondsToClock(timeLimit[0]) .. ' - ' .. SecondsToClock(timeLimit[0] - timeLimit[2])
+                elseif level == 1 then
+                    timeText = SecondsToClock(timeLimit[0] - timeLimit[2]) .. ' - ' .. SecondsToClock(timeLimit[0] - timeLimit[1])
+                else
+                    timeText = SecondsToClock(timeLimit[0] - timeLimit[1]) .. ' - 0:00'
+                end
+                local color = theme.elements.timer.color[level]
+                GameTooltip:AddDoubleLine(keyText, timeText, color.r, color.g, color.b, color.r, color.g, color.b)
             end
-            local color = theme.elements.timer.color[level]
-            GameTooltip:AddDoubleLine(keyText, timeText, color.r, color.g, color.b, color.r, color.g, color.b)
+        else
+            for level = 2,0,-1 do
+                local keyText = '+' .. level + 1
+                local timeText
+                if level == 2 then
+                    timeText = '0:00 - ' .. SecondsToClock(timeLimit[0])
+                elseif level == 1 then
+                    timeText = SecondsToClock(timeLimit[0]) .. ' - ' .. SecondsToClock(timeLimit[1])
+                else
+                    timeText = SecondsToClock(timeLimit[1]) .. ' - ' .. SecondsToClock(timeLimit[2])
+                end
+                local color = theme.elements.timer.color[level]
+                GameTooltip:AddDoubleLine(keyText, timeText, color.r, color.g, color.b, color.r, color.g, color.b)
+            end
         end
         GameTooltip:Show()
     end
@@ -228,12 +245,18 @@ local function UpdateTime(block, elapsedTime)
     local plusTimeText = nil
     local color = nil
 
-    if IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[0] == nil then
+    if true or IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC] == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][0] == nil then
         IPMTDungeon.timeLimit = {
-            [0] = block.timeLimit,
+            [Addon.TIMER_DIRECTION_DESC] = {
+                [0] = block.timeLimit,
+            },
+            [Addon.TIMER_DIRECTION_ASC] = {
+                [2] = block.timeLimit,
+            },
         }
         for level = 2,1,-1 do
-            IPMTDungeon.timeLimit[level] = timeCoef[level] * block.timeLimit
+            IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][level] = timeCoef[level] * block.timeLimit
+            IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_ASC][2-level] = timeCoef[level] * block.timeLimit
         end
     end
     if Addon.fool ~= nil and IPMTDungeon.fool ~= nil and IPMTDungeon.fool > 0 then
@@ -244,25 +267,33 @@ local function UpdateTime(block, elapsedTime)
             Addon:HideFool()
         end
         for level = 2,1,-1 do
-            if elapsedTime < IPMTDungeon.timeLimit[level] then
+            if elapsedTime < IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][level] then
                 plusLevel = level
-                plusTimer = IPMTDungeon.timeLimit[level] - elapsedTime
+                plusTimer = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][level] - elapsedTime
                 plusTimeText = SecondsToClock(plusTimer)
                 break
             end
         end
-        timeText = SecondsToClock(block.timeLimit - elapsedTime)
-        plusTimer = SecondsToClock(plusTimer)
+        if IPMTOptions.timerDir == 1 then
+            timeText = SecondsToClock(block.timeLimit - elapsedTime)
+            plusTimer = SecondsToClock(plusTimer)
+        else
+            timeText = SecondsToClock(elapsedTime)
+            if plusTimeText == nil then
+                plusTimer = block.timeLimit - elapsedTime
+                plusTimeText = SecondsToClock(plusTimer)
+            end
+        end
         color = theme.elements.timer.color[plusLevel]
         plusLevel = "+" .. plusLevel+1
     else
         if Addon.fool ~= nil then
             Addon:ShowFool()
         end
+        timeText = SecondsToClock(elapsedTime)
+        plusTimeText = SecondsToClock(elapsedTime - block.timeLimit)
         plusLevel = "-1"
-        timeText = SecondsToClock(elapsedTime - block.timeLimit)
         color = theme.elements.timer.color[-1]
-        plusTimeText = SecondsToClock(elapsedTime)
     end
     IPMTDungeon.time = elapsedTime
 

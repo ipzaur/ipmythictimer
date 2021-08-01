@@ -1,7 +1,7 @@
 local AddonName, Addon = ...
-print(Addon.season.number)
+
 if Addon.season.number ~= 92 then return end
-print(2)
+
 Addon.season.affix = 128
 Addon.season.frameName = 'torments'
 table.insert(Addon.frames, {

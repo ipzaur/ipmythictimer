@@ -145,6 +145,11 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "Редактирование темы"
 Addon.localization.THEMENAME  = "Название темы"
+Addon.localization.TIMERDIRS  = {
+    desc = "По убыванию (36:00 -> 0:00)",
+    asc  = "По возрастанию (0:00 -> 36:00)",
+}
+Addon.localization.TIMERDIR   = "Изменение таймера"
 Addon.localization.TOP        = "Сверху"
 Addon.localization.TORMENTED  = {
     [179891] = "Соггодон Ломатель (Цепи)",

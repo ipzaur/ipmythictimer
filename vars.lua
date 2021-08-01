@@ -1,7 +1,10 @@
 local AddonName, Addon = ...
-Addon.version = 1317
+Addon.version = 1318
 
 Addon.AFFIX_TEEMING = 5
+
+Addon.TIMER_DIRECTION_DESC  = 1
+Addon.TIMER_DIRECTION_ASC = 2
 
 Addon.PROGRESS_FORMAT_PERCENT = 1
 Addon.PROGRESS_FORMAT_FORCES  = 2
@@ -142,6 +145,7 @@ Addon.defaultOption = {
     scale     = 0,
     direction = 1,
     progress  = 1,
+    timerDir  = 1,
     theme     = 1,
     position  = {
         main = {
@@ -199,6 +203,10 @@ Addon.optionList = {
     progress = {
         [Addon.PROGRESS_FORMAT_PERCENT] = Addon.localization.PROGFORMAT.percent,
         [Addon.PROGRESS_FORMAT_FORCES]  = Addon.localization.PROGFORMAT.forces,
+    },
+    timerDir = {
+        [Addon.TIMER_DIRECTION_ASC]  = Addon.localization.TIMERDIRS.asc,
+        [Addon.TIMER_DIRECTION_DESC] = Addon.localization.TIMERDIRS.desc,
     },
     createTheme = {
         [Addon.THEME_ACTIONS_NEW]    = Addon.localization.THEMEACTN.NEW,

@@ -1,3 +1,7 @@
+Version 1.3.18:
+  - Change timer direction added
+  - Fixed bug with class color if someone leave party
+
 Version 1.3.17:
   - Season 9.2 activate
 

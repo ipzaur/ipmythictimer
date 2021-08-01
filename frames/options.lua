@@ -6,7 +6,7 @@ function Addon:RenderOptions()
     -- Options Frame
     Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent, BackdropTemplateMixin and "BackdropTemplate")
     Addon.fOptions:SetFrameStrata("MEDIUM")
-    Addon.fOptions:SetSize(270, 458)
+    Addon.fOptions:SetSize(270, 500)
     Addon.fOptions:ClearAllPoints()
     Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
     Addon.fOptions:SetBackdrop(Addon.backdrop)
@@ -43,9 +43,10 @@ function Addon:RenderOptions()
     Addon.fOptions.caption:SetText(Addon.localization.OPTIONS)
 
     -- Scale slider
+    local top = -66
     Addon.fOptions.scale = CreateFrame("Slider", nil, Addon.fOptions.common, "IPOptionsSlider")
-    Addon.fOptions.scale:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -66)
-    Addon.fOptions.scale:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -66)
+    Addon.fOptions.scale:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.scale:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
     Addon.fOptions.scale:SetOrientation('HORIZONTAL')
     Addon.fOptions.scale:SetMinMaxValues(0, 100)
     Addon.fOptions.scale:SetValue(IPMTOptions.scale)
@@ -61,19 +62,43 @@ function Addon:RenderOptions()
         Addon:SetScale(self:GetValue())
     end)
 
+    -- TimerDirection caption
+    top = top - 44
+    Addon.fOptions.timerCaption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    Addon.fOptions.timerCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, top)
+    Addon.fOptions.timerCaption:SetJustifyH("CENTER")
+    Addon.fOptions.timerCaption:SetSize(120, 20)
+    Addon.fOptions.timerCaption:SetTextColor(1, 1, 1)
+    Addon.fOptions.timerCaption:SetText(Addon.localization.TIMERDIR)
+
+    -- TimerDirection selector
+    top = top - 24
+    Addon.fOptions.timerDirection = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
+    Addon.fOptions.timerDirection:SetHeight(30)
+    Addon.fOptions.timerDirection:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.timerDirection:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
+    Addon.fOptions.timerDirection:SetList(Addon.optionList.timerDir, IPMTOptions.timerDir)
+    Addon.fOptions.timerDirection:SetCallback({
+        OnSelect = function(self, key, text)
+            Addon:SetTimerDirection(key)
+        end,
+    })
+
     -- ProgressFormat caption
+    top = top - 34
     Addon.fOptions.progressCaption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    Addon.fOptions.progressCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -110)
+    Addon.fOptions.progressCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, top)
     Addon.fOptions.progressCaption:SetJustifyH("CENTER")
     Addon.fOptions.progressCaption:SetSize(120, 20)
     Addon.fOptions.progressCaption:SetTextColor(1, 1, 1)
     Addon.fOptions.progressCaption:SetText(Addon.localization.PROGRESS)
 
     -- ProgressFormat selector
+    top = top - 24
     Addon.fOptions.progressFormat = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
     Addon.fOptions.progressFormat:SetHeight(30)
-    Addon.fOptions.progressFormat:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -134)
-    Addon.fOptions.progressFormat:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -134)
+    Addon.fOptions.progressFormat:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.progressFormat:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
     Addon.fOptions.progressFormat:SetList(Addon.optionList.progress, IPMTOptions.progress)
     Addon.fOptions.progressFormat:SetCallback({
         OnSelect = function(self, key, text)
@@ -82,18 +107,20 @@ function Addon:RenderOptions()
     })
 
     -- Progress direction caption
+    top = top - 34
     Addon.fOptions.directionCaption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    Addon.fOptions.directionCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -168)
+    Addon.fOptions.directionCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, top)
     Addon.fOptions.directionCaption:SetJustifyH("CENTER")
     Addon.fOptions.directionCaption:SetSize(180, 20)
     Addon.fOptions.directionCaption:SetTextColor(1, 1, 1)
     Addon.fOptions.directionCaption:SetText(Addon.localization.DIRECTION)
 
     -- Progress direction selector
+    top = top - 24
     Addon.fOptions.progressDirection = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
     Addon.fOptions.progressDirection:SetHeight(30)
-    Addon.fOptions.progressDirection:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -192)
-    Addon.fOptions.progressDirection:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -192)
+    Addon.fOptions.progressDirection:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.progressDirection:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
     Addon.fOptions.progressDirection:SetList(Addon.optionList.direction, IPMTOptions.direction)
     Addon.fOptions.progressDirection:SetCallback({
         OnSelect = function(self, key, text)
@@ -102,10 +129,11 @@ function Addon:RenderOptions()
     })
 
     -- Minimap Button checkbox
+    top = top - 48
     Addon.fOptions.Mapbut = CreateFrame("CheckButton", nil, Addon.fOptions.common, "IPCheckButton")
     Addon.fOptions.Mapbut:SetHeight(22)
-    Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -240)
-    Addon.fOptions.Mapbut:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -240)
+    Addon.fOptions.Mapbut:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.Mapbut:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
     Addon.fOptions.Mapbut:SetText(Addon.localization.MAPBUTOPT)
     Addon.fOptions.Mapbut:SetScript("PostClick", function(self)
         Addon:ToggleMapButton(self:GetChecked())
@@ -114,14 +142,16 @@ function Addon:RenderOptions()
 
 
     -- Themes caption
+    top = top - 40
     Addon.fOptions.themeCaption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    Addon.fOptions.themeCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, -280)
+    Addon.fOptions.themeCaption:SetPoint("CENTER", Addon.fOptions.common, "TOP", 0, top)
     Addon.fOptions.themeCaption:SetJustifyH("CENTER")
     Addon.fOptions.themeCaption:SetSize(180, 20)
     Addon.fOptions.themeCaption:SetTextColor(1, 1, 1)
     Addon.fOptions.themeCaption:SetText(Addon.localization.THEME)
 
     -- Themes selector
+    top = top - 24
     local function GetThemesList()
         local list = {}
         for id,theme in pairs(IPMTTheme) do
@@ -131,8 +161,8 @@ function Addon:RenderOptions()
     end
     Addon.fOptions.theme = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
     Addon.fOptions.theme:SetHeight(30)
-    Addon.fOptions.theme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -304)
-    Addon.fOptions.theme:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, -304)
+    Addon.fOptions.theme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.theme:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
     Addon.fOptions.theme:SetList(GetThemesList, IPMTOptions.theme, true)
     Addon.fOptions.theme:SetCallback({
         OnSelect = function(self, key, text)
@@ -141,9 +171,10 @@ function Addon:RenderOptions()
     })
 
     -- New theme button
+    top = top - 36
     Addon.fOptions.newTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPListBox")
     Addon.fOptions.newTheme:SetSize(50, 30)
-    Addon.fOptions.newTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, -340)
+    Addon.fOptions.newTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
     Addon.fOptions.newTheme:SetList(Addon.optionList.createTheme, nil, true)
     Addon.fOptions.newTheme:SetBackdropColor(.15,.15,.15, 1)
     Addon.fOptions.newTheme.fText:Hide()
@@ -177,7 +208,7 @@ function Addon:RenderOptions()
 
     -- Remove theme button
     Addon.fOptions.removeTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
-    Addon.fOptions.removeTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 60, -340)
+    Addon.fOptions.removeTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 60, top)
     Addon.fOptions.removeTheme:SetSize(50, 30)
     Addon.fOptions.removeTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
     Addon.fOptions.removeTheme.fTexture:SetSize(20, 20)
@@ -215,7 +246,7 @@ function Addon:RenderOptions()
 
     -- Restore theme button
     Addon.fOptions.restoreTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
-    Addon.fOptions.restoreTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 120, -340)
+    Addon.fOptions.restoreTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 120, top)
     Addon.fOptions.restoreTheme:SetSize(50, 30)
     Addon.fOptions.restoreTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
     Addon.fOptions.restoreTheme.fTexture:SetSize(20, 20)
@@ -237,7 +268,7 @@ function Addon:RenderOptions()
 
     -- Edit Theme button
     Addon.fOptions.editTheme = CreateFrame("Button", nil, Addon.fOptions.common, "IPButton")
-    Addon.fOptions.editTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 180, -340)
+    Addon.fOptions.editTheme:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 180, top)
     Addon.fOptions.editTheme:SetSize(50, 30)
     Addon.fOptions.editTheme:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
     Addon.fOptions.editTheme.fTexture:SetSize(20, 20)
@@ -324,8 +355,8 @@ function Addon:RenderOptions()
     Addon.fOptions.closeX.icon:SetPoint("CENTER", Addon.fOptions.closeX, "CENTER", 0, 0)
     Addon.fOptions.closeX.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\x-close")
 
+    top = top - 60
     if Addon.season.options and Addon.season.options.Render then
-        local top = (-400)
         Addon.fOptions.season = {}
         -- Options caption
         Addon.fOptions.season.caption = Addon.fOptions.common:CreateFontString(nil, "BACKGROUND", "GameFontNormal")

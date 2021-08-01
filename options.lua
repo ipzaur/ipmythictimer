@@ -48,6 +48,12 @@ function Addon:SetProgressDirection(value)
     end
 end
 
+function Addon:SetTimerDirection(value)
+    if IPMTOptions.timerDir ~= value then
+        IPMTOptions.timerDir = value
+    end
+end
+
 function Addon:ToggleOptions()
     if Addon.opened.options then
         Addon:CloseOptions()

@@ -145,6 +145,11 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "Edit theme"
 Addon.localization.THEMENAME  = "Theme name"
+Addon.localization.TIMERDIRS  = {
+    desc = "Descending (36:00 -> 0:00)",
+    asc  = "Ascending (0:00 -> 36:00)",
+}
+Addon.localization.TIMERDIR   = "Timer direction"
 Addon.localization.TOP        = "Top"
 Addon.localization.TORMENTED  = {
     [179891] = "Soggodon the Breaker (Chains)",

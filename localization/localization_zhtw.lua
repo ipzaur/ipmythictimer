@@ -146,6 +146,11 @@ Addon.localization.THEMEBUTNS = {
 }
 Addon.localization.THEMEDITOR = "編輯主題"
 Addon.localization.THEMENAME  = "主題名稱"
+Addon.localization.TIMERDIRS  = {
+    desc = "降序 (36:00 -> 0:00)",
+    asc  = "升序 (0:00 -> 36:00)",
+}
+Addon.localization.TIMERDIR   = "Timer direction" -- need correct
 Addon.localization.TOP        = "頂部"
 Addon.localization.TORMENTED  = {
     [179891] = "『破壞者』索格登 (鎖鏈)",

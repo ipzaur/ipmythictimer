@@ -62,11 +62,13 @@ function Addon.deaths:Record(playerName)
     if IPMTDungeon.deathes.list == nil then
         IPMTDungeon.deathes.list = {}
     end
+    local _, class = UnitClass(playerName)
     table.insert(IPMTDungeon.deathes.list, {
         playerName = playerName,
         time       = IPMTDungeon.time,
         enemy      = enemy,
         damage     = damage,
+        class      = class,
         spell      = {
             id   = spellId,
             icon = spellIcon,
@@ -89,19 +91,22 @@ function Addon.deaths:ShowTooltip(self)
 
         local counts = {}
         for i, death in ipairs(IPMTDungeon.deathes.list) do
-            if counts[death.playerName] then
-                counts[death.playerName] = counts[death.playerName] + 1
+            if counts[death.playerName] ~= nil then
+                counts[death.playerName].count = counts[death.playerName].count + 1
             else
-                counts[death.playerName] = 1
+                counts[death.playerName] = {
+                    count = 1,
+                    class = death.class,
+                }
             end
         end
         local list = {}
-        for playerName, count in pairs(counts) do
+        for playerName, deathInfo in pairs(counts) do
             local _, class = UnitClass(playerName)
             table.insert(list, {
-                count      = count,
+                count      = deathInfo.count,
                 playerName = playerName,
-                class      = class,
+                class      = deathInfo.class,
             })
         end
         table.sort(list, function(a, b)
