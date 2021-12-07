@@ -37,7 +37,7 @@ Addon.localization.CORRUPTED = {
 
 Addon.localization.DAMAGE     = "Урон"
 Addon.localization.DECORELEMS = "Декоративные элементы"
-Addon.localization.DEFAULT    = "По-умолчанию"
+Addon.localization.DEFAULT    = "По умолчанию"
 Addon.localization.DEATHCOUNT = "Смертей"
 Addon.localization.DEATHSHOW  = "Нажмите для подробной информации"
 Addon.localization.DEATHTIME  = "Потеряно времени"

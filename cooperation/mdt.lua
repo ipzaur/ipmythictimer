@@ -37,12 +37,14 @@ Addon.MDTdungeon = {
 
 -- BfA
     [934]  = 15, -- Atal Dazar
+
     [936]  = 16, -- Freehold
 
     [942]  = 18, -- Shrine of the Storm
     [1039] = 18, -- Shrine of the Storm
 
     [1004] = 17, -- Kings Rest
+
     [1010] = 21, -- The Motherlode
 
     [1015] = 24, -- Waycrest Manor
@@ -55,6 +57,7 @@ Addon.MDTdungeon = {
     [1043] = 20, -- Temple of Sethraliss
 
     [1041] = 22, -- The Underrot
+
     [1162] = 19, -- Siege of Bolarus
 
     [974] = 23, -- Tol Dagor
@@ -70,6 +73,45 @@ Addon.MDTdungeon = {
     [1491] = 26, -- Mechagon City (Workshop)
     [1494] = 26, -- Mechagon City (Workshop)
     [1497] = 26, -- Mechagon City (Workshop)
+
+
+-- Legion
+    [751] = 1, -- Black Rook Hold
+    [752] = 1, -- Black Rook Hold
+    [753] = 1, -- Black Rook Hold
+    [754] = 1, -- Black Rook Hold
+    [755] = 1, -- Black Rook Hold
+    [756] = 1, -- Black Rook Hold
+
+    [845] = 2, -- Cathedral of Eternal Night
+    [846] = 2, -- Cathedral of Eternal Night
+    [847] = 2, -- Cathedral of Eternal Night
+    [848] = 2, -- Cathedral of Eternal Night
+    [849] = 2, -- Cathedral of Eternal Night
+
+    [761] = 3, -- Court of Stars
+    [762] = 3, -- Court of Stars
+    [763] = 3, -- Court of Stars
+
+    [733] = 4, -- Darkheart Thicket
+
+    [713] = 5, -- Eye of Azshara
+
+    [703] = 6, -- Halls of Valor
+    [704] = 6, -- Halls of Valor
+    [705] = 6, -- Halls of Valor
+
+    [706] = 7, -- Maw of Souls
+    [707] = 7, -- Maw of Souls
+    [708] = 7, -- Maw of Souls
+
+    [731] = 8, -- Neltharions Lair
+
+    [749] = 12, -- The Arcway
+
+    [710] = 13, -- Vault of the Wardens
+    [711] = 13, -- Vault of the Wardens
+    [712] = 13, -- Vault of the Wardens
 }
 
 
