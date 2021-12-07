@@ -1,3 +1,6 @@
+Version 1.3.19:
+  - Legion dungeons linked with MDT
+
 Version 1.3.18:
   - Change timer direction added
   - Fixed bug with class color if someone leave party
