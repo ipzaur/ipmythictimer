@@ -310,6 +310,46 @@ local function UpdateTime(block, elapsedTime)
 end
 hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
 
+local function fillMapGroupID(mapID)
+    if mapID == 1490 then
+        return {{
+            mapID = 1490,
+        }}
+    elseif mapID == 1989 or mapID == 1990 or mapID == 1991 or mapID == 1992 then
+        return {{
+            mapID = 1989,
+        }}
+    elseif mapID == 1993 or mapID == 1995 or mapID == 1996 or mapID == 1997 then
+        return {{
+            mapID = 1997,
+        },{
+            mapID = 1996,
+        },{
+            mapID = 1993,
+        }}
+    else
+        return nil
+    end
+end
+
+local function fillEncountersID(mapID)
+    if mapID == 1989 then
+        return {{
+            encounterID = 2437,
+        },{
+            encounterID = 2454,
+        },{
+            encounterID = 2436,
+        },{
+            encounterID = 2452,
+        },{
+            encounterID = 2451,
+        }}
+    else
+        return nil
+    end
+end
+
 local function InitBossesInfo()
     IPMTDungeon.bossesKilled = 0
     if IPMTDungeon.bosses == nil then
@@ -318,18 +358,23 @@ local function InitBossesInfo()
             return
         end
         local uiMapGroupID = C_Map.GetMapGroupID(mapID)
-        local mapGroup = {}
-        if uiMapGroupID == nil or mapID == 1490 then
-            table.insert(mapGroup, {
-                mapID = mapID,
-            })
-        else
-            mapGroup = C_Map.GetMapGroupMembersInfo(uiMapGroupID)
+        local mapGroup = fillMapGroupID(mapID)
+        if mapGroup == nil then
+            if uiMapGroupID == nil then
+                mapGroup = {{
+                    mapID = mapID,
+                }}
+            else
+                mapGroup = C_Map.GetMapGroupMembersInfo(uiMapGroupID)
+            end
         end
         IPMTDungeon.bosses = {}
         for g, map in ipairs(mapGroup) do
             if (mapID ~= 1490 and map.mapID ~= 1490) or (mapID == 1490 and map.mapID == 1490) then
-                local encounters = C_EncounterJournal.GetEncountersOnMap(map.mapID)
+                local encounters = fillEncountersID(map.mapID)
+                if encounters == nil then
+                    encounters = C_EncounterJournal.GetEncountersOnMap(map.mapID)
+                end
                 for e, encounter in ipairs(encounters) do
                     local name, _, _, _, _, journalInstanceID, dungeonEncounterID = EJ_GetEncounterInfo(encounter.encounterID)
                     table.insert(IPMTDungeon.bosses, {

@@ -34,6 +34,16 @@ Addon.MDTdungeon = {
     [1694] = 34, -- Spires Of Ascension
     [1695] = 34, -- Spires Of Ascension
 
+    [1989] = 37, -- Tazavesh Lower
+    [1990] = 37, -- Tazavesh Lower
+    [1991] = 37, -- Tazavesh Lower
+    [1992] = 37, -- Tazavesh Lower
+
+    [1993] = 38, -- Tazavesh Upper
+    [1995] = 38, -- Tazavesh Upper
+    [1996] = 38, -- Tazavesh Upper
+    [1997] = 38, -- Tazavesh Upper
+
 
 -- BfA
     [934]  = 15, -- Atal Dazar

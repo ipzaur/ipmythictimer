@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-Addon.version = 1318
+Addon.version = 1320
 
 Addon.AFFIX_TEEMING = 5
 
@@ -20,7 +20,7 @@ Addon.THEME_ACTIONS_EXPORT = 4
 Addon.DUNGEON_ARTWORK = 'dungeon'
 
 Addon.season = {
-    number   = 92,
+    number   = 93,
     isActive = false,
 }
 
