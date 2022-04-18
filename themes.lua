@@ -2,7 +2,7 @@ local AddonName, Addon = ...
 
 function Addon:InitThemes()
     local needInsetConvert = false
-    if IPMTTheme == nil then
+    if IPMTTheme == nil or #IPMTTheme == 0 then
         IPMTTheme = {
             [1] = {}
         }
@@ -190,6 +190,15 @@ function Addon:FillThemeEditor()
             end
         end
     end
+
+    Addon.fThemes.deaths.fFonts:SelectItem(theme.deaths.font, true)
+    Addon.fThemes.deaths.fFonts.fText:SetFont(theme.deaths.font, 12)
+    Addon.fThemes.deaths.fFontStyle:SelectItem(theme.deaths.fontStyle, true)
+    Addon.fThemes.deaths.fFontStyle.fText:SetFont(theme.deaths.font, 12)
+    Addon.fThemes.deaths.captionFontSize:SetValue(theme.deaths.captionFontSize)
+    Addon.fThemes.deaths.headerFontSize:SetValue(theme.deaths.headerFontSize)
+    Addon.fThemes.deaths.recordFontSize:SetValue(theme.deaths.recordFontSize)
+
     for decorID, info in ipairs(theme.decors) do
         Addon:RenderDecorEditor(decorID)
         Addon:ToggleVisible(decorID, true)
@@ -213,34 +222,44 @@ function Addon:ToggleVisible(frame, woSave)
     local element
     local elemInfo
     local editorElement
-    if type(frame) == "number" then
-        element = Addon.fMain.decors[frame]
-        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
-        editorElement = Addon.fThemes.decors[frame]
-    else
-        element = Addon.fMain[frame]
-        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
-        editorElement = Addon.fThemes[frame]
-    end
-    if woSave ~= true then
-        elemInfo.hidden = not elemInfo.hidden
-    end
-
-    if type(frame) == "number" then
-        if elemInfo.hidden then
-            element:Hide()
-        else
-            element:Show()
+    if frame == 'deaths' then
+        editorElement = Addon.fThemes.deaths
+        if not woSave then
+            Addon.deaths:Toggle(nil, true)
         end
+        elemInfo = {
+            hidden = not Addon.fDeaths:IsShown(),
+        }
     else
-        if elemInfo.hidden then
-            element:SetBackdropColor(.85,0,0, .35)
+        if type(frame) == "number" then
+            element = Addon.fMain.decors[frame]
+            elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
+            editorElement = Addon.fThemes.decors[frame]
         else
-            local alpha = .15
-            if woSave == true then
-                alpha = 0
+            element = Addon.fMain[frame]
+            elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+            editorElement = Addon.fThemes[frame]
+        end
+        if woSave ~= true then
+            elemInfo.hidden = not elemInfo.hidden
+        end
+
+        if type(frame) == "number" then
+            if elemInfo.hidden then
+                element:Hide()
+            else
+                element:Show()
             end
-            element:SetBackdropColor(1,1,1, alpha)
+        else
+            if elemInfo.hidden then
+                element:SetBackdropColor(.85,0,0, .35)
+            else
+                local alpha = .15
+                if woSave == true then
+                    alpha = 0
+                end
+                element:SetBackdropColor(1,1,1, alpha)
+            end
         end
     end
     if elemInfo.hidden then
@@ -256,23 +275,29 @@ end
 function Addon:HoverVisible(frame, button)
     button.icon:SetAlpha(.9)
     local text
-    local element
-    if type(frame) == "number" then
-        element = Addon.fMain.decors[frame]
-        elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
+    if frame == 'deaths' then
+        if Addon.fDeaths:IsShown() then
+            text = Addon.localization.DEATHSHIDE
+        else
+            text = Addon.localization.DEATHSSHOW
+        end
     else
-        element = Addon.fMain[frame]
-        elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
-    end
-    if element.hidden then
-        text = Addon.localization.ELEMACTION.SHOW
-    else
-        text = Addon.localization.ELEMACTION.HIDE
+        local elemInfo
+        if type(frame) == "number" then
+            elemInfo = IPMTTheme[IPMTOptions.theme].decors[frame]
+        else
+            elemInfo = IPMTTheme[IPMTOptions.theme].elements[frame]
+        end
+        if elemInfo.hidden then
+            text = Addon.localization.ELEMACTION.SHOW
+        else
+            text = Addon.localization.ELEMACTION.HIDE
+        end
     end
     GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
     GameTooltip:SetText(text, .9, .9, 0, 1, true)
     GameTooltip:Show()
-    if type(frame) ~= "number" then
+    if type(frame) ~= "number" and frame ~= 'deaths' then
         Addon.fThemes[frame]:GetScript("OnEnter")(Addon.fThemes[frame])
     end
 end
@@ -493,6 +518,68 @@ function Addon:SetFontSize(frame, value, woSave)
     end
     if woSave ~= true then
         theme.elements[frame].fontSize = value
+    end
+end
+
+-- Deaths history
+local deathsColumns = {'name', 'enemy', 'damage', 'time'}
+function Addon:SetDeathsFont(filepath, woSave)
+    local theme = IPMTTheme[IPMTOptions.theme]
+    Addon.fDeaths.caption:SetFont(filepath, theme.deaths.captionFontSize)
+    for i,column in ipairs(deathsColumns) do
+        Addon.fDeaths.head[column]:SetFont(filepath, theme.deaths.headerFontSize)
+    end
+    for r, record in ipairs(Addon.fDeaths.line) do
+        for i, column in ipairs(deathsColumns) do
+            record[column]:SetFont(filepath, theme.deaths.recordFontSize)
+        end
+    end
+    if woSave ~= true then
+        theme.deaths.font = filepath
+    elseif Addon.opened.themes then
+        for i,fItem in ipairs(Addon.fThemes.deaths.fFontStyle.fItem) do
+            local _, _, style = fItem.fText:GetFont()
+            fItem.fText:SetFont(filepath, 12, style)
+            fItem.fText:SetWidth(250)
+            local width = math.ceil(fItem.fText:GetStringWidth()) + 20
+            fItem.fText:SetWidth(width)
+        end
+    end
+end
+
+function Addon:SetDeathsFontStyle(fontStyle, woSave)
+    local theme = IPMTTheme[IPMTOptions.theme]
+    Addon.fDeaths.caption:SetFont(theme.deaths.font, theme.deaths.captionFontSize, fontStyle)
+    for i,column in ipairs(deathsColumns) do
+        Addon.fDeaths.head[column]:SetFont(theme.deaths.font, theme.deaths.headerFontSize, fontStyle)
+    end
+    for r, record in ipairs(Addon.fDeaths.line) do
+        for i, column in ipairs(deathsColumns) do
+            record[column]:SetFont(theme.deaths.font, theme.deaths.recordFontSize, fontStyle)
+        end
+    end
+    if woSave ~= true then
+        theme.deaths.fontStyle = fontStyle
+    end
+end
+
+function Addon:SetDeathsFontSize(place, value, woSave)
+    local theme = IPMTTheme[IPMTOptions.theme]
+    if place == 'caption' then
+        Addon.fDeaths.caption:SetFont(theme.deaths.font, value)
+    elseif place == 'header' then
+        for i,column in ipairs(deathsColumns) do
+            Addon.fDeaths.head[column]:SetFont(theme.deaths.font, value)
+        end
+    else
+        for r, record in ipairs(Addon.fDeaths.line) do
+            for i, column in ipairs(deathsColumns) do
+                record[column]:SetFont(theme.deaths.font, value)
+            end
+        end
+    end
+    if woSave ~= true then
+        theme.deaths[place .. 'FontSize'] = value
     end
 end
 

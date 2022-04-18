@@ -48,6 +48,11 @@ Addon.localization.DIRECTIONS = {
     desc = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡紀錄"
+Addon.localization.DEATHSHIDE = "Close deaths history" -- need correct
+Addon.localization.DEATHSSHOW = "Show deaths history" -- need correct
+Addon.localization.DTHCAPTFS  = "Caption font size" -- need correct
+Addon.localization.DTHHEADFS  = "Column name font size" -- need correct
+Addon.localization.DTHRCRDPFS = "Row font size" -- need correct
 
 Addon.localization.ELEMENT    = {
     AFFIXES   = "啟動詞綴",
@@ -100,6 +105,7 @@ Addon.localization.JUSTIFYH   = "水平文字對齊"
 
 Addon.localization.LAYER      = "層級"
 Addon.localization.LEFT       = "左"
+Addon.localization.LIMITPRGRS = "Limit progress to 100%" -- need correct
 
 Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..
                                 "滑鼠左鍵（拖動）- 移動按鈕"

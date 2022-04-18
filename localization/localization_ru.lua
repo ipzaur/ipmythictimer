@@ -48,6 +48,11 @@ Addon.localization.DIRECTIONS = {
     desc = "По убыванию (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Журнал смертей"
+Addon.localization.DEATHSHIDE = "Закрыть журнал смертей"
+Addon.localization.DEATHSSHOW = "Открыть журнал смертей"
+Addon.localization.DTHCAPTFS  = "Размер шрифта заголовка"
+Addon.localization.DTHHEADFS  = "Размер шрифта колонок"
+Addon.localization.DTHRCRDPFS = "Размер шрифта строк"
 
 Addon.localization.ELEMENT    = {
     AFFIXES   = "Активные аффиксы",
@@ -100,6 +105,7 @@ Addon.localization.JUSTIFYH   = "Горизонтальное выравнива
 
 Addon.localization.LAYER      = "Слой"
 Addon.localization.LEFT       = "Слева"
+Addon.localization.LIMITPRGRS = "Ограничить прогресс на 100%"
 
 Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настройки\n" ..
                                 "ЛКМ (зажать) - передвинуть иконку"

@@ -471,12 +471,14 @@ function Addon:RenderThemeEditor()
 
     -- Clear database button
     Addon.fThemes.addDecor = CreateFrame("Button", nil, Addon.fThemes.fContent, "IPButton")
-    Addon.fThemes.addDecor:SetPoint("CENTER", Addon.fThemes.fContent, "BOTTOM", 0, 42)
+    Addon.fThemes.addDecor:SetPoint("CENTER", Addon.fThemes.fContent, "BOTTOM", 0, 440)
     Addon.fThemes.addDecor:SetSize(220, 30)
     Addon.fThemes.addDecor:SetText(Addon.localization.ADDELEMENT)
     Addon.fThemes.addDecor:SetScript("OnClick", function(self)
         Addon:AddDecor()
     end)
+
+    Addon:RenderDeaths(theme.deaths)
 
     Addon:RecalcThemesHeight()
 end
@@ -484,7 +486,7 @@ end
 local decorOuterHeight = 0
 function Addon:RecalcThemesHeight()
     local decorsHeight = (decorOuterHeight + 47) * #IPMTTheme[IPMTOptions.theme].decors
-    Addon.fThemes.fContent:SetSize(320, (top - 52) * -1 + decorsHeight)
+    Addon.fThemes.fContent:SetSize(320, (top - 52) * -1 + decorsHeight + Addon.fThemes.deaths:GetHeight() + 100)
 end
 
 function Addon:RenderFieldSet(frameParams, elemInfo)
@@ -935,4 +937,166 @@ function Addon:RenderDecorEditor(decorID)
 
     Addon:ToggleVisible(decorID, true)
     Addon:RecalcThemesHeight()
+end
+
+
+function Addon:RenderDeaths()
+    local frame = 'deaths'
+    local theme = IPMTTheme[IPMTOptions.theme]
+    Addon.fThemes.deaths = CreateFrame("Frame", nil, Addon.fThemes.fContent, "IPFieldSet")
+    Addon.fThemes.deaths:SetHeight(310)
+    Addon.fThemes.deaths:SetFrameStrata("MEDIUM")
+    Addon.fThemes.deaths:SetPoint("BOTTOMLEFT", Addon.fThemes.fContent, "BOTTOMLEFT", 10, 42)
+    Addon.fThemes.deaths:SetPoint("BOTTOMRIGHT", Addon.fThemes.fContent, "BOTTOMRIGHT", -10, 42)
+    Addon.fThemes.deaths:SetText(Addon.localization.DTHCAPTION)
+    Addon.fThemes.deaths:SetFont(Addon.DECOR_FONT, 16 + Addon.DECOR_FONTSIZE_DELTA)
+
+    local subTop = -30
+    -- Toggle Visible button
+    Addon.fThemes.deaths.toggle = CreateFrame("Button", nil, Addon.fThemes.deaths, BackdropTemplateMixin and "BackdropTemplate")
+    Addon.fThemes.deaths.toggle:SetPoint("RIGHT", Addon.fThemes.deaths, "TOPRIGHT", -10, subTop)
+    Addon.fThemes.deaths.toggle:SetSize(20, 20)
+    Addon.fThemes.deaths.toggle:SetBackdrop(Addon.backdrop)
+    Addon.fThemes.deaths.toggle:SetBackdropColor(0,0,0, 0)
+    Addon.fThemes.deaths.toggle:SetScript("OnClick", function(self)
+        Addon:ToggleVisible(frame)
+    end)
+    Addon.fThemes.deaths.toggle:SetScript("OnEnter", function(self, event, ...)
+        Addon:HoverVisible(frame, self)
+    end)
+    Addon.fThemes.deaths.toggle:SetScript("OnLeave", function(self, event, ...)
+        Addon:BlurVisible(frame, self)
+    end)
+    Addon.fThemes.deaths.toggle.icon = Addon.fThemes.deaths.toggle:CreateTexture()
+    Addon.fThemes.deaths.toggle.icon:SetSize(20, 20)
+    Addon.fThemes.deaths.toggle.icon:ClearAllPoints()
+    Addon.fThemes.deaths.toggle.icon:SetPoint("CENTER", Addon.fThemes.deaths.toggle, "CENTER", 0, 0)
+    Addon.fThemes.deaths.toggle.icon:SetTexture("Interface\\AddOns\\IPMythicTimer\\media\\buttons")
+    Addon.fThemes.deaths.toggle.icon:SetAlpha(.5)
+    Addon:ToggleVisible(frame, true)
+
+    -- Fonts caption
+    subTop = subTop - 10
+    Addon.fThemes.deaths.fontsCaption = Addon.fThemes.deaths:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    Addon.fThemes.deaths.fontsCaption:SetPoint("CENTER", Addon.fThemes.deaths, "TOP", 0, subTop)
+    Addon.fThemes.deaths.fontsCaption:SetJustifyH("CENTER")
+    Addon.fThemes.deaths.fontsCaption:SetSize(200, 20)
+    Addon.fThemes.deaths.fontsCaption:SetTextColor(1, 1, 1)
+    Addon.fThemes.deaths.fontsCaption:SetText(Addon.localization.FONT)
+    -- Fonts selector
+    subTop = subTop - 24
+    Addon.fThemes.deaths.fFonts = CreateFrame("Button", nil, Addon.fThemes.deaths, "IPListBox")
+    Addon.fThemes.deaths.fFonts:SetHeight(30)
+    Addon.fThemes.deaths.fFonts:SetPoint("LEFT", Addon.fThemes.deaths, "TOPLEFT", 20, subTop)
+    Addon.fThemes.deaths.fFonts:SetPoint("RIGHT", Addon.fThemes.deaths, "TOPRIGHT", -20, subTop)
+    Addon.fThemes.deaths.fFonts:SetList(GetFontList, theme.deaths.font)
+    Addon.fThemes.deaths.fFonts:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetDeathsFont(key, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetDeathsFont(theme.deaths.font)
+        end,
+        OnSelect = function(self, key, text)
+            Addon.fThemes.deaths.fFonts.fText:SetFont(key, 12)
+            Addon:SetDeathsFont(key)
+        end,
+        OnRenderItem = function(self, fItem, key, text)
+            fItem.fText:SetFont(key, 12)
+        end,
+    })
+
+    -- Font style caption
+    subTop = subTop - 34
+    Addon.fThemes.deaths.fontStyleCaption = Addon.fThemes.deaths:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    Addon.fThemes.deaths.fontStyleCaption:SetPoint("CENTER", Addon.fThemes.deaths, "TOP", 0, subTop)
+    Addon.fThemes.deaths.fontStyleCaption:SetJustifyH("CENTER")
+    Addon.fThemes.deaths.fontStyleCaption:SetSize(200, 20)
+    Addon.fThemes.deaths.fontStyleCaption:SetTextColor(1, 1, 1)
+    Addon.fThemes.deaths.fontStyleCaption:SetText(Addon.localization.FONTSTYLE)
+    -- Font style selector
+    subTop = subTop - 24
+    Addon.fThemes.deaths.fFontStyle = CreateFrame("Button", nil, Addon.fThemes.deaths, "IPListBox")
+    Addon.fThemes.deaths.fFontStyle:SetHeight(30)
+    Addon.fThemes.deaths.fFontStyle:SetPoint("LEFT", Addon.fThemes.deaths, "TOPLEFT", 20, subTop)
+    Addon.fThemes.deaths.fFontStyle:SetPoint("RIGHT", Addon.fThemes.deaths, "TOPRIGHT", -20, subTop)
+    Addon.fThemes.deaths.fFontStyle:SetList(Addon.optionList.fontStyle, theme.deaths.fontStyle, true)
+    Addon.fThemes.deaths.fFontStyle:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetDeathsFontStyle(key, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetDeathsFontStyle(theme.deaths.fontStyle)
+        end,
+        OnSelect = function(self, key, text)
+            Addon.fThemes.deaths.fFontStyle.fText:SetFont(theme.deaths.font, 12, key)
+            Addon:SetDeathsFontStyle(key)
+        end,
+        OnRenderItem = function(self, fItem, key, text)
+            fItem.fText:SetFont(theme.deaths.font, 12, key)
+        end,
+    })
+
+    -- Caption FontSize
+    subTop = subTop - 56
+    Addon.fThemes.deaths.captionFontSize = CreateFrame("Slider", nil, Addon.fThemes.deaths, "IPOptionsSlider")
+    Addon.fThemes.deaths.captionFontSize:SetPoint("LEFT", Addon.fThemes.deaths, "TOPLEFT", 10, subTop)
+    Addon.fThemes.deaths.captionFontSize:SetPoint("RIGHT", Addon.fThemes.deaths, "TOPRIGHT", -10, subTop)
+    Addon.fThemes.deaths.captionFontSize:SetOrientation('HORIZONTAL')
+    Addon.fThemes.deaths.captionFontSize:SetMinMaxValues(6, 30)
+    Addon.fThemes.deaths.captionFontSize:SetValueStep(1.0)
+    Addon.fThemes.deaths.captionFontSize:EnableMouseWheel(0)
+    Addon.fThemes.deaths.captionFontSize:SetObeyStepOnDrag(true)
+    Addon.fThemes.deaths.captionFontSize.Low:SetText('6')
+    Addon.fThemes.deaths.captionFontSize.High:SetText('30')
+    Addon.fThemes.deaths.captionFontSize:SetScript('OnValueChanged', function(self)
+        local value = self:GetValue()
+        self.Text:SetText(Addon.localization.DTHCAPTFS .. " (" .. value .. ")")
+        Addon:SetDeathsFontSize('caption', value)
+    end)
+    Addon.fThemes.deaths.captionFontSize:HookScript("OnEnter", function(self)
+        Addon.fThemes.deaths:GetScript("OnEnter")(Addon.fThemes.deaths)
+    end)
+
+    -- Header FontSize
+    subTop = subTop - 46
+    Addon.fThemes.deaths.headerFontSize = CreateFrame("Slider", nil, Addon.fThemes.deaths, "IPOptionsSlider")
+    Addon.fThemes.deaths.headerFontSize:SetPoint("LEFT", Addon.fThemes.deaths, "TOPLEFT", 10, subTop)
+    Addon.fThemes.deaths.headerFontSize:SetPoint("RIGHT", Addon.fThemes.deaths, "TOPRIGHT", -10, subTop)
+    Addon.fThemes.deaths.headerFontSize:SetOrientation('HORIZONTAL')
+    Addon.fThemes.deaths.headerFontSize:SetMinMaxValues(6, 24)
+    Addon.fThemes.deaths.headerFontSize:SetValueStep(1.0)
+    Addon.fThemes.deaths.headerFontSize:EnableMouseWheel(0)
+    Addon.fThemes.deaths.headerFontSize:SetObeyStepOnDrag(true)
+    Addon.fThemes.deaths.headerFontSize.Low:SetText('6')
+    Addon.fThemes.deaths.headerFontSize.High:SetText('24')
+    Addon.fThemes.deaths.headerFontSize:SetScript('OnValueChanged', function(self)
+        local value = self:GetValue()
+        self.Text:SetText(Addon.localization.DTHHEADFS .. " (" .. value .. ")")
+        Addon:SetDeathsFontSize('header', value)
+    end)
+    Addon.fThemes.deaths.headerFontSize:HookScript("OnEnter", function(self)
+        Addon.fThemes.deaths:GetScript("OnEnter")(Addon.fThemes.deaths)
+    end)
+
+    -- Record FontSize
+    subTop = subTop - 46
+    Addon.fThemes.deaths.recordFontSize = CreateFrame("Slider", nil, Addon.fThemes.deaths, "IPOptionsSlider")
+    Addon.fThemes.deaths.recordFontSize:SetPoint("LEFT", Addon.fThemes.deaths, "TOPLEFT", 10, subTop)
+    Addon.fThemes.deaths.recordFontSize:SetPoint("RIGHT", Addon.fThemes.deaths, "TOPRIGHT", -10, subTop)
+    Addon.fThemes.deaths.recordFontSize:SetOrientation('HORIZONTAL')
+    Addon.fThemes.deaths.recordFontSize:SetMinMaxValues(6, 20)
+    Addon.fThemes.deaths.recordFontSize:SetValueStep(1.0)
+    Addon.fThemes.deaths.recordFontSize:EnableMouseWheel(0)
+    Addon.fThemes.deaths.recordFontSize:SetObeyStepOnDrag(true)
+    Addon.fThemes.deaths.recordFontSize.Low:SetText('6')
+    Addon.fThemes.deaths.recordFontSize.High:SetText('20')
+    Addon.fThemes.deaths.recordFontSize:SetScript('OnValueChanged', function(self)
+        local value = self:GetValue()
+        self.Text:SetText(Addon.localization.DTHRCRDPFS .. " (" .. value .. ")")
+        Addon:SetDeathsFontSize('record', value)
+    end)
+    Addon.fThemes.deaths.recordFontSize:HookScript("OnEnter", function(self)
+        Addon.fThemes.deaths:GetScript("OnEnter")(Addon.fThemes.deaths)
+    end)
 end

@@ -165,6 +165,7 @@ Addon.defaultOption = {
         },
     },
     MDTversion = 0,
+    limitProgress = true,
 }
 
 Addon.cleanDungeon = {

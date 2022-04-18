@@ -111,6 +111,7 @@ end)
 
 Addon.fDeaths.line = {}
 function Addon:FillDeathRow(num, deathInfo, summary)
+    local theme = IPMTTheme[IPMTOptions.theme].deaths
     if Addon.fDeaths.line[num] then
         Addon.fDeaths.line[num]:Show()
     else
@@ -127,7 +128,6 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].name:ClearAllPoints()
         Addon.fDeaths.line[num].name:SetPoint("LEFT", 8, 0)
         Addon.fDeaths.line[num].name:SetJustifyH("LEFT")
-        Addon.fDeaths.line[num].name:SetFont(Addon.DECOR_FONT, 14 + Addon.DECOR_FONTSIZE_DELTA)
 
         Addon.fDeaths.line[num].spell = CreateFrame("Frame", nil, Addon.fDeaths.line[num], BackdropTemplateMixin and "BackdropTemplate")
         Addon.fDeaths.line[num].spell:SetSize(18, 18)
@@ -156,7 +156,6 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].enemy:ClearAllPoints()
         Addon.fDeaths.line[num].enemy:SetPoint("LEFT", 190, 0)
         Addon.fDeaths.line[num].enemy:SetJustifyH("LEFT")
-        Addon.fDeaths.line[num].enemy:SetFont(Addon.DECOR_FONT, 14 + Addon.DECOR_FONTSIZE_DELTA)
         Addon.fDeaths.line[num].enemy:SetTextColor(1, 1, 1)
 
         Addon.fDeaths.line[num].damage = Addon.fDeaths.line[num]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -164,7 +163,6 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].damage:ClearAllPoints()
         Addon.fDeaths.line[num].damage:SetPoint("RIGHT", -68, 0)
         Addon.fDeaths.line[num].damage:SetJustifyH("LEFT")
-        Addon.fDeaths.line[num].damage:SetFont(Addon.DECOR_FONT, 14 + Addon.DECOR_FONTSIZE_DELTA)
         Addon.fDeaths.line[num].damage:SetTextColor(1, .2, .2)
 
         Addon.fDeaths.line[num].time = Addon.fDeaths.line[num]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
@@ -172,15 +170,18 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].time:ClearAllPoints()
         Addon.fDeaths.line[num].time:SetPoint("RIGHT", -8, 0)
         Addon.fDeaths.line[num].time:SetJustifyH("RIGHT")
-        Addon.fDeaths.line[num].time:SetFont(Addon.DECOR_FONT, 14 + Addon.DECOR_FONTSIZE_DELTA)
         Addon.fDeaths.line[num].time:SetTextColor(1, 1, 1)
     end
 
     local color = RAID_CLASS_COLORS[deathInfo.class] or HIGHLIGHT_FONT_COLOR
     Addon.fDeaths.line[num].name:SetTextColor(color.r, color.g, color.b)
     Addon.fDeaths.line[num].name:SetText(deathInfo.playerName .. " (" .. summary .. ")")
+    Addon.fDeaths.line[num].name:SetFont(theme.font, theme.recordFontSize, theme.fontStyle)
     Addon.fDeaths.line[num].time:SetText(SecondsToClock(deathInfo.time))
+    Addon.fDeaths.line[num].time:SetFont(theme.font, theme.recordFontSize, theme.fontStyle)
     Addon.fDeaths.line[num].damage:SetText(deathInfo.damage)
+    Addon.fDeaths.line[num].damage:SetFont(theme.font, theme.recordFontSize, theme.fontStyle)
     Addon.fDeaths.line[num].spell.texture:SetTexture(deathInfo.spell.icon)
     Addon.fDeaths.line[num].enemy:SetText(deathInfo.enemy)
+    Addon.fDeaths.line[num].enemy:SetFont(theme.font, theme.recordFontSize, theme.fontStyle)
 end

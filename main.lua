@@ -78,6 +78,10 @@ function Addon:EnemyDied(npcGUID)
     npcID = tonumber(npcID)
     local npcUID = spawnID .. "_" .. npcID
     if IPMTDungeon.prognosis[npcUID] then
+        if IPMTDungeon.trash.total <= IPMTDungeon.trash.current then
+            IPMTDungeon.trash.current = IPMTDungeon.trash.current + IPMTDungeon.prognosis[npcUID]
+            Addon:UpdateProgress()
+        end
         IPMTDungeon.prognosis[npcUID] = nil
     end
     if Addon:GetEnemyForces(npcID) == nil then
@@ -138,25 +142,32 @@ function Addon:UpdateProgress()
             if IPMTDungeon.trash.total == nil or IPMTDungeon.trash.total == 0 then
                 IPMTDungeon.trash.total = totalQuantity
             end
-            local currentTrash = tonumber(strsub(quantityString, 1, -2))
-            if IPMTDungeon.trash.current and currentTrash < IPMTDungeon.trash.total and currentTrash > IPMTDungeon.trash.current then
-                killInfo.progress = currentTrash - IPMTDungeon.trash.current
-                killInfo.progressTime = GetTime()
-                GrabMobInfo()
+            if IPMTDungeon.trash.total > IPMTDungeon.trash.current then
+                local currentTrash = tonumber(strsub(quantityString, 1, -2))
+                if IPMTDungeon.trash.current and currentTrash < IPMTDungeon.trash.total and currentTrash > IPMTDungeon.trash.current then
+                    killInfo.progress = currentTrash - IPMTDungeon.trash.current
+                    killInfo.progressTime = GetTime()
+                    GrabMobInfo()
+                end
+                IPMTDungeon.trash.current = currentTrash
             end
-            IPMTDungeon.trash.current = currentTrash
             if Addon.season.isActive and Addon.season.Progress then
                 Addon.season:Progress(IPMTDungeon.trash.current)
             end
+            local progress = IPMTDungeon.trash.current
             if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
-                local progress = IPMTDungeon.trash.current / IPMTDungeon.trash.total * 100
-                progress = math.min(100, progress)
+                progress = progress / IPMTDungeon.trash.total * 100
+                if IPMTOptions.limitProgress then
+                    progress = math.min(100, progress)
+                end
                 if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_DESC then
                     progress = 100 - progress
                 end
                 Addon.fMain.progress.text:SetFormattedText("%.2f%%", progress)
             else
-                local progress = math.min(IPMTDungeon.trash.current, IPMTDungeon.trash.total)
+                if IPMTOptions.limitProgress then
+                    progress = math.min(progress, IPMTDungeon.trash.total)
+                end
                 if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_ASC then
                     Addon.fMain.progress.text:SetText(progress .. "/" .. IPMTDungeon.trash.total)
                 else

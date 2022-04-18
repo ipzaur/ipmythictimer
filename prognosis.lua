@@ -68,16 +68,24 @@ function Addon:ShowPrognosis()
         end
         if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
             progress = progress / IPMTDungeon.trash.total * 100
-            progress = math.min(100, progress)
+            if IPMTOptions.limitProgress then
+                progress = math.min(100, progress)
+            end
             if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_DESC then
                 progress = 100 - progress
             end
             Addon.fMain.prognosis.text:SetFormattedText("%.2f%%", progress)
         else
             if IPMTOptions.direction == Addon.PROGRESS_DIRECTION_ASC then
-                progress = math.min(progress, IPMTDungeon.trash.total)
+                if IPMTOptions.limitProgress then
+                    progress = math.min(progress, IPMTDungeon.trash.total)
+                end
             else
-                progress = math.max(IPMTDungeon.trash.total - progress, 0)
+                if IPMTOptions.limitProgress then
+                    progress = math.max(IPMTDungeon.trash.total - progress, 0)
+                else
+                    progress = IPMTDungeon.trash.total - progress
+                end
             end
             Addon.fMain.prognosis.text:SetText(progress)
         end

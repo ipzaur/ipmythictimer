@@ -54,6 +54,15 @@ function Addon:SetTimerDirection(value)
     end
 end
 
+function Addon:SetLimitProgress(value)
+    if IPMTOptions.limitProgress ~= value then
+        IPMTOptions.limitProgress = value
+        if IPMTDungeon.keyActive then
+            Addon:UpdateProgress()
+        end
+    end
+end
+
 function Addon:ToggleOptions()
     if Addon.opened.options then
         Addon:CloseOptions()
@@ -145,6 +154,9 @@ function Addon:InitOptions()
     if globalVars ~= nil then
         IPMTOptions.global = globalVars
     end
+    if IPMTTheme[IPMTOptions.theme] == nil then
+        IPMTOptions.theme = 1
+    end
 end
 
 function Addon:ThemeAction(action)
@@ -200,6 +212,7 @@ function Addon:ApplyTheme(themeID)
     end
     Addon:SetFont(theme.font, true)
     Addon:SetFontStyle(theme.fontStyle, true)
+    Addon:SetDeathsFontStyle(theme.deaths.fontStyle, true)
     for decorID, info in ipairs(theme.decors) do
         Addon:RenderDecor(decorID)
     end

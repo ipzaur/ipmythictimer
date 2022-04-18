@@ -6,7 +6,7 @@ function Addon:RenderOptions()
     -- Options Frame
     Addon.fOptions = CreateFrame("Frame", "IPMTSettings", UIParent, BackdropTemplateMixin and "BackdropTemplate")
     Addon.fOptions:SetFrameStrata("MEDIUM")
-    Addon.fOptions:SetSize(270, 500)
+    Addon.fOptions:SetSize(270, 540)
     Addon.fOptions:ClearAllPoints()
     Addon.fOptions:SetPoint(IPMTOptions.position.options.point, IPMTOptions.position.options.x, IPMTOptions.position.options.y)
     Addon.fOptions:SetBackdrop(Addon.backdrop)
@@ -127,6 +127,18 @@ function Addon:RenderOptions()
             Addon:SetProgressDirection(key)
         end,
     })
+
+    -- Limit Progress checkbox
+    top = top - 34
+    Addon.fOptions.limitProgress = CreateFrame("CheckButton", nil, Addon.fOptions.common, "IPCheckButton")
+    Addon.fOptions.limitProgress:SetHeight(22)
+    Addon.fOptions.limitProgress:SetPoint("LEFT", Addon.fOptions.common, "TOPLEFT", 0, top)
+    Addon.fOptions.limitProgress:SetPoint("RIGHT", Addon.fOptions.common, "TOPRIGHT", 0, top)
+    Addon.fOptions.limitProgress:SetText(Addon.localization.LIMITPRGRS)
+    Addon.fOptions.limitProgress:SetScript("PostClick", function(self)
+        Addon:SetLimitProgress(self:GetChecked())
+    end)
+    Addon.fOptions.limitProgress:SetChecked(IPMTOptions.limitProgress)
 
     -- Minimap Button checkbox
     top = top - 48

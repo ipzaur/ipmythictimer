@@ -48,6 +48,11 @@ Addon.localization.DIRECTIONS = {
     desc = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡历史纪录"
+Addon.localization.DEATHSHIDE = "Close deaths history" -- need correct
+Addon.localization.DEATHSSHOW = "Show deaths history" -- need correct
+Addon.localization.DTHCAPTFS  = "Caption font size" -- need correct
+Addon.localization.DTHHEADFS  = "Column name font size" -- need correct
+Addon.localization.DTHRCRDPFS = "Row font size" -- need correct
 
 Addon.localization.ELEMENT    = {
     AFFIXES   = "激活词缀",
@@ -100,6 +105,7 @@ Addon.localization.JUSTIFYH   = "水平文本对齐"
 
 Addon.localization.LAYER      = "层"
 Addon.localization.LEFT       = "左"
+Addon.localization.LIMITPRGRS = "Limit progress to 100%" -- need correct
 
 Addon.localization.MAPBUT     = "鼠标左键(单击)- 切换选项\n" ..
                                 "鼠标左键(拖动)- 移动按钮"
@@ -150,7 +156,7 @@ Addon.localization.TIMERDIRS  = {
     desc = "降序 (36:00 -> 0:00)",
     asc  = "升序 (0:00 -> 36:00)",
 }
-Addon.localization.TIMERDIR   = "Timer direction" -- need correct
+Addon.localization.TIMERDIR   = "计时器方向"
 Addon.localization.TOP        = "顶部"
 Addon.localization.TORMENTED  = {
     [179891] = "粉碎者索苟冬 (锁链)",

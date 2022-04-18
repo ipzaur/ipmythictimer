@@ -194,8 +194,14 @@ Addon.theme[1] = {
         },
     },
     decors = {},
+    deaths = {
+        font            = Addon.DECOR_FONT,
+        fontStyle       = '',
+        captionFontSize = 20 + Addon.DECOR_FONTSIZE_DELTA,
+        headerFontSize  = 16 + Addon.DECOR_FONTSIZE_DELTA,
+        recordFontSize  = 14 + Addon.DECOR_FONTSIZE_DELTA,
+    },
 }
-
 Addon.defaultDecor = {
     size = {
         w = 120,

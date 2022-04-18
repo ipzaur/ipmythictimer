@@ -50,6 +50,11 @@ Addon.localization.DIRECTIONS = {
     desc = "Descendant (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "Historique des morts"
+Addon.localization.DEATHSHIDE = "Close deaths history" -- need correct
+Addon.localization.DEATHSSHOW = "Show deaths history" -- need correct
+Addon.localization.DTHCAPTFS  = "Caption font size" -- need correct
+Addon.localization.DTHHEADFS  = "Column name font size" -- need correct
+Addon.localization.DTHRCRDPFS = "Row font size" -- need correct
 
 Addon.localization.ELEMENT    = {
     AFFIXES   = "Affixes actifs",
@@ -102,6 +107,7 @@ Addon.localization.JUSTIFYH   = "Texte horizontal justifié"
 
 Addon.localization.LAYER      = "Étage"
 Addon.localization.LEFT       = "Gauche"
+Addon.localization.LIMITPRGRS = "Limit progress to 100%" -- need correct
 
 Addon.localization.MAPBUT     = "LMB (click) - basculer les options\n" ..
                                 "LMB (drag) - bouton de déplacement"
