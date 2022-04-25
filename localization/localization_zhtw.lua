@@ -18,9 +18,9 @@ Addon.localization.COLOR      = "顏色"
 Addon.localization.COLORDESCR = {
     TIMER = {
         [-1] = '計時器顏色（如果按鍵已指定）',
-        [0]  = '計時器顏色（如果時間在+1範圍內）',
-        [1]  = '計時器顏色（如果時間在+2範圍內）',
-        [2]  = '計時器顏色（如果時間在+3範圍內）',
+        [0]  = '計時器顏色（如果在+1時限內）',
+        [1]  = '計時器顏色（如果在+2時限內）',
+        [2]  = '計時器顏色（如果在+3時限內）',
     },
     OBELISKS = {
         [-1] = '存活的方尖碑顏色',
@@ -48,11 +48,11 @@ Addon.localization.DIRECTIONS = {
     desc = "降序 (100% -> 0%)",
 }
 Addon.localization.DTHCAPTION = "死亡紀錄"
-Addon.localization.DEATHSHIDE = "Close deaths history" -- need correct
-Addon.localization.DEATHSSHOW = "Show deaths history" -- need correct
-Addon.localization.DTHCAPTFS  = "Caption font size" -- need correct
-Addon.localization.DTHHEADFS  = "Column name font size" -- need correct
-Addon.localization.DTHRCRDPFS = "Row font size" -- need correct
+Addon.localization.DEATHSHIDE = "關閉死亡紀錄"
+Addon.localization.DEATHSSHOW = "顯示死亡紀錄"
+Addon.localization.DTHCAPTFS  = "標題字體大小"
+Addon.localization.DTHHEADFS  = "欄位名字字體大小"
+Addon.localization.DTHRCRDPFS = "行字體大小"
 
 Addon.localization.ELEMENT    = {
     AFFIXES   = "啟動詞綴",
@@ -105,7 +105,7 @@ Addon.localization.JUSTIFYH   = "水平文字對齊"
 
 Addon.localization.LAYER      = "層級"
 Addon.localization.LEFT       = "左"
-Addon.localization.LIMITPRGRS = "Limit progress to 100%" -- need correct
+Addon.localization.LIMITPRGRS = "限制進度到100%"
 
 Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..
                                 "滑鼠左鍵（拖動）- 移動按鈕"
@@ -156,7 +156,7 @@ Addon.localization.TIMERDIRS  = {
     desc = "降序 (36:00 -> 0:00)",
     asc  = "升序 (0:00 -> 36:00)",
 }
-Addon.localization.TIMERDIR   = "Timer direction" -- need correct
+Addon.localization.TIMERDIR   = "計時器方向" -- need correct
 Addon.localization.TOP        = "頂部"
 Addon.localization.TORMENTED  = {
     [179891] = "『破壞者』索格登 (鎖鏈)",
