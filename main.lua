@@ -78,8 +78,9 @@ function Addon:EnemyDied(npcGUID)
     npcID = tonumber(npcID)
     local npcUID = spawnID .. "_" .. npcID
     if IPMTDungeon.prognosis[npcUID] then
-        if IPMTDungeon.trash.total <= IPMTDungeon.trash.current then
-            IPMTDungeon.trash.current = IPMTDungeon.trash.current + IPMTDungeon.prognosis[npcUID]
+        local progress = IPMTDungeon.trash.current + IPMTDungeon.prognosis[npcUID]
+        if IPMTDungeon.trash.total < progress then
+            IPMTDungeon.trash.current = progress
             Addon:UpdateProgress()
         end
         IPMTDungeon.prognosis[npcUID] = nil
@@ -142,7 +143,7 @@ function Addon:UpdateProgress()
             if IPMTDungeon.trash.total == nil or IPMTDungeon.trash.total == 0 then
                 IPMTDungeon.trash.total = totalQuantity
             end
-            if IPMTDungeon.trash.total > IPMTDungeon.trash.current then
+            if IPMTDungeon.trash.total >= IPMTDungeon.trash.current then
                 local currentTrash = tonumber(strsub(quantityString, 1, -2))
                 if IPMTDungeon.trash.current and currentTrash < IPMTDungeon.trash.total and currentTrash > IPMTDungeon.trash.current then
                     killInfo.progress = currentTrash - IPMTDungeon.trash.current

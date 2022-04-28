@@ -2,8 +2,6 @@ if GetLocale() ~= "frFR" then return end
 
 local AddonName, Addon = ...
 
-Addon.localization = {}
-
 Addon.localization.ADDELEMENT = "Ajouter un élément"
 
 Addon.localization.BACKGROUND = "Fond"
