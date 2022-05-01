@@ -187,6 +187,7 @@ Addon.cleanDungeon = {
         total   = 0,
         current = 0,
         killed  = 0,
+        grabbed = 0,
     },
     combat      = {
         boss   = false,

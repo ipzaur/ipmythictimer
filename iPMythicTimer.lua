@@ -26,6 +26,7 @@ local function OnTooltipSetUnit(tooltip)
     end
 end
 
+local debugLines = {}
 local function PrintDebug()
 --[[    local text = Addon:PrintObject(IPMTDungeon, 'dungeon.', true)
     text = text .. "\n\n" .. Addon:PrintObject(IPMTOptions, 'IPMTOptions.', true)
@@ -40,14 +41,28 @@ local function PrintDebug()
         end
     end--]]
 
-
+--[[
     local text = Addon:PrintObject(Addon.theme, 'Addon.theme.', true)
     text = text .. "\n\n" .. Addon:PrintObject(IPMTTheme, 'IPMTTheme.', true)
+--]]
+    local text = ""
+    for i,line in ipairs(debugLines) do
+        text = text .. line .. "\n"
+    end
 
-
-    print('debug')
-    Addon.fDebug:Show()
+    if not Addon.fDebug:IsShown() then
+        Addon.fDebug:Show()
+        print('debug')
+    end
     Addon.fDebug.textarea:SetText(text)
+end
+
+function Addon:AddDebug(text)
+    if #debugLines >= 17 then
+       table.remove(debugLines, 1)
+    end
+    table.insert(debugLines, text)
+    PrintDebug()
 end
 
 function Addon:StartAddon()
