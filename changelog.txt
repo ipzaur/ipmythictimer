@@ -1,3 +1,6 @@
+Version 1.3.23:
+  - Bug with progress fixed
+
 Version 1.3.22:
   - zhTW localization updated
   - some fixes
