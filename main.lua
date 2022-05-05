@@ -73,22 +73,23 @@ local function GrabMobInfo(npcID)
     end
 end
 
+local lastDeathEvent = 0 -- 1=CLEU, 2=UpdateProgress
 function Addon:EnemyDied(npcGUID)
     local _, zero, server_id, instance_id, zone_uid, npcID, spawnID = strsplit("-", npcGUID)
     npcID = tonumber(npcID)
     local npcUID = spawnID .. "_" .. npcID
     if IPMTDungeon.prognosis[npcUID] then
         local progress = IPMTDungeon.trash.current + IPMTDungeon.prognosis[npcUID]
-        if IPMTDungeon.trash.total <= progress then
-            if IPMTDungeon.trash.grabbed > 0 then
-                IPMTDungeon.trash.current = IPMTDungeon.trash.grabbed + IPMTDungeon.prognosis[npcUID]
-                IPMTDungeon.trash.grabbed = 0
-            else
-                IPMTDungeon.trash.current = progress
-            end
+        if IPMTDungeon.trash.total >= IPMTDungeon.trash.current and IPMTDungeon.trash.grabbed > 0 then
+            IPMTDungeon.trash.current = IPMTDungeon.trash.grabbed + IPMTDungeon.prognosis[npcUID]
+            IPMTDungeon.trash.grabbed = 0
+            Addon:UpdateProgress()
+        elseif (IPMTDungeon.trash.total <= progress and lastDeathEvent == 1) or IPMTDungeon.trash.total <= IPMTDungeon.trash.current then
+            IPMTDungeon.trash.current = progress
             Addon:UpdateProgress()
         end
         IPMTDungeon.prognosis[npcUID] = nil
+        lastDeathEvent = 1
     end
     if Addon:GetEnemyForces(npcID) == nil then
         GrabMobInfo(npcID)
@@ -159,6 +160,7 @@ function Addon:UpdateProgress()
                     IPMTDungeon.trash.grabbed = IPMTDungeon.trash.current
                 end
                 IPMTDungeon.trash.current = currentTrash
+                lastDeathEvent = 2
             end
             local progress = IPMTDungeon.trash.current
             if Addon.season.isActive and Addon.season.Progress then
