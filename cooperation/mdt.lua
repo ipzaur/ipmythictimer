@@ -122,6 +122,31 @@ Addon.MDTdungeon = {
     [710] = 13, -- Vault of the Wardens
     [711] = 13, -- Vault of the Wardens
     [712] = 13, -- Vault of the Wardens
+
+    [809] = 9, -- Karazhan Lower
+    [810] = 9, -- Karazhan Lower
+    [811] = 9, -- Karazhan Lower
+    [812] = 9, -- Karazhan Lower
+    [813] = 9, -- Karazhan Lower
+    [814] = 9, -- Karazhan Lower
+
+    [815] = 10, -- Karazhan Upper
+    [816] = 10, -- Karazhan Upper
+    [817] = 10, -- Karazhan Upper
+    [818] = 10, -- Karazhan Upper
+    [819] = 10, -- Karazhan Upper
+    [820] = 10, -- Karazhan Upper
+    [821] = 10, -- Karazhan Upper
+    [822] = 10, -- Karazhan Upper
+
+
+-- WoD
+    [595] = 41, -- Iron Docks
+
+    [606] = 40, -- Grimrail Depot
+    [607] = 40, -- Grimrail Depot
+    [608] = 40, -- Grimrail Depot
+    [609] = 40, -- Grimrail Depot
 }
 
 

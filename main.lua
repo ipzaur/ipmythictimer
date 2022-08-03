@@ -333,14 +333,17 @@ end
 hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
 
 local function fillMapGroupID(mapID)
+    -- Mechagon Island (Junkyard)
     if mapID == 1490 then
         return {{
             mapID = 1490,
         }}
+    -- Tazavesh Lower
     elseif mapID == 1989 or mapID == 1990 or mapID == 1991 or mapID == 1992 then
         return {{
             mapID = 1989,
         }}
+    -- Tazavesh Upper
     elseif mapID == 1993 or mapID == 1995 or mapID == 1996 or mapID == 1997 then
         return {{
             mapID = 1997,
@@ -349,12 +352,23 @@ local function fillMapGroupID(mapID)
         },{
             mapID = 1993,
         }}
+    -- Karazhan Lower
+    elseif mapID == 809 or mapID == 810 or mapID == 811 or mapID == 812 or mapID == 813 or mapID == 814 then
+        return {{
+            mapID = 809,
+        }}
+    -- Karazhan Upper
+    elseif mapID == 815 or mapID == 816 or mapID == 817 or mapID == 818 or mapID == 819 or mapID == 820 or mapID == 821 or mapID == 822 then
+        return {{
+            mapID = 815,
+        }}
     else
         return nil
     end
 end
 
 local function fillEncountersID(mapID)
+    -- Tazavesh Lower
     if mapID == 1989 then
         return {{
             encounterID = 2437,
@@ -366,6 +380,28 @@ local function fillEncountersID(mapID)
             encounterID = 2452,
         },{
             encounterID = 2451,
+        }}
+    -- Karazhan Lower
+    elseif mapID == 809 then
+        return {{
+            encounterID = 1820,
+        },{
+            encounterID = 1835,
+        },{
+            encounterID = 1837,
+        },{
+            encounterID = 1825,
+        }}
+    -- Karazhan Upper
+    elseif mapID == 815 then
+        return {{
+            encounterID = 1836,
+        },{
+            encounterID = 1817,
+        },{
+            encounterID = 1818,
+        },{
+            encounterID = 1838,
         }}
     else
         return nil
