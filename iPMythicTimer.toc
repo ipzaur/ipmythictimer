@@ -3,7 +3,7 @@
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Ключей
 ## Author: iP
-## Version: 1.3.26
+## Version: 1.3.27
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon, IPMTTheme
 ## X-eMail: ipzaur@gmail.com
@@ -33,6 +33,7 @@ seasons\season84.lua
 seasons\season91.lua
 seasons\season92.lua
 seasons\season93.lua
+seasons\season94.lua
 
 frames\main.lua
 frames\help.lua
