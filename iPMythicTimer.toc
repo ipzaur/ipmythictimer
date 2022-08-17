@@ -1,4 +1,4 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Ключей
