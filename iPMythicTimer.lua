@@ -13,14 +13,23 @@ local function OnTooltipSetUnit(tooltip)
         local guID = unit and UnitGUID(unit)
 
         if guID then
-            local npcID = select(6, strsplit("-", guID))
-            npcID = tonumber(npcID)
-            local percent = Addon:GetEnemyForces(npcID)
-            if (percent ~= nil) then
-                if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
-                    percent = percent .. "%"
+            local npcInfo = nil
+            if Addon.season.GetInfoByNamePlate then
+                npcInfo = Addon.season:GetInfoByNamePlate(unit)
+            end
+            if npcInfo == nil then
+                local npcID = select(6, strsplit("-", guID))
+                npcID = tonumber(npcID)
+                local percent = Addon:GetEnemyForces(npcID)
+                if (percent ~= nil) then
+                    if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then
+                        percent = percent .. "%"
+                    end
+                    tooltip:AddDoubleLine("|cFFEEDE70" .. percent)
                 end
-                tooltip:AddDoubleLine("|cFFEEDE70" .. percent)
+            end
+            if npcInfo ~= nil then
+                tooltip:AddLine(npcInfo.tooltip)
             end
         end
     end
@@ -57,6 +66,10 @@ local function PrintDebug()
     Addon.fDebug.textarea:SetText(text)
 end
 
+function Addon:ClearDebug()
+    debugLines = {}
+    PrintDebug()
+end
 function Addon:AddDebug(text)
     if #debugLines >= 17 then
        table.remove(debugLines, 1)

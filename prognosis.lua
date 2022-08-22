@@ -35,11 +35,19 @@ local function GrabPrognosis()
                     local _, _, _, _, _, npcID, spawnID = strsplit("-", guID)
                     if spawnID ~= nil and npcID ~= nil then
                         local npcUID = spawnID .. "_" .. npcID
-                        if not IPMTDungeon.checkmobs[npcUID] and not IPMTDungeon.prognosis[npcUID] then
-                            npcID = tonumber(npcID)
-                            local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
-                            if forces then
-                                IPMTDungeon.prognosis[npcUID] = forces
+                        local npcInfo = nil
+                        if Addon.season.GetInfoByNamePlate then
+                            npcInfo = Addon.season:GetInfoByNamePlate(unitName, npcUID)
+                        end
+                        if npcInfo ~= nil then
+                            IPMTDungeon.prognosis[npcUID] = npcInfo.forces
+                        else
+                            if not IPMTDungeon.checkmobs[npcUID] and not IPMTDungeon.prognosis[npcUID] then
+                                npcID = tonumber(npcID)
+                                local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
+                                if forces then
+                                    IPMTDungeon.prognosis[npcUID] = forces
+                                end
                             end
                         end
                     end

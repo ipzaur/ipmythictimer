@@ -127,6 +127,10 @@ Addon.localization.RIGHT      = "Right"
 
 Addon.localization.SCALE      = "Scale"
 Addon.localization.SEASONOPTS = "Season options"
+Addon.localization.SHROUDED   = {
+    [189878] = "Nathrezim Infiltrator",
+    [190128] = "Zul'gamux",
+}
 Addon.localization.SOURCE     = "Source"
 Addon.localization.STARTINFO  = "iP Mythic Timer loaded. Type /ipmt for options."
 

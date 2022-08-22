@@ -460,6 +460,9 @@ function Addon:OnUpdate(elapsed)
         updateTimer = updateTimer + elapsed * 1000
         if updateTimer >= 300 then
             updateTimer = 0
+            if Addon.season.OnUpdate then
+                Addon.season:OnUpdate()
+            end
             Addon:ShowPrognosis()
             if IPMTDungeon.bosses == nil then
                 InitBossesInfo()

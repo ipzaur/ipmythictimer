@@ -127,6 +127,10 @@ Addon.localization.RIGHT      = "Справа"
 
 Addon.localization.SCALE      = "Масштаб"
 Addon.localization.SEASONOPTS = "Настройки для сезона"
+Addon.localization.SHROUDED   = {
+    [189878] = "Натрезим-лазутчик",
+    [190128] = "Зул'гамуз",
+}
 Addon.localization.SOURCE     = "Источник"
 Addon.localization.STARTINFO  = "iP Mythic Timer загружен. Для вызова настроек наберите /ipmt."
 
