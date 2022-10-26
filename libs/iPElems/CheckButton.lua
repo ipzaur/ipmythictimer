@@ -41,7 +41,7 @@ function IPCheckButtonMixin:OnLoad()
     self.fChecker:SetBackdropColor(1,1,1, 0)
     self.fChecker:SetBackdropBorderColor(1,1,1, .5)
 
-    self.fText = self:CreateFontString(nil, "MEDIUM", "GameFontNormal")
+    self.fText = self:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
     self.fText:SetPoint("TOPLEFT", self, "LEFT", 26, 20)
     self.fText:SetPoint("BOTTOMRIGHT", self, "RIGHT", 0, -20)
     self.fText:SetJustifyH("LEFT")

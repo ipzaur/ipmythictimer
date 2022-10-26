@@ -29,7 +29,7 @@ function IPFieldSetMixin:OnLoad()
     self.fTextBG:SetBackdropBorderColor(bgColor,bgColor,bgColor, 1)
     self.fTextBG:SetFrameStrata("MEDIUM")
 
-    self.fTextBG.fText = self.fTextBG:CreateFontString(nil, "MEDIUM", "GameFontNormal")
+    self.fTextBG.fText = self.fTextBG:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
     self.fTextBG.fText:SetSize(280, 22)
     self.fTextBG.fText:ClearAllPoints()
     self.fTextBG.fText:SetPoint("CENTER", self.fTextBG, "CENTER", 0, 0)

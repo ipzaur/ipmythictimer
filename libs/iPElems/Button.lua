@@ -34,7 +34,7 @@ function IPButtonMixin:OnLoad()
     self:SetBackdropColor(bgColor,bgColor,bgColor, 1)
     self:SetBackdropBorderColor(1,1,1, .5)
 
-    self.fText = self:CreateFontString(nil, "MEDIUM", "GameFontNormal")
+    self.fText = self:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
     self.fText:SetSize(190, 20)
     self.fText:ClearAllPoints()
     self.fText:SetPoint("CENTER", self, "CENTER", 0, 0)
