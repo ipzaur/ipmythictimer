@@ -1,7 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <Script file="ScrollBox.lua"/>
 
-    <ScrollFrame name="IPScrollBox" enableMouseWheel="true" virtual="true" mixin="IPScrollBoxMixin" inherits="UIPanelScrollFrameTemplate, BackdropTemplate">
+    <ScrollFrame name="IPScrollBox" virtual="true" mixin="IPScrollBoxMixin" inherits="UIPanelScrollFrameTemplate, BackdropTemplate">
         <ScrollChild>
             <Frame parentKey="fContent">
                 <Size x="200" y="300"/>

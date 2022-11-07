@@ -1,6 +1,35 @@
 local AddonName, Addon = ...
 
 Addon.MDTdungeon = {
+-- DF
+    [2071] = 51, -- Uldaman: Legacy of Tyr
+    [2072] = 51, -- Uldaman: Legacy of Tyr
+
+    [2073] = 44, -- The Azure Vault
+    [2074] = 44, -- The Azure Vault
+    [2075] = 44, -- The Azure Vault
+    [2076] = 44, -- The Azure Vault
+    [2077] = 44, -- The Azure Vault
+
+    [2080] = 50, -- Neltharus
+    [2081] = 50, -- Neltharus
+
+    [2082] = 49, -- Halls Of Infusion
+    [2083] = 49, -- Halls Of Infusion
+
+    [2093] = 43, -- The Nokhud Offensive
+
+    [2094] = 42, -- Ruby Life Pools
+    [2095] = 42, -- Ruby Life Pools
+
+    [2096] = 48, -- Brackenhide Hollow
+    [2106] = 48, -- Brackenhide Hollow
+
+    [2097] = 45, -- Algeth'ar Academy
+    [2098] = 45, -- Algeth'ar Academy
+    [2099] = 45, -- Algeth'ar Academy
+
+
 -- SL
     [1663] = 30, -- Halls of Atonement
     [1664] = 30, -- Halls of Atonement
@@ -141,12 +170,21 @@ Addon.MDTdungeon = {
 
 
 -- WoD
+    [574] = 46, -- Shadowmoon Burial Grounds
+    [575] = 46, -- Shadowmoon Burial Grounds
+    [576] = 46, -- Shadowmoon Burial Grounds
+
     [595] = 41, -- Iron Docks
 
     [606] = 40, -- Grimrail Depot
     [607] = 40, -- Grimrail Depot
     [608] = 40, -- Grimrail Depot
     [609] = 40, -- Grimrail Depot
+
+
+-- Pandaria
+    [791] = 47, -- Temple of the Jade Serpent
+    [792] = 47, -- Temple of the Jade Serpent
 }
 
 

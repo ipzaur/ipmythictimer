@@ -132,7 +132,7 @@ hooksecurefunc('GameMenuFrame_UpdateVisibleButtons', TryToHideMainMenu)
 local _G = getfenv(0)
 _G.hooksecurefunc("StaticPopup_EscapePressed", function()
     if Addon.opened.options then
-        if not GameMenuFrame:IsShown() and not InterfaceOptionsFrame:IsShown() then
+        if not GameMenuFrame:IsShown() and not SettingsPanel:IsShown() then
             Addon:CloseOptions()
             hideMainMenu = true
         end
@@ -142,7 +142,7 @@ end)
 function Addon:OpenSettingsFromPanel()
     Addon:ShowOptions()
     hideMainMenu = true
-    InterfaceOptionsFrame:Hide()
+    SettingsPanel:Hide()
 end
 
 function Addon:InitOptions()
