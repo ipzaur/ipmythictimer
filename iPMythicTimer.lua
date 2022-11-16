@@ -93,7 +93,7 @@ function Addon:StartAddon()
     Addon.fMain:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
     Addon.fMain:RegisterEvent("VARIABLES_LOADED")
 
-    GameTooltip:HookScript("OnTooltipSetUnit", OnTooltipSetUnit)
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, OnTooltipSetUnit)
 
     DEFAULT_CHAT_FRAME:AddMessage(Addon.localization.STARTINFO)
 end

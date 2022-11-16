@@ -565,11 +565,11 @@ end
 -- Copypasted from Angry Keystones
 local function InsertKeystone()
     for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
-        local slots = GetContainerNumSlots(container)
+        local slots = C_Container.GetContainerNumSlots(container)
         for slot = 1,slots do
-            local slotLink = select(7, GetContainerItemInfo(container, slot))
+            local slotLink = C_Container.GetContainerItemLink(container, slot)
             if slotLink and slotLink:match("|Hkeystone:") then
-                PickupContainerItem(container, slot)
+                C_Container.PickupContainerItem(container, slot)
                 if (CursorHasItem()) then
                     C_ChallengeMode.SlotKeystone()
                 end
