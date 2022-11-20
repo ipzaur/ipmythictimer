@@ -2,10 +2,16 @@ local AddonName, Addon = ...
 
 local LSM = LibStub("LibSharedMedia-3.0")
 
-local justifyList = {
+local justifyHList = {
     CENTER = 'CENTER',
     LEFT   = 'LEFT',
     RIGHT  = 'RIGHT',
+}
+
+local justifyVList = {
+    MIDDLE = 'MIDDLE',
+    TOP    = 'TOP',
+    BOTTOM = 'BOTTOM',
 }
 
 local GetTextureList = {
@@ -557,6 +563,51 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
     Addon.fThemes[frame].moveMode.icon:SetAlpha(.5)
     Addon.fThemes[frame].moveMode.icon:SetTexCoord(.25, .5, .5, 1)
 
+    if frameParams.canResize then
+        subTop = subTop - 40
+        -- Background width caption
+        Addon.fThemes[frame].widthCaption = Addon.fThemes[frame]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+        Addon.fThemes[frame].widthCaption:SetPoint("RIGHT", Addon.fThemes[frame], "TOP", -80, subTop)
+        Addon.fThemes[frame].widthCaption:SetJustifyH("RIGHT")
+        Addon.fThemes[frame].widthCaption:SetSize(70, 20)
+        Addon.fThemes[frame].widthCaption:SetTextColor(1, 1, 1)
+        Addon.fThemes[frame].widthCaption:SetText(Addon.localization.WIDTH)
+        -- Background width edit box
+        Addon.fThemes[frame].width = CreateFrame("EditBox", nil, Addon.fThemes[frame], "IPEditBox")
+        Addon.fThemes[frame].width:SetAutoFocus(false)
+        Addon.fThemes[frame].width:SetPoint("RIGHT", Addon.fThemes[frame], "TOP", -10, subTop)
+        Addon.fThemes[frame].width:SetSize(60, 30)
+        Addon.fThemes[frame].width:SetNumeric(true)
+        Addon.fThemes[frame].width:SetMaxLetters(4)
+        Addon.fThemes[frame].width:SetScript('OnTextChanged', function(self)
+            Addon:SetSize(frame, self:GetText(), nil)
+        end)
+        Addon.fThemes[frame].width:HookScript("OnEnter", function(self)
+            self:GetParent():OnEnter()
+        end)
+        -- Background height caption
+        Addon.fThemes[frame].heightCaption = Addon.fThemes[frame]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+        Addon.fThemes[frame].heightCaption:SetPoint("RIGHT", Addon.fThemes[frame], "TOPRIGHT", -80, subTop)
+        Addon.fThemes[frame].heightCaption:SetJustifyH("RIGHT")
+        Addon.fThemes[frame].heightCaption:SetSize(70, 20)
+        Addon.fThemes[frame].heightCaption:SetTextColor(1, 1, 1)
+        Addon.fThemes[frame].heightCaption:SetText(Addon.localization.HEIGHT)
+        -- Background height edit box
+        Addon.fThemes[frame].height = CreateFrame("EditBox", nil, Addon.fThemes[frame], "IPEditBox")
+        Addon.fThemes[frame].height:SetAutoFocus(false)
+        Addon.fThemes[frame].height:SetPoint("RIGHT", Addon.fThemes[frame], "TOPRIGHT", -10, subTop)
+        Addon.fThemes[frame].height:SetSize(60, 30)
+        Addon.fThemes[frame].height:SetNumeric(true)
+        Addon.fThemes[frame].height:SetMaxLetters(4)
+        Addon.fThemes[frame].height:SetScript('OnTextChanged', function(self)
+            Addon:SetSize(frame, nil, self:GetText())
+        end)
+        Addon.fThemes[frame].height:HookScript("OnEnter", function(self)
+            self:GetParent():OnEnter()
+        end)
+        subTop = subTop - 46
+    end
+
     if (frameParams.hasText or frameParams.colors) and elemInfo.color ~= nil then
         local colorInfo = Addon:CopyObject(elemInfo.color)
         if colorInfo.r ~= nil then
@@ -635,7 +686,7 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
         Addon.fThemes[frame].justifyH:SetHeight(30)
         Addon.fThemes[frame].justifyH:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
         Addon.fThemes[frame].justifyH:SetPoint("RIGHT", Addon.fThemes[frame], "TOPRIGHT", -10, subTop)
-        Addon.fThemes[frame].justifyH:SetList(justifyList)
+        Addon.fThemes[frame].justifyH:SetList(justifyHList)
         Addon.fThemes[frame].justifyH:SetCallback({
             OnHoverItem = function(self, fItem, key, text)
                 Addon:SetJustifyH(frame, key, true)
@@ -650,6 +701,39 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
         Addon.fThemes[frame].justifyH:HookScript("OnEnter", function(self)
             self:GetParent():OnEnter()
         end)
+
+        if frameParams.canAlignV then
+            -- Justify Vertical caption
+            subTop = subTop - 30
+            Addon.fThemes[frame].justifyVCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+            Addon.fThemes[frame].justifyVCaption:SetPoint("CENTER", Addon.fThemes[frame], "TOP", 0, subTop)
+            Addon.fThemes[frame].justifyVCaption:SetJustifyH("CENTER")
+            Addon.fThemes[frame].justifyVCaption:SetSize(250, 20)
+            Addon.fThemes[frame].justifyVCaption:SetTextColor(1, 1, 1)
+            Addon.fThemes[frame].justifyVCaption:SetText(Addon.localization.JUSTIFYV)
+
+            -- Justify Vertical
+            subTop = subTop - 24
+            Addon.fThemes[frame].justifyV = CreateFrame("Button", nil, Addon.fThemes[frame], "IPListBox")
+            Addon.fThemes[frame].justifyV:SetHeight(30)
+            Addon.fThemes[frame].justifyV:SetPoint("LEFT", Addon.fThemes[frame], "TOPLEFT", 10, subTop)
+            Addon.fThemes[frame].justifyV:SetPoint("RIGHT", Addon.fThemes[frame], "TOPRIGHT", -10, subTop)
+            Addon.fThemes[frame].justifyV:SetList(justifyVList)
+            Addon.fThemes[frame].justifyV:SetCallback({
+                OnHoverItem = function(self, fItem, key, text)
+                    Addon:SetJustifyV(frame, key, true)
+                end,
+                OnCancel = function(self)
+                    Addon:SetJustifyV(frame, elemInfo.justifyV)
+                end,
+                OnSelect = function(self, key, text)
+                    Addon:SetJustifyV(frame, key)
+                end,
+            })
+            Addon.fThemes[frame].justifyV:HookScript("OnEnter", function(self)
+                self:GetParent():OnEnter()
+            end)
+        end
 
     end
     if frameParams.hasIcons then

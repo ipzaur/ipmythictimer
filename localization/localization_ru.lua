@@ -102,6 +102,7 @@ Addon.localization.ICONSIZE   = "Размер иконки"
 Addon.localization.IMPORT     = "Импорт"
 
 Addon.localization.JUSTIFYH   = "Горизонтальное выравнивание текста"
+Addon.localization.JUSTIFYV   = "Вертикальное выравнивание текста"
 
 Addon.localization.LAYER      = "Слой"
 Addon.localization.LEFT       = "Слева"

@@ -102,6 +102,7 @@ Addon.localization.ICONSIZE   = "图标大小"
 Addon.localization.IMPORT     = "导入"
 
 Addon.localization.JUSTIFYH   = "水平文本对齐"
+Addon.localization.JUSTIFYV   = "Vertical text justify" -- need correct
 
 Addon.localization.LAYER      = "层"
 Addon.localization.LEFT       = "左"

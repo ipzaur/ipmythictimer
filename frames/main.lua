@@ -92,14 +92,22 @@ function Addon:RenderElement(info)
     Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, elemInfo.position.x, elemInfo.position.y)
     Addon.fMain[frame]:SetBackdrop(Addon.backdrop)
     Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+    if info.canResize then
+        Addon.fMain[frame]:SetSize(elemInfo.size.w, elemInfo.size.h)
+    end
     if info.hasText then
-        local justify = elemInfo.justifyH
-        if (justify == nil) then
-            justify = 'LEFT'
+        local justifyH = elemInfo.justifyH
+        if justifyH == nil then
+            justifyH = 'LEFT'
         end
         Addon.fMain[frame].text = Addon.fMain[frame]:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
         Addon.fMain[frame].text:SetAllPoints(Addon.fMain[frame])
-        if elemInfo.justifyV then
+        Addon.fMain[frame].text:SetJustifyH(elemInfo.justifyH)
+        if info.canAlignV then
+            local justifyV = elemInfo.justifyV
+            if justifyV == nil then
+                justifyV = 'BOTTOM'
+            end
             Addon.fMain[frame].text:SetJustifyV(elemInfo.justifyV)
         end
         Addon.fMain[frame].text:SetFont(theme.font, elemInfo.fontSize)

@@ -50,6 +50,8 @@ Addon.frames = {
         label = 'dungeonname',
         name = Addon.localization.ELEMENT.DUNGENAME,
         hasText = true,
+        canAlignV = true,
+        canResize = true,
         dummy = {
             text = Addon.localization.ELEMENT.DUNGENAME,
         },

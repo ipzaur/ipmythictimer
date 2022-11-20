@@ -102,6 +102,7 @@ Addon.localization.ICONSIZE   = "Icon size"
 Addon.localization.IMPORT     = "Import"
 
 Addon.localization.JUSTIFYH   = "Horizontal text justify"
+Addon.localization.JUSTIFYV   = "Vertical text alignment"
 
 Addon.localization.LAYER      = "Layer"
 Addon.localization.LEFT       = "Left"

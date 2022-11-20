@@ -187,23 +187,31 @@ function Addon:ApplyTheme(themeID)
     local theme = IPMTTheme[IPMTOptions.theme]
 
     Addon:ChangeDecor('main', theme.main, true)
-    for frame, info in pairs(theme.elements) do
+    for i, info in ipairs(Addon.frames) do
+        local frame = info.label
+        local elemInfo = theme.elements[frame]
         Addon:MoveElement(frame, nil, true)
-        if info.fontSize ~= nil then
-            Addon:SetFontSize(frame, info.fontSize, true)
-            Addon:SetJustifyH(frame, info.justifyH, true)
-            if info.color ~= nil then
-                if info.color.r ~= nil then
-                    Addon:SetColor(frame, info.color, nil, true)
+        if info.canResize then
+            Addon:SetSize(frame, elemInfo.size.w, elemInfo.size.h)
+        end
+        if elemInfo.fontSize ~= nil then
+            Addon:SetFontSize(frame, elemInfo.fontSize, true)
+            Addon:SetJustifyH(frame, elemInfo.justifyH, true)
+            if elemInfo.justifyV then
+                Addon:SetJustifyV(frame, elemInfo.justifyV, true)
+            end
+            if elemInfo.color ~= nil then
+                if elemInfo.color.r ~= nil then
+                    Addon:SetColor(frame, elemInfo.color, nil, true)
                 else
-                    Addon:SetColor(frame, info.color[0], nil, true)
+                    Addon:SetColor(frame, elemInfo.color[0], nil, true)
                 end
             end
         end
-        if info.iconSize then
-            Addon:SetIconSize(frame, info.iconSize, true)
+        if elemInfo.iconSize then
+            Addon:SetIconSize(frame, elemInfo.iconSize, true)
         end
-        if info.hidden then
+        if elemInfo.hidden then
             Addon.fMain[frame]:Hide()
         else
             Addon.fMain[frame]:Show()

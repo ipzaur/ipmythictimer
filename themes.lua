@@ -162,8 +162,8 @@ function Addon:FillThemeEditor()
     Addon.fThemes.fFontStyle:SelectItem(theme.fontStyle, true)
     Addon.fThemes.fFontStyle.fText:SetFont(theme.font, 12)
 
-    Addon.fThemes.bg.width:SetText(theme.main.size.w)
-    Addon.fThemes.bg.height:SetText(theme.main.size.h)
+    Addon.fThemes.bg.width:SetText(Addon:Round(theme.main.size.w))
+    Addon.fThemes.bg.height:SetText(Addon:Round(theme.main.size.h))
     Addon.fThemes.bg.background:SetText(theme.main.background.texture)
     Addon.fThemes.bg.backgroundColor:ColorChange(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a, true)
     Addon.fThemes.bg.backgroundInset:SetValue(theme.main.background.inset)
@@ -171,20 +171,29 @@ function Addon:FillThemeEditor()
     Addon.fThemes.bg.borderColor:ColorChange(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a, true)
     Addon.fThemes.bg.borderSize:SetValue(theme.main.border.size)
 
-    for frame, info in pairs(theme.elements) do
+    for i, info in ipairs(Addon.frames) do
+        local frame = info.label
+        local elemInfo = theme.elements[frame]
         Addon.fMain[frame]:Show()
         Addon:ToggleVisible(frame, true)
-        if info.fontSize ~= nil then
-            Addon.fThemes[frame].fontSize:SetValue(info.fontSize)
+        if info.canResize then
+            Addon.fThemes[frame].width:SetText(Addon:Round(elemInfo.size.w))
+            Addon.fThemes[frame].height:SetText(Addon:Round(elemInfo.size.h))
         end
-        if info.justifyH ~= nil then
-            Addon.fThemes[frame].justifyH:SelectItem(info.justifyH, true)
+        if elemInfo.fontSize ~= nil then
+            Addon.fThemes[frame].fontSize:SetValue(elemInfo.fontSize)
         end
-        if info.color ~= nil then
-            if info.color.r ~= nil then
-                Addon.fThemes[frame].color[-1]:ColorChange(info.color.r, info.color.g, info.color.b, info.color.a, true)
+        if elemInfo.justifyH ~= nil then
+            Addon.fThemes[frame].justifyH:SelectItem(elemInfo.justifyH, true)
+        end
+        if elemInfo.justifyV ~= nil then
+            Addon.fThemes[frame].justifyV:SelectItem(elemInfo.justifyV, true)
+        end
+        if elemInfo.color ~= nil then
+            if elemInfo.color.r ~= nil then
+                Addon.fThemes[frame].color[-1]:ColorChange(elemInfo.color.r, elemInfo.color.g, elemInfo.color.b, elemInfo.color.a, true)
             else
-                for i, color in pairs(info.color) do
+                for i, color in pairs(elemInfo.color) do
                     Addon.fThemes[frame].color[i]:ColorChange(color.r, color.g, color.b, color.a, true)
                 end
             end
@@ -811,9 +820,31 @@ function Addon:SetLayer(decorID, value, woSave)
         IPMTTheme[IPMTOptions.theme].decors[decorID].layer = value
     end
 end
+
 function Addon:SetJustifyH(frame, value, woSave)
     Addon.fMain[frame].text:SetJustifyH(value)
     if woSave ~= true then
         IPMTTheme[IPMTOptions.theme].elements[frame].justifyH = value
+    end
+end
+
+function Addon:SetJustifyV(frame, value, woSave)
+    Addon.fMain[frame].text:SetJustifyV(value)
+    if woSave ~= true then
+        IPMTTheme[IPMTOptions.theme].elements[frame].justifyV = value
+    end
+end
+
+function Addon:SetSize(frame, w, h, woSave)
+    if w == nil then
+        w = IPMTTheme[IPMTOptions.theme].elements[frame].size.w
+    end
+    if h == nil then
+        h = IPMTTheme[IPMTOptions.theme].elements[frame].size.h
+    end
+    Addon.fMain[frame]:SetSize(w, h)
+    if woSave ~= true then
+        IPMTTheme[IPMTOptions.theme].elements[frame].size.w = w
+        IPMTTheme[IPMTOptions.theme].elements[frame].size.h = h
     end
 end

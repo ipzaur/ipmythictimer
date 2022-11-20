@@ -562,7 +562,6 @@ local function EncounterEnd(encounterID, success)
     IPMTDungeon.combat.boss = false
 end
 
--- Copypasted from Angry Keystones
 local function InsertKeystone()
     for container = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
         local slots = C_Container.GetContainerNumSlots(container)
