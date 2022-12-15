@@ -20,7 +20,7 @@ Addon.THEME_ACTIONS_EXPORT = 4
 Addon.DUNGEON_ARTWORK = 'dungeon'
 
 Addon.season = {
-    number   = 94,
+    number   = 101,
     isActive = false,
 }
 
