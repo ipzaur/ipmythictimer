@@ -149,6 +149,9 @@ function Addon:FillDummy(onlyText)
             SetPortraitToTexture(Addon.fMain.affix[i].Portrait, filedataid)
             Addon.fMain.affix[i]:Show()
         end
+        if Addon.fool and Addon.fMain.affix[Addon.affixesCount]:IsShown() then
+            Addon.fMain.affix[Addon.affixesCount]:Hide()
+        end
     end
 end
 
@@ -618,8 +621,8 @@ function Addon:SetIconSize(frame, value, woSave)
             Addon.season:SetIconSize(value)
         end
     else
-        Addon.fMain[frame]:SetSize(value*4 + 10, value + 10)
-        for f = 1,4 do
+        Addon.fMain[frame]:SetSize(value*Addon.affixesCount + 10, value + 10)
+        for f = 1,Addon.affixesCount do
             local right = (-1) * (value + 1) * (f-1)
             Addon.fMain.affix[f]:SetSize(value, value)
             Addon.fMain.affix[f].Portrait:SetSize(value, value - 2)
@@ -681,7 +684,7 @@ function Addon:ToggleMovable(frame, enable)
     element:EnableMouse(element.isMovable)
     element:SetMovable(element.isMovable)
     if frame == 'affixes' then
-        for f = 1,4 do
+        for f = 1,Addon.affixesCount do
             Addon.fMain.affix[f]:EnableMouse(not Addon.fMain[frame].isMovable)
         end
     end

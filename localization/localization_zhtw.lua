@@ -36,6 +36,7 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "傷害"
+Addon.localization.DBCLEANED  = "怪物百分比數據庫已清除" -- need correct
 Addon.localization.DECORELEMS = "裝飾元素"
 Addon.localization.DEFAULT    = "預設"
 Addon.localization.DEATHCOUNT = "死亡人數"
@@ -84,6 +85,8 @@ Addon.localization.FONTSTYLES = {
     MONO    = "單色",
     THOUTLN = "粗外框",
 }
+Addon.localization.FOOLAFX    = "額外的" -- need correct
+Addon.localization.FOOLAFXDSC = "你的群裡好像多了一個詞綴。 他提醒某人..." -- need correct
 
 Addon.localization.HEIGHT     = "高度"
 Addon.localization.HELP = {

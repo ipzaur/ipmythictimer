@@ -4,6 +4,7 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 function Addon:CleanDB()
     IPMTDB = {}
+    print(Addon.localization.DBCLEANED)
 end
 function Addon:ToggleDBTooltip(self, show)
     if show then

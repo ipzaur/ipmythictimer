@@ -36,6 +36,7 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "Damage"
+Addon.localization.DBCLEANED  = "Monster percentage database cleared"
 Addon.localization.DECORELEMS = "Decorative elements"
 Addon.localization.DEFAULT    = "Default"
 Addon.localization.DEATHCOUNT = "Deaths"
@@ -84,6 +85,8 @@ Addon.localization.FONTSTYLES = {
     MONO    = "Monochrome",
     THOUTLN = "Thick outline",
 }
+Addon.localization.FOOLAFX    = "Additional"
+Addon.localization.FOOLAFXDSC = "There seems to be an additional affix in your group. And he is reminds someone..."
 
 Addon.localization.HEIGHT     = "Height"
 Addon.localization.HELP       = {

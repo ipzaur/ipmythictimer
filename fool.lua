@@ -6,6 +6,8 @@ if not (tonumber(day) == 1 and tonumber(month) == 4) then return end
 local AddonName, Addon = ...
 
 Addon.fool = true
+Addon.foolAffix = 9999
+Addon.affixesCount = 5
 
 function Addon:ShowFool()
     if Addon.fMain.fool == nil then
@@ -37,4 +39,12 @@ function Addon:HideFool()
             Addon.fMain.fool[value]:Hide()
         end
     end
+end
+
+function Addon:FoolUpdatePortrait()
+    SetPortraitTexture(Addon.fMain.affix[1].Portrait, "player")
+    if Addon.fMain.affix[1].Portrait:GetTexture() ~= nil then
+        return
+    end
+    C_Timer.After(1, Addon.FoolUpdatePortrait)
 end

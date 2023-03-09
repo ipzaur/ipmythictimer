@@ -159,7 +159,7 @@ function Addon:RenderElement(info)
     end)
     if frame == 'affixes' then
         Addon.fMain.affix = {}
-        for f = 1,4 do
+        for f = 1,Addon.affixesCount do
             Addon.fMain.affix[f] = CreateFrame("Frame", nil, Addon.fMain.affixes, "ScenarioChallengeModeAffixTemplate")
             Addon.fMain.affix[f]:SetScript("OnEnter", function(self, event, ...)
                 Addon:OnAffixEnter(self, f)

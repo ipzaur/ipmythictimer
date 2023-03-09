@@ -249,9 +249,8 @@ end
 function Addon:OnAffixEnter(self, iconNum)
     if not Addon.opened.options then
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        local affixNum = #IPMTDungeon.affixes - iconNum + 1
-        GameTooltip:SetText(IPMTDungeon.affixes[affixNum].name, 1, 1, 1, 1, true)
-        GameTooltip:AddLine(IPMTDungeon.affixes[affixNum].text, nil, nil, nil, true)
+        GameTooltip:SetText(IPMTDungeon.affixes[iconNum].name, 1, 1, 1, 1, true)
+        GameTooltip:AddLine(IPMTDungeon.affixes[iconNum].text, nil, nil, nil, true)
         GameTooltip:Show()
     end
 end
@@ -475,17 +474,29 @@ end
 local function initAffixes()
     Addon.season.isActive = false
     local level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
-    local count = #affixes
-    for i,affix in pairs(affixes) do
-        local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix)
-        local iconNum = count - i + 1
-        IPMTDungeon.affixes[i] = {
-            id   = affix,
-            name = name,
-            text = description,
-        }
-        SetPortraitToTexture(Addon.fMain.affix[iconNum].Portrait, filedataid)
-        Addon.fMain.affix[iconNum]:Show()
+    if Addon.fool then
+        tinsert(affixes, Addon.foolAffix)
+    end
+    local count = 1
+    for i=#affixes,1,-1 do
+        local affix = affixes[i]
+        Addon.fMain.affix[count]:Show()
+        if affix == Addon.foolAffix then
+            IPMTDungeon.affixes[count] = {
+                id   = Addon.foolAffix,
+                name = Addon.localization.FOOLAFX,
+                text = Addon.localization.FOOLAFXDSC,
+            }
+            Addon:FoolUpdatePortrait()
+        else
+            local name, description, filedataid = C_ChallengeMode.GetAffixInfo(affix)
+            IPMTDungeon.affixes[count] = {
+                id   = affix,
+                name = name,
+                text = description,
+            }
+            SetPortraitToTexture(Addon.fMain.affix[count].Portrait, filedataid)
+        end
 
         if affix == Addon.AFFIX_TEEMING then
             IPMTDungeon.isTeeming = true
@@ -493,9 +504,10 @@ local function initAffixes()
         if affix == Addon.season.affix then
             Addon.season.isActive = true
         end
+        count = count+1
     end
-    for a = count+1,4 do
-        Addon.fMain.affix[a]:Hide()
+    for i = #affixes+1,Addon.affixesCount do
+        Addon.fMain.affix[i]:Hide()
     end
 end
 

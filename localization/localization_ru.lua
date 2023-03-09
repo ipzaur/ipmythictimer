@@ -36,6 +36,7 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "Урон"
+Addon.localization.DBCLEANED  = "База данных с процентами монстров очищена"
 Addon.localization.DECORELEMS = "Декоративные элементы"
 Addon.localization.DEFAULT    = "По умолчанию"
 Addon.localization.DEATHCOUNT = "Смертей"
@@ -84,6 +85,8 @@ Addon.localization.FONTSTYLES  = {
     MONO    = "Монохромный",
     THOUTLN = "Толстый контур",
 }
+Addon.localization.FOOLAFX    = "Дополнительный"
+Addon.localization.FOOLAFXDSC = "Кажется, в вашей группе есть дополнительный аффикс. И он кого-то напоминает..."
 
 Addon.localization.HEIGHT     = "Высота"
 Addon.localization.HELP       = {

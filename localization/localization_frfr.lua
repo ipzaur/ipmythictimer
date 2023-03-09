@@ -36,6 +36,7 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "Dégâts"
+Addon.localization.DBCLEANED  = "Base de données de pourcentage de monstres effacée" -- need correct
 Addon.localization.DECORELEMS = "Éléments décoratifs"
 Addon.localization.DEFAULT    = "Défaut"
 Addon.localization.DEATHCOUNT = "Morts"
@@ -84,6 +85,8 @@ Addon.localization.FONTSTYLES = {
     MONO    = "Monochrome",
     THOUTLN = "Contour épais",
 }
+Addon.localization.FOOLAFX    = "Supplémentaire" -- need correct
+Addon.localization.FOOLAFXDSC = "Il semble y avoir un affixe supplémentaire dans votre groupe. Et il rappelle à quelqu'un..." -- need correct
 
 Addon.localization.HEIGHT     = "Hauteur"
 Addon.localization.HELP       = {

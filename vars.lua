@@ -24,6 +24,7 @@ Addon.season = {
     isActive = false,
 }
 
+Addon.affixesCount = 4
 Addon.FONT_ROBOTO_LIGHT = "Interface\\AddOns\\" .. AddonName .. "\\media\\RobotoCondensed-Light.ttf"
 Addon.FONT_ROBOTO = "Interface\\AddOns\\" .. AddonName .. "\\media\\RobotoCondensed-Regular.ttf"
 Addon.ACOUSTIC_STRING_X3 = "Interface\\AddOns\\" .. AddonName .. "\\media\\acoustic_string_x3.mp3"
