@@ -86,7 +86,7 @@ Addon.localization.FONTSTYLES = {
     THOUTLN = "加粗轮廓线",
 }
 Addon.localization.FOOLAFX    = "额外的" -- need correct
-Addon.localization.FOOLAFXDSC = "你的群里好像多了一个词缀。 他提醒某人..." -- need correct
+Addon.localization.FOOLAFXDSC = "你的群里好像多了一个词缀。 他看起来很眼熟..." -- need correct
 
 Addon.localization.HEIGHT     = "高度"
 Addon.localization.HELP = {

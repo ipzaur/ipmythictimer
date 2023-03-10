@@ -86,7 +86,7 @@ Addon.localization.FONTSTYLES  = {
     THOUTLN = "Толстый контур",
 }
 Addon.localization.FOOLAFX    = "Дополнительный"
-Addon.localization.FOOLAFXDSC = "Кажется, в вашей группе есть дополнительный аффикс. И он кого-то напоминает..."
+Addon.localization.FOOLAFXDSC = "Кажется, в вашей группе есть дополнительный аффикс. И он выглядит очень знакомо..."
 
 Addon.localization.HEIGHT     = "Высота"
 Addon.localization.HELP       = {

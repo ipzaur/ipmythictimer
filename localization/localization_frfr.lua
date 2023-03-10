@@ -86,7 +86,7 @@ Addon.localization.FONTSTYLES = {
     THOUTLN = "Contour épais",
 }
 Addon.localization.FOOLAFX    = "Supplémentaire" -- need correct
-Addon.localization.FOOLAFXDSC = "Il semble y avoir un affixe supplémentaire dans votre groupe. Et il rappelle à quelqu'un..." -- need correct
+Addon.localization.FOOLAFXDSC = "Il semble y avoir un affixe supplémentaire dans votre groupe. Et il a l'air très familier..." -- need correct
 
 Addon.localization.HEIGHT     = "Hauteur"
 Addon.localization.HELP       = {
