@@ -143,7 +143,7 @@ end)
 function Addon:OpenSettingsFromPanel()
     Addon:ShowOptions()
     hideMainMenu = true
-    SettingsPanel:Hide()
+    HideUIPanel(SettingsPanel)
 end
 
 function Addon:InitOptions()

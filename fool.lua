@@ -12,9 +12,17 @@ Addon.affixesCount = 5
 function Addon:ShowFool()
     if Addon.fMain.fool == nil then
         Addon.fMain.fool = {}
+        local point = 'RIGHT'
+        local rPoint = 'LEFT'
+        local x = -10
+        if Addon.fMain:GetLeft() < 100 then
+            point = 'LEFT'
+            rPoint = 'RIGHT'
+            x = 10
+        end
         for value = 1,3 do
             Addon.fMain.fool[value] = CreateFrame("Button", nil, Addon.fMain, "IPButton")
-            Addon.fMain.fool[value]:SetPoint("RIGHT", Addon.fMain, "LEFT", -10, -(value - 2)*24)
+            Addon.fMain.fool[value]:SetPoint(point, Addon.fMain, rPoint, x, -(value - 2)*24)
             Addon.fMain.fool[value]:SetSize(60, 20)
             Addon.fMain.fool[value]:SetText('+' .. (value*5) .. ' min')
             Addon.fMain.fool[value]:SetScript("OnClick", function(self)
