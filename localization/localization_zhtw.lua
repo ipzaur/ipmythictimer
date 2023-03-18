@@ -36,7 +36,7 @@ Addon.localization.CORRUPTED = {
 }
 
 Addon.localization.DAMAGE     = "傷害"
-Addon.localization.DBCLEANED  = "怪物百分比數據庫已清除" -- need correct
+Addon.localization.DBCLEANED  = "怪物百分比數據庫已清除"
 Addon.localization.DECORELEMS = "裝飾元素"
 Addon.localization.DEFAULT    = "預設"
 Addon.localization.DEATHCOUNT = "死亡人數"
@@ -85,8 +85,8 @@ Addon.localization.FONTSTYLES = {
     MONO    = "單色",
     THOUTLN = "粗外框",
 }
-Addon.localization.FOOLAFX    = "額外的" -- need correct
-Addon.localization.FOOLAFXDSC = "你的群裡好像多了一個詞綴。 而且他看起來很眼熟..." -- need correct
+Addon.localization.FOOLAFX    = "額外"
+Addon.localization.FOOLAFXDSC = "您的隊伍好像多了一個詞綴。 而且他看起來很眼熟..."
 
 Addon.localization.HEIGHT     = "高度"
 Addon.localization.HELP = {
@@ -105,7 +105,7 @@ Addon.localization.ICONSIZE   = "圖示大小"
 Addon.localization.IMPORT     = "匯入"
 
 Addon.localization.JUSTIFYH   = "水平文字對齊"
-Addon.localization.JUSTIFYV   = "Vertical text justify" -- need correct
+Addon.localization.JUSTIFYV   = "垂直文字對齊"
 
 Addon.localization.LAYER      = "層級"
 Addon.localization.LEFT       = "左"
@@ -132,8 +132,8 @@ Addon.localization.RIGHT      = "右"
 Addon.localization.SCALE      = "縮放"
 Addon.localization.SEASONOPTS = "賽季選項"
 Addon.localization.SHROUDED   = {
-    [189878] = "Натрезим-лазутчик", -- need correct
-    [190128] = "Зул'гамуз", -- need correct
+    [189878] = "Nathrezim Infiltrator",
+    [190128] = "Zul'gamux",
 }
 Addon.localization.SOURCE     = "資源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已載入。輸入 /ipmt 開啟選項。"
