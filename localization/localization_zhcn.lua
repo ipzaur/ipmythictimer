@@ -132,8 +132,8 @@ Addon.localization.RIGHT      = "右"
 Addon.localization.SCALE      = "比例"
 Addon.localization.SEASONOPTS = '赛季选项'
 Addon.localization.SHROUDED   = {
-    [189878] = "Натрезим-лазутчик", -- need correct
-    [190128] = "Зул'гамуз", -- need correct
+    [189878] = "Nathrezim Infiltrator",
+    [190128] = "Zul'gamux",
 }
 Addon.localization.SOURCE     = "资源"
 Addon.localization.STARTINFO  = "iP Mythic Timer已载入。键入 /ipmt 开启选项。"
