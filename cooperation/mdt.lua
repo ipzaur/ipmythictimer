@@ -220,3 +220,13 @@ end
 function Addon:MDTHasDB()
     return #MDT.dungeonEnemies[33] > 0
 end
+
+function Addon:CheckMDTVersion(MDTName)
+    local MDTversion = C_AddOns.GetAddOnMetadata(MDTName, 'Version')
+    if MDTversion ~= nil and (not IPMTOptions.MDTversion or (IPMTOptions.MDTversion ~= MDTversion)) then
+        if Addon:MDTHasDB() then
+            IPMTOptions.MDTversion = MDTversion
+            IPMTDB = {}
+        end
+    end
+end

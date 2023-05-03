@@ -597,6 +597,8 @@ function Addon:OnEvent(self, event, ...)
             Addon:Init()
         elseif arg1 == 'NamePlateKAI' then
             Addon:NamePlateKAIfix()
+        elseif arg1 == 'MDT' or arg1 == 'MythicDungeonTools' then
+            Addon:CheckMDTVersion(arg1)
         end
     elseif event == "CHALLENGE_MODE_DEATH_COUNT_UPDATED" then
         Addon.deaths:Update()
@@ -638,18 +640,6 @@ function Addon:InitVars()
 
     if IPMTDB == nil then
         IPMTDB = {}
-    end
-    if MDT then
-        local MDTversion = GetAddOnMetadata('MDT', 'Version')
-        if MDTversion == nil then
-            MDTversion = GetAddOnMetadata('MythicDungeonTools', 'Version')
-        end
-        if MDTversion ~= nil and (not IPMTOptions.MDTversion or (IPMTOptions.MDTversion ~= MDTversion)) then
-            if Addon:MDTHasDB() then
-                IPMTOptions.MDTversion = MDTversion
-                IPMTDB = {}
-            end
-        end
     end
 end
 
