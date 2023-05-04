@@ -615,8 +615,9 @@ function Addon:OnEvent(self, event, ...)
         local inInstance, instanceType = IsInInstance()
         if not (inInstance and instanceType == "party") then
             HideTimer()
-            IPMTDungeon.keyActive = false
-            ObjectiveTracker_Expand()
+            if ObjectiveTrackerFrame ~= nil and ObjectiveTrackerFrame.MODULES_UI_ORDER ~= nil then
+                ObjectiveTracker_Expand()
+            end
         else
             Addon:UpdateProgress()
         end
