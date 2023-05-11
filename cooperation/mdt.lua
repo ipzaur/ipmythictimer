@@ -185,6 +185,9 @@ Addon.MDTdungeon = {
 -- Pandaria
     [791] = 47, -- Temple of the Jade Serpent
     [792] = 47, -- Temple of the Jade Serpent
+
+-- Cataclysm
+    [325] = 77, -- The Vortex Pinnacle
 }
 
 
