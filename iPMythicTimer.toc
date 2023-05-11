@@ -7,6 +7,7 @@
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon, IPMTTheme
 ## X-eMail: ipzaur@gmail.com
+## IconTexture: Interface\AddOns\iPMythicTimer\media\icon
 
 Localization\localization.lua
 Localization\localization_ru.lua
