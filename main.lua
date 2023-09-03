@@ -5,6 +5,7 @@ local ignoredNPC = {
     [168837] = true, -- Summoned Stealthling spiders (Plaguefall)
     [174773] = true, -- Shadows from Spiteful affix
     [200388] = true, -- Malformed Sha
+    [194389] = true, -- Lava Spawn
 }
 
 function Addon:ResetDungeon()
