@@ -1,3 +1,6 @@
+Version 1.3.44:
+ - 10.1.7 supported
+
 Version 1.3.43:
  - Lava spawn force fixed
 
