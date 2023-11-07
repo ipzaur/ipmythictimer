@@ -363,6 +363,16 @@ local function fillMapGroupID(mapID)
         return {{
             mapID = 815,
         }}
+    -- Dawn Of The Infinite Lower
+    elseif mapID == 2190 or mapID == 2192 or mapID == 2193 or mapID == 2198 then
+        return {{
+            mapID = 2190,
+        }}
+    -- Dawn Of The Infinite Upper
+    elseif mapID == 2195 or mapID == 2196 or mapID == 2197 then
+        return {{
+            mapID = 2195,
+        }}      
     else
         return nil
     end
@@ -403,6 +413,28 @@ local function fillEncountersID(mapID)
             encounterID = 1818,
         },{
             encounterID = 1838,
+        }}
+    -- Dawn Of The Infinite Lower
+    elseif mapID == 2190 then
+        return {{
+            encounterID = 2521,
+        },{
+            encounterID = 2528,
+        },{
+            encounterID = 2535,
+        },{
+            encounterID = 2537,
+        }}
+    -- Dawn Of The Infinite Upper
+    elseif mapID == 2195 then
+        return {{
+            encounterID = 2526,
+        },{
+            encounterID = 2534,
+        },{
+            encounterID = 2536,
+        },{
+            encounterID = 2538,
         }}
     else
         return nil

@@ -29,6 +29,15 @@ Addon.MDTdungeon = {
     [2098] = 45, -- Algeth'ar Academy
     [2099] = 45, -- Algeth'ar Academy
 
+    [2190] = 100, -- Dawn Of The Infinite Lower
+    [2192] = 100, -- Dawn Of The Infinite Lower
+    [2193] = 100, -- Dawn Of The Infinite Lower
+    [2198] = 100, -- Dawn Of The Infinite Lower
+
+    [2195] = 101, -- Dawn Of The Infinite Upper
+    [2196] = 101, -- Dawn Of The Infinite Upper
+    [2197] = 101, -- Dawn Of The Infinite Upper
+
 
 -- SL
     [1663] = 30, -- Halls of Atonement
@@ -86,11 +95,11 @@ Addon.MDTdungeon = {
 
     [1010] = 21, -- The Motherlode
 
-    [1015] = 24, -- Waycrest Manor
-    [1016] = 24, -- Waycrest Manor
-    [1017] = 24, -- Waycrest Manor
-    [1018] = 24, -- Waycrest Manor
-    [1029] = 24, -- Waycrest Manor
+    [1015] = 102, -- Waycrest Manor
+    [1016] = 102, -- Waycrest Manor
+    [1017] = 102, -- Waycrest Manor
+    [1018] = 102, -- Waycrest Manor
+    [1029] = 102, -- Waycrest Manor
 
     [1038] = 20, -- Temple of Sethraliss
     [1043] = 20, -- Temple of Sethraliss
@@ -176,6 +185,9 @@ Addon.MDTdungeon = {
 
     [595] = 41, -- Iron Docks
 
+    [620] = 104, -- The Everbloom
+    [621] = 104, -- The Everbloom
+
     [606] = 40, -- Grimrail Depot
     [607] = 40, -- Grimrail Depot
     [608] = 40, -- Grimrail Depot
@@ -188,6 +200,9 @@ Addon.MDTdungeon = {
 
 -- Cataclysm
     [325] = 77, -- The Vortex Pinnacle
+
+    [322] = 105, -- Throne of Tides
+    [323] = 105, -- Throne of Tides
 }
 
 
