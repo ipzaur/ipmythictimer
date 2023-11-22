@@ -436,6 +436,17 @@ local function fillEncountersID(mapID)
         },{
             encounterID = 2538,
         }}
+    -- The Everbloom (exclude Xeri'tac, the spider)
+    elseif mapID == 620 or mapID == 621 then
+        return {{
+            encounterID = 1207,
+        },{
+            encounterID = 1214,
+        },{
+            encounterID = 1208,
+        },{
+            encounterID = 1210,
+        }}
     else
         return nil
     end
