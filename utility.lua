@@ -23,7 +23,11 @@ function Addon:PrintObject(data, prefix, toText)
         if value == nil then
             text = text .. prefix .. key .. " = nil\n"
         elseif type(value) == 'table' then
-            text = text .. Addon:PrintObject(value, prefix .. key .. '.', toText) .. "\n"
+            local subText = Addon:PrintObject(value, prefix .. key .. '.', toText)
+            if subText == nil then
+                subText = ' ?? '
+            end
+            text = text .. subText .. "\n"
         elseif type(value) == 'boolean' then
             if value then
                 text = text .. prefix .. key .. " = true\n"

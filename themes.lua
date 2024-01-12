@@ -413,13 +413,7 @@ function Addon:ChangeDecor(decorID, params, woSave)
         end
     end
 
-    if params.border then 
-        if params.border.color ~= nil then
-            element:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
-            if woSave ~= true then
-                elemInfo.border.color = Addon:CopyObject(params.border.color)
-            end
-        end
+    if params.border then
         if params.border.texture ~= nil or params.border.size ~= nil then
             local backdrop = {
                 bgFile   = nil,
@@ -443,6 +437,13 @@ function Addon:ChangeDecor(decorID, params, woSave)
                 backdrop.edgeFile = nil
             end
             element:SetBackdrop(backdrop)
+            element:SetBackdropBorderColor(elemInfo.border.color.r, elemInfo.border.color.g, elemInfo.border.color.b, elemInfo.border.color.a)
+        end
+        if params.border.color ~= nil then
+            element:SetBackdropBorderColor(params.border.color.r, params.border.color.g, params.border.color.b, params.border.color.a)
+            if woSave ~= true then
+                elemInfo.border.color = Addon:CopyObject(params.border.color)
+            end
         end
     end
 end
