@@ -19,7 +19,6 @@ local function OnTooltipSetUnit(tooltip)
             end
             if npcInfo == nil then
                 local npcID = select(6, strsplit("-", guID))
-                npcID = tonumber(npcID)
                 local percent = Addon:GetEnemyForces(npcID)
                 if (percent ~= nil) then
                     if IPMTOptions.progress == Addon.PROGRESS_FORMAT_PERCENT then

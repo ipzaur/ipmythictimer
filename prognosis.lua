@@ -3,6 +3,9 @@ local AddonName, Addon = ...
 local STONEBORN_ID = 174175
 local STONEBORN_SPELL = 342171
 
+local DEVOURING_MAGGOT_ID = 134024
+local DEVOURING_MAGGOT_SPELL = 278444
+
 function Addon:GetNameplateInfo(nameplate)
     local unitName, unitExists = nil, nil
     if nameplate and nameplate.UnitFrame then
@@ -43,7 +46,6 @@ local function GrabPrognosis()
                             IPMTDungeon.prognosis[npcUID] = npcInfo.forces
                         else
                             if not IPMTDungeon.checkmobs[npcUID] and not IPMTDungeon.prognosis[npcUID] then
-                                npcID = tonumber(npcID)
                                 local forces = Addon:GetEnemyForces(npcID, Addon.PROGRESS_FORMAT_FORCES)
                                 if forces then
                                     IPMTDungeon.prognosis[npcUID] = forces
@@ -107,12 +109,22 @@ function Addon:PrognosisCheck()
     local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags, x12, x13, x14, x15 = CombatLogGetCurrentEventInfo()
 
     if event == "SPELL_AURA_APPLIED" then
+        local _, _, _, _, _, npcID, spawnID = strsplit("-", sourceGUID)
+        -- Devouring Maggot applied "Infest" and despawn (no more give force)
+        if tonumber(npcID) == DEVOURING_MAGGOT_ID and tonumber(x12) == DEVOURING_MAGGOT_SPELL then
+            local npcUID = spawnID .. "_" .. npcID
+            IPMTDungeon.prognosis[npcUID] = 0
+            IPMTDungeon.checkmobs[npcUID] = true
+            return
+        end
+
         local _, _, _, _, _, npcID, spawnID = strsplit("-", destGUID)
         -- Loyal Stoneborn mind control by Ventyr's
         if tonumber(npcID) == STONEBORN_ID and tonumber(x12) == STONEBORN_SPELL then
             local npcUID = spawnID .. "_" .. npcID
             IPMTDungeon.prognosis[npcUID] = 0
             IPMTDungeon.checkmobs[npcUID] = true
+            return
         end
     end
 end

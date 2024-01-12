@@ -379,7 +379,9 @@ function Addon:ChangeDecor(decorID, params, woSave)
                 }
                 params.background.coords = Addon:convertCoords(256, 128, 5, 87, 5, 37)
                 Addon:SetDungeonArtwork(element)
+                params.background.color = {r=1, g=1, b=1, a=.7}
             else
+                params.background.color = elemInfo.background.color
                 element.background:SetTexture(texture)
             end
             if woSave ~= true then

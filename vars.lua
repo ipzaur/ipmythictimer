@@ -20,7 +20,7 @@ Addon.THEME_ACTIONS_EXPORT = 4
 Addon.DUNGEON_ARTWORK = 'dungeon'
 
 Addon.season = {
-    number   = 101,
+    number   = 103,
     isActive = false,
 }
 
@@ -180,6 +180,7 @@ Addon.cleanDungeon = {
     players     = {},
     prognosis   = {},
     isTeeming   = false,
+    keyMapId    = 0,
     artwork     = 3759909, -- Mists Of Tirna Scithe journal button
     timeLimit   = {
         [2] = nil,

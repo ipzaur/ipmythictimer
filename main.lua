@@ -1,13 +1,5 @@
 local AddonName, Addon = ...
 
-local ignoredNPC = {
-    [168457] = true, -- Summoned Stonewall Gargon (corridor before last boss of Sanguine Depths)
-    [168837] = true, -- Summoned Stealthling spiders (Plaguefall)
-    [174773] = true, -- Shadows from Spiteful affix
-    [200388] = true, -- Malformed Sha
-    [194389] = true, -- Lava Spawn
-}
-
 function Addon:ResetDungeon()
     IPMTDungeon = Addon:CopyObject(Addon.cleanDungeon)
     if Addon.fool ~= nil then
@@ -16,15 +8,16 @@ function Addon:ResetDungeon()
 end
 
 function Addon:GetEnemyForces(npcID, progressFormat)
+    npcID = tonumber(npcID)
     local forces = nil
 
     if Addon.season.isActive and Addon.season.GetForces then
         forces = Addon.season:GetForces(npcID, IPMTDungeon.isTeeming)
     end
 
-    if forces == nil and ignoredNPC[npcID] == nil then
-        if IPMTDB and IPMTDB[npcID] and type(IPMTDB[npcID]) == 'table' and IPMTDB[npcID][IPMTDungeon.isTeeming] then
-            forces = IPMTDB[npcID][IPMTDungeon.isTeeming]
+    if forces == nil and Addon.ignoredNPC[npcID] == nil then
+        if IPMTDB and IPMTDB[IPMTDungeon.keyMapId] and IPMTDB[IPMTDungeon.keyMapId][npcID] and IPMTDB[IPMTDungeon.keyMapId][npcID][IPMTDungeon.isTeeming] then
+            forces = IPMTDB[IPMTDungeon.keyMapId][npcID][IPMTDungeon.isTeeming]
         else
             forces = Addon:GetForcesFromMDT(npcID, true)
         end
@@ -57,6 +50,7 @@ local function ClearKillInfo()
 end
 
 local function GrabMobInfo(npcID)
+    npcID = tonumber(npcID)
     killInfo.npcID = npcID
     killInfo.diedTime = GetTime()
     if killInfo.npcID and killInfo.diedTime and killInfo.progress and killInfo.progressTime then
@@ -64,11 +58,14 @@ local function GrabMobInfo(npcID)
             if not IPMTDB then
                 IPMTDB = {}
             end
-            if IPMTDB[killInfo.npcID] == nil then
-                IPMTDB[killInfo.npcID] = {}
+            if not IPMTDB[IPMTDungeon.keyMapId] then
+                IPMTDB[IPMTDungeon.keyMapId] = {}
             end
-            if IPMTDB[killInfo.npcID][IPMTDungeon.isTeeming] == nil then
-                IPMTDB[killInfo.npcID][IPMTDungeon.isTeeming] = killInfo.progress
+            if IPMTDB[IPMTDungeon.keyMapId][killInfo.npcID] == nil then
+                IPMTDB[IPMTDungeon.keyMapId][killInfo.npcID] = {}
+            end
+            if IPMTDB[IPMTDungeon.keyMapId][killInfo.npcID][IPMTDungeon.isTeeming] == nil then
+                IPMTDB[IPMTDungeon.keyMapId][killInfo.npcID][IPMTDungeon.isTeeming] = killInfo.progress
             end
             ClearKillInfo()
         end
@@ -78,7 +75,6 @@ end
 local lastDeathEvent = 0 -- 1=CLEU, 2=UpdateProgress
 function Addon:EnemyDied(npcGUID)
     local _, zero, server_id, instance_id, zone_uid, npcID, spawnID = strsplit("-", npcGUID)
-    npcID = tonumber(npcID)
     local npcUID = spawnID .. "_" .. npcID
     if IPMTDungeon.prognosis[npcUID] then
         local progress = IPMTDungeon.trash.current + IPMTDungeon.prognosis[npcUID]
@@ -372,6 +368,11 @@ local function fillMapGroupID(mapID)
     elseif mapID == 2195 or mapID == 2196 or mapID == 2197 then
         return {{
             mapID = 2195,
+        }}   
+    -- Everbloom
+    elseif mapID == 620 or mapID == 621 then
+        return {{
+            mapID = 620,
         }}      
     else
         return nil
@@ -515,9 +516,8 @@ function Addon:OnUpdate(elapsed)
     end
 end
 
-local function initAffixes()
+local function initAffixes(affixes)
     Addon.season.isActive = false
-    local level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
     if Addon.fool then
         tinsert(affixes, Addon.foolAffix)
     end
@@ -556,16 +556,17 @@ local function initAffixes()
 end
 
 local function ShowTimer()
-    local name, _, difficulty = GetInstanceInfo()
-    if difficulty == 8 then
-        local level = C_ChallengeMode.GetActiveKeystoneInfo()
+    local name, _, difficultyId = GetInstanceInfo()
+    if difficultyId == 8 then
+        IPMTDungeon.keyMapId = C_ChallengeMode.GetActiveChallengeMapID()
+        local level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
         IPMTDungeon.level = level
         Addon.fMain.level.text:SetText(IPMTDungeon.level)
         Addon.fMain.prognosis.text:SetTextColor(1,1,1)
         Addon.fMain.progress.text:SetTextColor(1,1,1)
 
         InitBossesInfo()
-        initAffixes()
+        initAffixes(affixes)
         Addon.deaths:Update()
         Addon:UpdateProgress()
         Addon.fMain:Show()
@@ -686,6 +687,14 @@ function Addon:InitVars()
     if IPMTDB == nil then
         IPMTDB = {}
     end
+
+-- remove after 3 versions +
+    local iter = pairs(IPMTDB)
+    local id, npcInfo = iter(IPMTDB)
+    if id and id > 5000 then
+        IPMTDB = {}
+    end
+-- remove after 3 version -
 end
 
 function Addon:Render()
