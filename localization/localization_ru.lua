@@ -28,12 +28,13 @@ Addon.localization.COLORDESCR = {
     },
 }
 Addon.localization.COPY       = "Копия"
-Addon.localization.CORRUPTED = {
+Addon.localization.CORRUPTED  = {
     [161124] = "Ург'рот Сокрушитель Героев (Ломатель танков)",
     [161241] = "Мал'тир - маг Бездны (Паук)",
     [161243] = "Сам'рек Призыватель Хаоса (Фиряющий)",
     [161244] = "Кровь Заразителя (Капля)",
 }
+Addon.localization.CURSEASON  = "Текущий сезон"
 
 Addon.localization.DAMAGE     = "Урон"
 Addon.localization.DBCLEANED  = "База данных с процентами монстров очищена"
@@ -107,6 +108,8 @@ Addon.localization.IMPORT     = "Импорт"
 Addon.localization.JUSTIFYH   = "Горизонтальное выравнивание текста"
 Addon.localization.JUSTIFYV   = "Вертикальное выравнивание текста"
 
+Addon.localization.KEYSNAME   = "Названия ключей"
+
 Addon.localization.LAYER      = "Слой"
 Addon.localization.LEFT       = "Слева"
 Addon.localization.LIMITPRGRS = "Ограничить прогресс на 100%"
@@ -128,6 +131,8 @@ Addon.localization.PROGRESS   = "Формат прогресса"
 
 Addon.localization.RELPOINT   = "Точка зависимости"
 Addon.localization.RIGHT      = "Справа"
+Addon.localization.RNMKEYSBT  = "Переименовать ключи"
+Addon.localization.RNMKEYSTT  = "Здесь можно поменять названия ключей для таймера"
 
 Addon.localization.SCALE      = "Масштаб"
 Addon.localization.SEASONOPTS = "Настройки для сезона"

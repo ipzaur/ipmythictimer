@@ -571,7 +571,10 @@ local function ShowTimer()
         Addon:UpdateProgress()
         Addon.fMain:Show()
 
-        local dungeonName = C_Scenario.GetInfo()
+        local dungeonName = IPMTOptions.keysName[IPMTDungeon.keyMapId]
+        if dungeonName == nil then
+            dungeonName = C_ChallengeMode.GetMapUIInfo(IPMTDungeon.keyMapId)
+        end
         Addon.fMain.dungeonname.text:SetText(dungeonName)
         Addon.fMain.dungeonname:EnableMouse(false)
 

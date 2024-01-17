@@ -28,12 +28,13 @@ Addon.localization.COLORDESCR = {
     },
 }
 Addon.localization.COPY       = "Copy"
-Addon.localization.CORRUPTED = {
+Addon.localization.CORRUPTED  = {
     [161124] = "Urg'roth, Breaker of Heroes (Tank breaker)",
     [161241] = "Voidweaver Mal'thir (Spider)",
     [161243] = "Samh'rek, Beckoner of Chaos (Fear)",
     [161244] = "Blood of the Corruptor (Blob)",
 }
+Addon.localization.CURSEASON  = "Current season"
 
 Addon.localization.DAMAGE     = "Damage"
 Addon.localization.DBCLEANED  = "Monster percentage database cleared"
@@ -107,6 +108,8 @@ Addon.localization.IMPORT     = "Import"
 Addon.localization.JUSTIFYH   = "Horizontal text justify"
 Addon.localization.JUSTIFYV   = "Vertical text alignment"
 
+Addon.localization.KEYSNAME   = "Keys name"
+
 Addon.localization.LAYER      = "Layer"
 Addon.localization.LEFT       = "Left"
 Addon.localization.LIMITPRGRS = "Limit progress to 100%"
@@ -128,6 +131,8 @@ Addon.localization.PROGRESS   = "Progress format"
 
 Addon.localization.RELPOINT   = "Relative point"
 Addon.localization.RIGHT      = "Right"
+Addon.localization.RNMKEYSBT  = "Rename keys"
+Addon.localization.RNMKEYSTT  = "Here you can change the names of the keys for the timer"
 
 Addon.localization.SCALE      = "Scale"
 Addon.localization.SEASONOPTS = "Season options"

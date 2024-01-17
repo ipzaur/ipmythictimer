@@ -28,12 +28,13 @@ Addon.localization.COLORDESCR = {
     },
 }
 Addon.localization.COPY       = "复制"
-Addon.localization.CORRUPTED = {
+Addon.localization.CORRUPTED  = {
     [161124] = "乌尔格斯，勇士噬灭者(坦克终结者)",
     [161241] = "纺虚者玛熙尔(蜘蛛)",
     [161243] = "萨姆莱克，混沌唤引者(恐惧)",
     [161244] = "腐蚀者之血(软泥)",
 }
+Addon.localization.CURSEASON  = "Current season" -- need correct
 
 Addon.localization.DAMAGE     = "伤害"
 Addon.localization.DBCLEANED  = "怪物百分比数据库已清除" -- need correct
@@ -107,6 +108,8 @@ Addon.localization.IMPORT     = "导入"
 Addon.localization.JUSTIFYH   = "水平文本对齐"
 Addon.localization.JUSTIFYV   = "Vertical text justify" -- need correct
 
+Addon.localization.KEYSNAME   = "Keys name" -- need correct
+
 Addon.localization.LAYER      = "层"
 Addon.localization.LEFT       = "左"
 Addon.localization.LIMITPRGRS = "Limit progress to 100%" -- need correct
@@ -128,6 +131,8 @@ Addon.localization.PROGRESS   = "进度格式"
 
 Addon.localization.RELPOINT   = '相对点'
 Addon.localization.RIGHT      = "右"
+Addon.localization.RNMKEYSBT  = "Rename keys" -- need correct
+Addon.localization.RNMKEYSTT  = "Here you can change the names of the keys for the timer" -- need correct
 
 Addon.localization.SCALE      = "比例"
 Addon.localization.SEASONOPTS = '赛季选项'
@@ -152,7 +157,6 @@ Addon.localization.THEMEACTN  = {
 }
 Addon.localization.THEMEBUTNS = {
     ACTIONS     = "应用当前主题",
-    DUPLICATE   = "复制当前主题",
     DELETE      = "删除当前主题",
     RESTORE     = '恢复主题 "' .. Addon.localization.DEFAULT .. '" 并选择它',
     OPENEDITOR  = "打开主题编辑器",

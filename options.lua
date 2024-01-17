@@ -16,6 +16,16 @@ function Addon:ToggleDBTooltip(self, show)
     end
 end
 
+function Addon:ToggleKeyRenameTooltip(self, show)
+    if show then
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.RNMKEYSTT, .9, .9, 0, 1, true)
+        GameTooltip:Show()
+    else
+        GameTooltip:Hide()
+    end
+end
+
 function Addon:SetScale(value)
     IPMTOptions.scale = value
     Addon.fMain:SetScale(1 + IPMTOptions.scale / 100)
@@ -119,6 +129,7 @@ function Addon:CloseOptions()
     Addon.fMain.bosses:EnableMouse(true)
     Addon.fOptions:Hide()
     Addon:HideHelp()
+    Addon:CloseKeyRename()
 end
 
 local hideMainMenu = false
@@ -151,9 +162,17 @@ function Addon:InitOptions()
     if IPMTOptions ~= nil and IPMTOptions.global then
         globalVars = IPMTOptions.global
     end
+    local keysName = nil
+    if IPMTOptions ~= nil and IPMTOptions.keysName then
+        keysName = IPMTOptions.keysName
+    end
+
     IPMTOptions = Addon:CopyObject(Addon.defaultOption, IPMTOptions)
     if globalVars ~= nil then
         IPMTOptions.global = globalVars
+    end
+    if keysName ~= nil then
+        IPMTOptions.keysName = keysName
     end
     if IPMTTheme[IPMTOptions.theme] == nil then
         IPMTOptions.theme = 1

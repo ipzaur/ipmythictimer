@@ -28,12 +28,13 @@ Addon.localization.COLORDESCR = {
     },
 }
 Addon.localization.COPY       = "Copier"
-Addon.localization.CORRUPTED = {
+Addon.localization.CORRUPTED  = {
     [161124] = "Urg'roth, bourreau des héros (Brise-armure)",
     [161241] = "Tisse-Vide Mal'thir (Araignée)",
     [161243] = "Samh'rek, harangueur du chaos (Peur)",
     [161244] = "Sang du Corrupteur (Blob)",
 }
+Addon.localization.CURSEASON  = "Saison en cours" -- need correct
 
 Addon.localization.DAMAGE     = "Dégâts"
 Addon.localization.DBCLEANED  = "Base de données de pourcentage de monstres effacée" -- need correct
@@ -107,6 +108,8 @@ Addon.localization.IMPORT     = "Importer"
 Addon.localization.JUSTIFYH   = "Texte horizontal justifié"
 Addon.localization.JUSTIFYV   = "Alignement vertical du texte" -- need correct
 
+Addon.localization.KEYSNAME   = "Nom des clés" -- need correct
+
 Addon.localization.LAYER      = "Étage"
 Addon.localization.LEFT       = "Gauche"
 Addon.localization.LIMITPRGRS = "Limit progress to 100%" -- need correct
@@ -128,6 +131,8 @@ Addon.localization.PROGRESS   = "Format de progression"
 
 Addon.localization.RELPOINT   = "Point relatif"
 Addon.localization.RIGHT      = "Droite"
+Addon.localization.RNMKEYSBT  = "Renommer les clés" -- need correct
+Addon.localization.RNMKEYSTT  = "Ici vous pouvez changer les noms des clés pour le timer" -- need correct
 
 Addon.localization.SCALE      = "Échelle"
 Addon.localization.SEASONOPTS = "Options de saison"

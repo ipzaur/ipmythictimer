@@ -28,12 +28,13 @@ Addon.localization.COLORDESCR = {
     },
 }
 Addon.localization.COPY       = "複製"
-Addon.localization.CORRUPTED = {
+Addon.localization.CORRUPTED  = {
     [161124] = "『英雄擊破者』爾格羅斯 (坦克殺手)",
     [161241] = "虛織者瑪希爾 (蜘蛛)",
     [161243] = "山姆雷克，混沌召喚者 (恐懼)",
     [161244] = "腐化者之血 (軟泥)",
 }
+Addon.localization.CURSEASON  = "Current season" -- need correct
 
 Addon.localization.DAMAGE     = "傷害"
 Addon.localization.DBCLEANED  = "怪物百分比數據庫已清除"
@@ -107,6 +108,8 @@ Addon.localization.IMPORT     = "匯入"
 Addon.localization.JUSTIFYH   = "水平文字對齊"
 Addon.localization.JUSTIFYV   = "垂直文字對齊"
 
+Addon.localization.KEYSNAME   = "Keys name" -- need correct
+
 Addon.localization.LAYER      = "層級"
 Addon.localization.LEFT       = "左"
 Addon.localization.LIMITPRGRS = "限制進度到100%"
@@ -128,6 +131,8 @@ Addon.localization.PROGRESS   = "進度格式"
 
 Addon.localization.RELPOINT   = "相對位置"
 Addon.localization.RIGHT      = "右"
+Addon.localization.RNMKEYSBT  = "Rename keys" -- need correct
+Addon.localization.RNMKEYSTT  = "Here you can change the names of the keys for the timer" -- need correct
 
 Addon.localization.SCALE      = "縮放"
 Addon.localization.SEASONOPTS = "賽季選項"
@@ -152,7 +157,6 @@ Addon.localization.THEMEACTN  = {
 }
 Addon.localization.THEMEBUTNS = {
     ACTIONS     = "在主題的動作",
-    DUPLICATE   = "當前主題重複",
     DELETE      = "刪除當前主題",
     RESTORE     = '恢復主題"' .. Addon.localization.DEFAULT .. '"並選擇它',
     OPENEDITOR  = "打開主題編輯器",

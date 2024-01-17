@@ -1,5 +1,5 @@
 local AddonName, Addon = ...
-Addon.version = 1320
+Addon.version = 1349
 
 Addon.AFFIX_TEEMING = 5
 
@@ -169,6 +169,7 @@ Addon.defaultOption = {
     },
     MDTversion = 0,
     limitProgress = true,
+    keysName = {},
 }
 
 Addon.cleanDungeon = {
