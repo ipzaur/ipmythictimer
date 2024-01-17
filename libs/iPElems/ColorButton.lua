@@ -20,28 +20,28 @@ local function ColorChange(restore)
         r, g, b, a = unpack(restore)
     else
         r, g, b = ColorPickerFrame:GetColorRGB()
-        a = 1 - OpacitySliderFrame:GetValue()
+        a = ColorPickerFrame.Content.ColorPicker:GetColorAlpha()
     end
     currentButton:ColorChange(r, g, b, a)
 end
 local function ShowColorPicker(button)
     ColorPickerFrame.hasOpacity = true
-    ColorPickerFrame.opacity = 1 - currentButton.a
+    ColorPickerFrame.opacity = currentButton.a
     ColorPickerFrame.previousValues = {currentButton.r, currentButton.g, currentButton.b, currentButton.a}
-    ColorPickerFrame.func        = ColorChange
+    ColorPickerFrame.swatchFunc  = ColorChange
     ColorPickerFrame.opacityFunc = ColorChange
     ColorPickerFrame.cancelFunc  = ColorChange
-    ColorPickerFrame:SetColorRGB(currentButton.r, currentButton.g, currentButton.b)
-    OpacitySliderFrame:SetValue(1 - currentButton.a)
-
-    ColorPickerFrame:Show()
+    ColorPickerFrame.Content.ColorPicker:SetColorRGB(currentButton.r, currentButton.g, currentButton.b)
+    ColorPickerFrame.Content.ColorPicker:SetColorAlpha(currentButton.a)
+    ShowUIPanel(ColorPickerFrame)
 end
-ColorPickerCancelButton:HookScript("OnHide", function()
+
+ColorPickerFrame:HookScript("OnHide", function()
     if currentButton ~= nil then
         currentButton = nil
     end
 end)
-ColorPickerOkayButton:HookScript("OnHide", function()
+ColorPickerFrame:HookScript("OnHide", function()
     if currentButton ~= nil then
         currentButton = nil
     end
