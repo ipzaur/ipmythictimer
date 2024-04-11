@@ -121,7 +121,7 @@ function Addon:CloseOptions()
     if not IPMTDungeon.keyActive then
         Addon.fMain:Hide()
     end
-    if IPMTDungeon.deathes and IPMTDungeon.deathes.list and #IPMTDungeon.deathes.list == 0 then
+    if IPMTDungeon.deathes and IPMTDungeon.deathes.list == nil or #IPMTDungeon.deathes.list == 0 then
         Addon.fMain.deathTimer:Hide()
     end
     Addon.fMain.timer:EnableMouse(true)

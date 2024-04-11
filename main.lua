@@ -233,11 +233,13 @@ function Addon:OnBossesEnter(self)
         GameTooltip:SetText(Addon.localization.HELP.BOSSES, 1, 1, 1)
         GameTooltip:AddLine(" ")
         for i, boss in ipairs(IPMTDungeon.bosses) do
+            local bossName = boss.name
             local color = 1
             if boss.killed then
                 color = .45
+                bossName = bossName .. " (" .. boss.time .. ")"
             end
-            GameTooltip:AddLine(boss.name, color, color, color)
+            GameTooltip:AddLine(bossName, color, color, color)
         end
         GameTooltip:Show()
     end
@@ -264,7 +266,7 @@ local function UpdateTime(block, elapsedTime)
     local plusTimeText = nil
     local color = nil
 
-    if true or IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC] == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][0] == nil then
+    if IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC] == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][0] == nil then
         IPMTDungeon.timeLimit = {
             [Addon.TIMER_DIRECTION_DESC] = {
                 [0] = block.timeLimit,
@@ -608,6 +610,7 @@ local function EncounterEnd(encounterID, success)
         for b, boss in ipairs(IPMTDungeon.bosses) do
             if boss.encounterID == encounterID then
                 boss.killed = true
+                boss.time = SecondsToClock(IPMTDungeon.time)
                 IPMTDungeon.bossesKilled = IPMTDungeon.bossesKilled + 1
                 Addon.fMain.bosses.text:SetText(IPMTDungeon.bossesKilled .. "/" .. #IPMTDungeon.bosses)
                 break
