@@ -1,6 +1,19 @@
 local AddonName, Addon = ...
 
+-- C_ChallengeMode.GetActiveChallengeMapID() -> MDT index
+-- ChallengeMapID: https://wago.tools/db2/MapChallengeMode?page=1
+
 Addon.MDTdungeon = {
+-- TWW
+    --[499] = 0,-- Priory of the Sacred Flame
+    --[500] = 0,-- The Rookery
+    [501] = 110, -- The Stonevault
+    [502] = 114, -- City of Threads
+    [503] = 113, -- Ara-Kara, City of Echoes
+    --[504] = 0, -- Darkflame Cleft
+    [505] = 111, -- The Dawnbreaker
+    --[506] = 0, -- Cinderbrew Meadery
+
 -- DF
     [399] = 42, -- Ruby Life Pools
     [400] = 43, -- The Nokhud Offensive
@@ -65,6 +78,7 @@ Addon.MDTdungeon = {
 -- Cataclysm
     [438] = 77, -- The Vortex Pinnacle
     [456] = 105, -- Throne of Tides
+    [507] = 112, -- Grim Batol
 }
 
 

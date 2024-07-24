@@ -142,13 +142,16 @@ function Addon:UpdateProgress()
     local numCriteria = select(3, C_Scenario.GetStepInfo())
 
     for c = 1, numCriteria do
-        local name, _, completed, quantity, totalQuantity, _, _, quantityString, _, _, _, _, isWeightedProgress = C_Scenario.GetCriteriaInfo(c)
-        if isWeightedProgress then
+        local criteria = C_ScenarioInfo.GetCriteriaInfo(c)
+        if criteria.isWeightedProgress then
             if IPMTDungeon.trash.total == nil or IPMTDungeon.trash.total == 0 then
-                IPMTDungeon.trash.total = totalQuantity
+                IPMTDungeon.trash.total = criteria.totalQuantity
             end
             if IPMTDungeon.trash.total > IPMTDungeon.trash.current then
-                local currentTrash = tonumber(strsub(quantityString, 1, -2))
+           --     local currentTrash = tonumber(strsub(criteria.quantityString, 1, -2))
+                -- Temporary translate the percentages to the force of mobs
+                -- I hope the Belzard will bring back the progress value in force
+                local currentTrash = tonumber(criteria.quantity) * IPMTDungeon.trash.total / 100
                 if IPMTDungeon.trash.current and currentTrash < IPMTDungeon.trash.total and currentTrash > IPMTDungeon.trash.current then
                     killInfo.progress = currentTrash - IPMTDungeon.trash.current
                     killInfo.progressTime = GetTime()
@@ -329,7 +332,7 @@ local function UpdateTime(block, elapsedTime)
         Addon.fMain.plusTimer:Hide()
     end
 end
-hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTime)
+hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", UpdateTime)
 
 local function fillMapGroupID(mapID)
     -- Mechagon Island (Junkyard)
@@ -589,11 +592,11 @@ local function ShowTimer()
             Addon.season:ShowTimer()
         end
         Addon:KalielsTrackerFix()
-        ObjectiveTracker_Collapse()
+        ObjectiveTrackerFrame:SetCollapsed(true)
         Addon:HideHelp()
     end
 end
-hooksecurefunc("Scenario_ChallengeMode_ShowBlock", ShowTimer)
+hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "Activate", ShowTimer)
 
 local function HideTimer()
     if not Addon.opened.options then
@@ -667,7 +670,7 @@ function Addon:OnEvent(self, event, ...)
         if not (inInstance and instanceType == "party") then
             HideTimer()
             if ObjectiveTrackerFrame ~= nil and ObjectiveTrackerFrame.MODULES_UI_ORDER ~= nil then
-                ObjectiveTracker_Expand()
+                ObjectiveTrackerFrame:SetCollapsed(false)
             end
         else
             Addon:UpdateProgress()

@@ -4,9 +4,10 @@ local OTClicked = false
 local function CheckExpandedOT()
     local inInstance, instanceType = IsInInstance()
     local inKey = IPMTDungeon.keyActive or (inInstance and instanceType == "party")
-    if inKey and not OTClicked then
-        ObjectiveTracker_Collapse()
+    if inKey and not OTClicked and not ObjectiveTrackerFrame:IsCollapsed() then
+        ObjectiveTrackerFrame:SetCollapsed(true)
     end
+    OTClicked = false
 end
 
 local tryCount = 0
@@ -22,11 +23,11 @@ local function WaitAutoHider()
 end
 
 function Addon:elvUIFix()
-    hooksecurefunc("ObjectiveTracker_Expand", CheckExpandedOT)
-    ObjectiveTrackerFrame.HeaderMenu.MinimizeButton:SetScript("OnClick", function(self)
+    hooksecurefunc(ObjectiveTrackerFrame, "SetCollapsed", CheckExpandedOT)
+    local clickFunc = ObjectiveTrackerFrame.Header.MinimizeButton:GetScript("OnClick")
+    ObjectiveTrackerFrame.Header.MinimizeButton:SetScript("OnClick", function(self)
         OTClicked = true
-        ObjectiveTracker_MinimizeButton_OnClick()
-        OTClicked = false
+        clickFunc()
     end)
     WaitAutoHider()
 end

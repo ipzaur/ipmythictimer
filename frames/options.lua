@@ -412,4 +412,11 @@ Addon.panel.fShowOptions:SetText(Addon.localization.OPTIONS)
 Addon.panel.fShowOptions:SetScript("OnClick", function(self)
     Addon:OpenSettingsFromPanel()
 end)
-InterfaceOptions_AddCategory(Addon.panel)
+
+if InterfaceOptions_AddCategory then
+    InterfaceOptions_AddCategory(Addon.panel)
+else
+    local category, layout = Settings.RegisterCanvasLayoutCategory(Addon.panel, Addon.panel.name);
+    Settings.RegisterAddOnCategory(category);
+    Addon.settingsCategory = category
+end

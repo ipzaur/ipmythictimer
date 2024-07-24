@@ -139,7 +139,7 @@ local function TryToHideMainMenu()
         HideUIPanel(GameMenuFrame)
     end
 end
-hooksecurefunc('GameMenuFrame_UpdateVisibleButtons', TryToHideMainMenu)
+hooksecurefunc('CloseMenus', TryToHideMainMenu)
 
 local _G = getfenv(0)
 _G.hooksecurefunc("StaticPopup_EscapePressed", function()
