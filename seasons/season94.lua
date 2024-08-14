@@ -49,7 +49,7 @@ end
 local function GetShroudedID(nameplate)
     local shroudedID = nil
     for i=1, 40 do
-        local _, _, _, _, _, _, _, _, _, spellId = UnitBuff(nameplate, i)
+        local _, _, _, _, _, _, _, _, _, spellId = C_UnitAuras.GetBuffDataByIndex(nameplate, i)
         if spellId == 373011 then
             shroudedID = NATHREZIM_ID
             break

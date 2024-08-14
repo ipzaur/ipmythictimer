@@ -13,7 +13,7 @@ end
 local hooked = false
 local trying = 0
 function Addon:KalielsTrackerFix()
-    if not hooked and IsAddOnLoaded('!KalielsTracker') then
+    if not hooked and C_AddOns.IsAddOnLoaded('!KalielsTracker') then
         local KTMinBut = _G["!KalielsTrackerMinimizeButton"]
         if KTMinBut ~= nil then
             hooksecurefunc("KT_ObjectiveTracker_Expand", CheckExpandedOT)

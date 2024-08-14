@@ -63,7 +63,7 @@ function Addon.deaths:Record(playerName, isFake)
             enemy   = IPMTDungeon.players[playerName].enemy
             damage  = IPMTDungeon.players[playerName].damage
             if spellId > 1 then
-                spellIcon = select(3, GetSpellInfo(spellId))
+                spellIcon = select(3, C_Spell.GetSpellInfo(spellId))
             else
                 spellIcon = 130730 -- Melee Attack Icon
             end
