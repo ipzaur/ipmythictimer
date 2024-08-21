@@ -194,8 +194,7 @@ function Addon:FillDeathRow(num, deathInfo, summary)
         Addon.fDeaths.line[num].time:SetTextColor(1, 1, 1)
     end
 
-    local color = RAID_CLASS_COLORS[deathInfo.class] or HIGHLIGHT_FONT_COLOR
-    Addon.fDeaths.line[num].name:SetTextColor(color.r, color.g, color.b)
+    Addon.fDeaths.line[num].name:SetTextColor(deathInfo.color.r, deathInfo.color.g, deathInfo.color.b)
     Addon.fDeaths.line[num].name:SetText(deathInfo.playerName .. " (" .. summary .. ")")
     Addon.fDeaths.line[num].name:SetFont(theme.font, theme.recordFontSize, theme.fontStyle)
     Addon.fDeaths.line[num].time:SetText(SecondsToClock(deathInfo.time))

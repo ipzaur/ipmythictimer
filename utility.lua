@@ -67,3 +67,11 @@ function Addon:CopyObject(template, filled)
     end
     return result
 end
+
+function Addon:PrepareName(playerName)
+    local playerName, realm, region = strsplit('-', playerName)
+    if realm then
+        playerName = playerName .. "-" .. realm
+    end
+    return playerName
+end

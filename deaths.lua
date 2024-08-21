@@ -44,29 +44,35 @@ function Addon.deaths:Show(wFake)
 end
 
 function Addon.deaths:Record(playerName, isFake)
-    local spellId, spellIcon, enemy, deathTime, damage
+    local spellId, spellIcon, enemy, color, deathTime, damage
     if isFake then
         spellId = 197137
         spellIcon = 135128
         deathTime = 585
         playerName = UnitName("player")
+        local _, class = UnitClass("player")
+        color = RAID_CLASS_COLORS[class] or HIGHLIGHT_FONT_COLOR
         damage = 7700
         enemy = "Ловчий из клана Колец Ненависти"
     else
-        if IPMTDungeon.players[playerName] == nil then
+        if IPMTDungeon.lastHit[playerName] == nil then
             spellId = nil
             spellIcon = nil
             enemy = Addon.localization.UNKNOWN
             damage = ''
         else
-            spellId = IPMTDungeon.players[playerName].spellId
-            enemy   = IPMTDungeon.players[playerName].enemy
-            damage  = IPMTDungeon.players[playerName].damage
+            spellId = IPMTDungeon.lastHit[playerName].spellId
+            enemy   = IPMTDungeon.lastHit[playerName].enemy
+            damage  = IPMTDungeon.lastHit[playerName].damage
             if spellId > 1 then
-                spellIcon = select(3, C_Spell.GetSpellInfo(spellId))
+                spellIcon = C_Spell.GetSpellInfo(spellId).iconID
             else
                 spellIcon = 130730 -- Melee Attack Icon
             end
+        end
+        color = HIGHLIGHT_FONT_COLOR
+        if IPMTDungeon.players[playerName] and IPMTDungeon.players[playerName].color then
+            color = IPMTDungeon.players[playerName].color
         end
         deathTime = IPMTDungeon.time
     end
@@ -76,13 +82,12 @@ function Addon.deaths:Record(playerName, isFake)
     if IPMTDungeon.deathes.list == nil or IPMTDungeon.deathes.list[1].isFake then
         IPMTDungeon.deathes.list = {}
     end
-    local _, class = UnitClass(playerName)
     local record = {
         playerName = playerName,
         time       = deathTime,
         enemy      = enemy,
         damage     = damage,
-        class      = class,
+        color      = color,
         spell      = {
             id   = spellId,
             icon = spellIcon,
@@ -92,7 +97,7 @@ function Addon.deaths:Record(playerName, isFake)
         record.isFake = true
     end
     table.insert(IPMTDungeon.deathes.list, record)
-    IPMTDungeon.players[playerName] = nil
+    IPMTDungeon.lastHit[playerName] = nil
 end
 
 function Addon.deaths:ShowTooltip(self)
@@ -114,17 +119,16 @@ function Addon.deaths:ShowTooltip(self)
             else
                 counts[death.playerName] = {
                     count = 1,
-                    class = death.class,
+                    color = death.color,
                 }
             end
         end
         local list = {}
         for playerName, deathInfo in pairs(counts) do
-            local _, class = UnitClass(playerName)
             table.insert(list, {
                 count      = deathInfo.count,
                 playerName = playerName,
-                class      = deathInfo.class,
+                color      = deathInfo.color,
             })
         end
         table.sort(list, function(a, b)
@@ -135,8 +139,7 @@ function Addon.deaths:ShowTooltip(self)
             end
         end)
         for i, item in ipairs(list) do
-            local color = RAID_CLASS_COLORS[item.class] or HIGHLIGHT_FONT_COLOR
-            GameTooltip:AddDoubleLine(item.playerName, item.count, color.r, color.g, color.b, HIGHLIGHT_FONT_COLOR:GetRGB())
+            GameTooltip:AddDoubleLine(item.playerName, item.count, item.color.r, item.color.g, item.color.b, HIGHLIGHT_FONT_COLOR:GetRGB())
         end
 
         GameTooltip:AddLine(" ")

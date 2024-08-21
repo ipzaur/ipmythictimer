@@ -112,24 +112,28 @@ function Addon:CombatLogEvent()
             or bit.band(destFlags, COMBATLOG_OBJECT_REACTION_NEUTRAL) > 0) then
             Addon:EnemyDied(destGUID)
         end
-        if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and (not UnitIsFeignDeath(destName)) then
+        destName = Addon:PrepareName(destName)
+        if (bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0) and IPMTDungeon.players[destName] and (not UnitIsFeignDeath(IPMTDungeon.players[destName].unitId)) then
             Addon.deaths:Record(destName)
         end
     elseif bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) > 0 then
+        if destName then
+            destName = Addon:PrepareName(destName)
+        end
         if event == "SPELL_DAMAGE" or event == "SPELL_PERIODIC_DAMAGE" then
-            IPMTDungeon.players[destName] = {
+            IPMTDungeon.lastHit[destName] = {
                 spellId = x12,
                 enemy   = sourceName,
                 damage  = x15,
             }
         elseif event == "SWING_DAMAGE" then
-            IPMTDungeon.players[destName] = {
+            IPMTDungeon.lastHit[destName] = {
                 spellId = 1,
                 enemy   = sourceName,
                 damage  = x12,
             }
         elseif event == "RANGE_DAMAGE" then
-            IPMTDungeon.players[destName] = {
+            IPMTDungeon.lastHit[destName] = {
                 spellId = 75,
                 enemy   = sourceName,
                 damage  = x12,
@@ -148,10 +152,7 @@ function Addon:UpdateProgress()
                 IPMTDungeon.trash.total = criteria.totalQuantity
             end
             if IPMTDungeon.trash.total > IPMTDungeon.trash.current then
-           --     local currentTrash = tonumber(strsub(criteria.quantityString, 1, -2))
-                -- Temporary translate the percentages to the force of mobs
-                -- I hope the Belzard will bring back the progress value in force
-                local currentTrash = tonumber(criteria.quantity) * IPMTDungeon.trash.total / 100
+                local currentTrash = tonumber(strsub(criteria.quantityString, 1, -2)) or 0
                 if IPMTDungeon.trash.current and currentTrash < IPMTDungeon.trash.total and currentTrash > IPMTDungeon.trash.current then
                     killInfo.progress = currentTrash - IPMTDungeon.trash.current
                     killInfo.progressTime = GetTime()
@@ -504,6 +505,22 @@ local function InitBossesInfo()
     Addon.fMain.bosses.text:SetText(IPMTDungeon.bossesKilled .. "/" .. #IPMTDungeon.bosses)
 end
 
+local unitIds = {'player', 'party1', 'party2', 'party3', 'party4'}
+local function InitPlayers()
+    IPMTDungeon.players = {}
+    for i, unitId in ipairs(unitIds) do
+        if UnitExists(unitId) then
+            local _, class = UnitClass(unitId)
+            local playerName = Addon:PrepareName(GetUnitName(unitId, true))
+            IPMTDungeon.players[playerName] = {
+                unitId = unitId,
+                class  = class,
+                color  = RAID_CLASS_COLORS[class] or HIGHLIGHT_FONT_COLOR,
+            }
+        end
+    end
+end
+
 local updateTimer = 0 
 function Addon:OnUpdate(elapsed)
     if IPMTDungeon and IPMTDungeon.keyActive then
@@ -571,6 +588,7 @@ local function ShowTimer()
         Addon.fMain.progress.text:SetTextColor(1,1,1)
 
         InitBossesInfo()
+        InitPlayers()
         initAffixes(affixes)
         Addon.deaths:Update()
         Addon:UpdateProgress()
@@ -586,6 +604,8 @@ local function ShowTimer()
         Addon.fMain:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
         Addon.fMain:RegisterEvent("ENCOUNTER_END")
         Addon.fMain:RegisterEvent("ENCOUNTER_START")
+        Addon.fMain:RegisterEvent("GROUP_JOINED")
+        Addon.fMain:RegisterEvent("GROUP_LEFT")
         IPMTDungeon.keyActive = true
         Addon:SetDungeonArtwork()
         if Addon.season.ShowTimer then
@@ -606,6 +626,8 @@ local function HideTimer()
     Addon.fMain:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     Addon.fMain:UnregisterEvent("ENCOUNTER_END")
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
+    Addon.fMain:UnregisterEvent("GROUP_JOINED")
+    Addon.fMain:UnregisterEvent("GROUP_LEFT")
 end
 
 local function EncounterEnd(encounterID, success)
@@ -686,6 +708,8 @@ function Addon:OnEvent(self, event, ...)
     elseif event == "VARIABLES_LOADED" then
         Addon:InitVars()
         Addon:Render()
+    elseif event == "GROUP_JOINED" or event == "GROUP_LEFT" then
+        InitPlayers()
     end
 end
 

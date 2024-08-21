@@ -179,6 +179,7 @@ Addon.cleanDungeon = {
     affixes     = {},
     level       = 0,
     players     = {},
+    lastHit     = {},
     prognosis   = {},
     isTeeming   = false,
     keyMapId    = 0,
