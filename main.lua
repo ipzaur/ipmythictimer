@@ -691,7 +691,7 @@ function Addon:OnEvent(self, event, ...)
         local inInstance, instanceType = IsInInstance()
         if not (inInstance and instanceType == "party") then
             HideTimer()
-            if ObjectiveTrackerFrame ~= nil and ObjectiveTrackerFrame.MODULES_UI_ORDER ~= nil then
+            if ObjectiveTrackerFrame ~= nil then
                 ObjectiveTrackerFrame:SetCollapsed(false)
             end
         else
