@@ -1,33 +1,31 @@
 local AddonName, Addon = ...
 
+--[[
 local OTClicked = false
-local function CheckExpandedOT()
+local function CheckCollapsedOT(self, isCollapsed)
     local inInstance, instanceType = IsInInstance()
     local inKey = IPMTDungeon.keyActive or (inInstance and instanceType == "party")
-    if inKey and not OTClicked and not ObjectiveTrackerFrame:IsCollapsed() then
-        ObjectiveTrackerFrame:SetCollapsed(true)
+    if inKey and not OTClicked and not isCollapsed then
+       -- ObjectiveTrackerFrame:SetCollapsed(true)
     end
     OTClicked = false
 end
-
-local tryCount = 0
-local function WaitAutoHider()
-    if ObjectiveTrackerFrame.AutoHider ~= nil then
-        ObjectiveTrackerFrame.AutoHider:HookScript('OnShow', function()
-            CheckExpandedOT()
-        end)
-    elseif tryCount < 10 then
-        tryCount = tryCount + 1
-        C_Timer.After(1, WaitAutoHider)
+]]
+local function CheckVisibleOT()
+    if IPMTDungeon.keyActive then
+        ObjectiveTrackerFrame:Hide()
     end
 end
 
 function Addon:elvUIFix()
-    hooksecurefunc(ObjectiveTrackerFrame, "SetCollapsed", CheckExpandedOT)
-    local clickFunc = ObjectiveTrackerFrame.Header.MinimizeButton:GetScript("OnClick")
-    ObjectiveTrackerFrame.Header.MinimizeButton:SetScript("OnClick", function(self)
-        OTClicked = true
-        clickFunc()
+    hooksecurefunc(ObjectiveTrackerFrame, "Show", CheckVisibleOT)
+--[[
+    hooksecurefunc(ObjectiveTrackerFrame, "SetCollapsed", CheckCollapsedOT)
+    ObjectiveTrackerFrame.Header.MinimizeButton:SetScript("PreClick", function(self, button)
+        if button == "LeftButton" then
+            OTClicked = true
+            print('clicked')
+        end
     end)
-    WaitAutoHider()
+]]
 end

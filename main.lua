@@ -612,7 +612,7 @@ local function ShowTimer()
             Addon.season:ShowTimer()
         end
         Addon:KalielsTrackerFix()
-        ObjectiveTrackerFrame:SetCollapsed(true)
+        ObjectiveTrackerFrame:Hide()
         Addon:HideHelp()
     end
 end
@@ -692,7 +692,7 @@ function Addon:OnEvent(self, event, ...)
         if not (inInstance and instanceType == "party") then
             HideTimer()
             if ObjectiveTrackerFrame ~= nil then
-                ObjectiveTrackerFrame:SetCollapsed(false)
+                ObjectiveTrackerFrame:Show()
             end
         else
             Addon:UpdateProgress()
