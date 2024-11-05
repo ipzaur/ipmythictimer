@@ -279,9 +279,15 @@ local function UpdateTime(block, elapsedTime)
                 [2] = block.timeLimit,
             },
         }
+        local deltaTime = 0
+        local timeLimit = block.timeLimit
+        if IPMTDungeon.isPeril then
+            deltaTime = 90
+            timeLimit = timeLimit - 90
+        end
         for level = 2,1,-1 do
-            IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][level] = timeCoef[level] * block.timeLimit
-            IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_ASC][2-level] = timeCoef[level] * block.timeLimit
+            IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][level] = timeCoef[level] * timeLimit + deltaTime
+            IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_ASC][2-level] = timeCoef[level] * timeLimit + deltaTime
         end
     end
     if Addon.fool ~= nil and IPMTDungeon.fool ~= nil and IPMTDungeon.fool > 0 then
@@ -587,6 +593,9 @@ local function initAffixes(affixes)
 
         if affix == Addon.AFFIX_TEEMING then
             IPMTDungeon.isTeeming = true
+        end
+        if affix == Addon.AFFIX_PERIL then
+            IPMTDungeon.isPeril = true
         end
         if affix == Addon.season.affix then
             Addon.season.isActive = true

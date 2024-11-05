@@ -2,6 +2,7 @@ local AddonName, Addon = ...
 Addon.version = 1349
 
 Addon.AFFIX_TEEMING = 5
+Addon.AFFIX_PERIL   = 152
 
 Addon.TIMER_DIRECTION_DESC  = 1
 Addon.TIMER_DIRECTION_ASC = 2
@@ -182,6 +183,7 @@ Addon.cleanDungeon = {
     lastHit     = {},
     prognosis   = {},
     isTeeming   = false,
+    isPeril     = false,
     keyMapId    = 0,
     artwork     = 3759909, -- Mists Of Tirna Scithe journal button
     timeLimit   = {
