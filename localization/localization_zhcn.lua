@@ -5,6 +5,7 @@ local AddonName, Addon = ...
 Addon.localization.ADDELEMENT = "添加元素"
 
 Addon.localization.BACKGROUND = "背景"
+Addon.localization.BGCOLOR    = "Background color" -- need correct
 Addon.localization.BORDER     = "边框"
 Addon.localization.BORDERLIST = "从库中选择一个边框"
 Addon.localization.BOTTOM     = "底部"
@@ -68,6 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "敌方被击杀",
     PROGNOSIS = "拉怪后百分比",
     TIMER     = "钥匙计时器",
+    TIMELINE  = "Time line", -- need corect
     TORMENT   = "磨难怪",
 }
 Addon.localization.ELEMACTION =  {
@@ -101,6 +103,7 @@ Addon.localization.HELP = {
     PROGRESS   = "已击杀小怪",
     TIMER      = "剩余时间",
 }
+Addon.localization.HORIZONTAL = "Horizontal" -- need correct
 
 Addon.localization.ICONSIZE   = "图标大小"
 Addon.localization.IMPORT     = "导入"
@@ -120,7 +123,9 @@ Addon.localization.MAPBUTOPT  = "显示/隐藏小地图按钮"
 Addon.localization.MELEEATACK = "近战攻击"
 
 Addon.localization.OPTIONS    = "选项"
+Addon.localization.ORIENT     = "Orientation" -- need correct
 
+Addon.localization.PADDING    = "Padding" -- need correct
 Addon.localization.POINT      = "点"
 Addon.localization.PRECISEPOS = "右键进行精确定位"
 Addon.localization.PROGFORMAT = {
@@ -180,6 +185,8 @@ Addon.localization.TIME       = "时间"
 Addon.localization.TIMERCHCKP = "计时器检查点"
 
 Addon.localization.UNKNOWN    = "未知"
+
+Addon.localization.VERTICAL   = "Vertical" -- need correct
 
 Addon.localization.WAVEALERT  = '每{percent}%提醒'
 Addon.localization.WIDTH      = "宽度"

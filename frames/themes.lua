@@ -14,6 +14,11 @@ local justifyVList = {
     BOTTOM = 'BOTTOM',
 }
 
+local timelineTypeList = {
+    H = Addon.localization.HORIZONTAL,
+    V = Addon.localization.VERTICAL,
+}
+
 local GetTextureList = {
     background = function()
         local textureList = LSM:List('background')
@@ -22,6 +27,17 @@ local GetTextureList = {
         }
         for i,texture in pairs(textureList) do
             local filepath = LSM:Fetch('background', texture)
+            if filepath then
+                list[filepath] = texture
+            end
+        end
+        return list
+    end,
+    statusbar = function()
+        local textureList = LSM:List('statusbar')
+        local list = {}
+        for i,texture in pairs(textureList) do
+            local filepath = LSM:Fetch('statusbar', texture)
             if filepath then
                 list[filepath] = texture
             end
@@ -495,6 +511,167 @@ function Addon:RecalcThemesHeight()
     Addon.fThemes.fContent:SetSize(320, (top - 52) * -1 + decorsHeight + Addon.fThemes.deaths:GetHeight() + 100)
 end
 
+
+function Addon:RenderTimelineEditor(subTop, elemInfo)
+    local fTimeline = Addon.fThemes.timeline
+
+    -- Timeline bg color
+    fTimeline.colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimeline.colorCaption:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop + 86)
+    fTimeline.colorCaption:SetJustifyH("LEFT")
+    fTimeline.colorCaption:SetSize(65, 20)
+    fTimeline.colorCaption:SetTextColor(1, 1, 1)
+    fTimeline.colorCaption:SetText(Addon.localization.COLOR)
+    -- Color
+    fTimeline.color = CreateFrame("Button", nil, fTimeline, "IPColorButton")
+    fTimeline.color:SetPoint("LEFT", fTimeline, "TOPLEFT", 90, subTop + 86)
+    fTimeline.color:SetBackdropColor(.5,0,0, 1)
+    fTimeline.color:SetCallback(function(self, r, g, b, a)
+        Addon:SetTimeline({
+            background = {
+                color = {r=r, g=g, b=b, a=a},
+            },
+        })
+    end)
+    local bgColor = elemInfo.background.color
+    fTimeline.color:ColorChange(bgColor.r, bgColor.g, bgColor.b, bgColor.a, true)
+    fTimeline.color:HookScript("OnEnter", function(self)
+        fTimeline:GetScript("OnEnter")(fTimeline)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.BGCOLOR, .9, .9, 0, 1, true)
+        GameTooltip:Show()
+    end)
+    fTimeline.color:HookScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+
+    -- Padding slider
+    fTimeline.padding = CreateFrame("Slider", nil, fTimeline, "IPOptionsSlider")
+    fTimeline.padding:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop)
+    fTimeline.padding:SetPoint("RIGHT", fTimeline, "TOPRIGHT", -10, subTop)
+    fTimeline.padding:SetOrientation('HORIZONTAL')
+    fTimeline.padding:SetMinMaxValues(0, 10)
+    fTimeline.padding:SetValueStep(1.0)
+    fTimeline.padding:EnableMouseWheel(0)
+    fTimeline.padding:SetObeyStepOnDrag(true)
+    fTimeline.padding.Low:SetText('0')
+    fTimeline.padding.High:SetText('10')
+    fTimeline.padding:SetScript('OnValueChanged', function(self)
+        local value = self:GetValue()
+        self.Text:SetText(Addon.localization.PADDING .. " (" .. value .. ")")
+        Addon:SetTimeline({
+            padding = value,
+        })
+    end)
+    fTimeline.padding:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+    fTimeline.padding:SetValue(elemInfo.padding)
+
+    -- Timeline type
+    subTop = subTop - 46
+    fTimeline.typeCaption = fTimeline:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimeline.typeCaption:SetPoint("CENTER", fTimeline, "TOP", 0, subTop)
+    fTimeline.typeCaption:SetJustifyH("CENTER")
+    fTimeline.typeCaption:SetSize(200, 20)
+    fTimeline.typeCaption:SetTextColor(1, 1, 1)
+    fTimeline.typeCaption:SetText(Addon.localization.ORIENT)
+
+    subTop = subTop - 24
+    fTimeline.type = CreateFrame("Button", nil, fTimeline, "IPListBox")
+    fTimeline.type:SetHeight(30)
+    fTimeline.type:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop)
+    fTimeline.type:SetPoint("RIGHT", fTimeline, "TOPRIGHT", -10, subTop)
+    fTimeline.type:SetList(timelineTypeList, elemInfo.type)
+    fTimeline.type:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetTimelineType(key, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetTimelineType(elemInfo.type)
+        end,
+        OnSelect = function(self, key, text)
+            Addon:SetTimelineType(key)
+        end,
+    })
+    fTimeline.type:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+
+    -- Bar texture caption
+    subTop = subTop - 46
+    fTimeline.barCaption = fTimeline:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimeline.barCaption:SetPoint("CENTER", fTimeline, "TOP", 0, subTop)
+    fTimeline.barCaption:SetJustifyH("CENTER")
+    fTimeline.barCaption:SetSize(200, 20)
+    fTimeline.barCaption:SetTextColor(1, 1, 1)
+    fTimeline.barCaption:SetText(Addon.localization.TEXTURE)
+
+    -- Bar texture selector
+    subTop = subTop - 24
+    fTimeline.barList = CreateFrame("Button", nil, fTimeline, "IPListBox")
+    fTimeline.barList:SetSize(20, 30)
+    fTimeline.barList.fText:Hide()
+    fTimeline.barList.fTriangle:ClearAllPoints()
+    fTimeline.barList.fTriangle:SetPoint("CENTER", fTimeline.barList, "CENTER", 0, 0)
+    fTimeline.barList.fTriangle:SetSize(8, 8)
+    fTimeline.barList:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop)
+    fTimeline.barList:SetList(GetTextureList['statusbar'], elemInfo.statusbar.texture)
+    fTimeline.barList:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetTimeline({
+                statusbar = {
+                    texture = key,
+                },
+            }, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetTimeline({
+                statusbar = {
+                    texture = IPMTTheme[IPMTOptions.theme].elements.timeline.statusbar.texture,
+                },
+            })
+        end,
+        OnSelect = function(self, key, text)
+            local byUser = fTimeline.barList.opened
+            if byUser then
+                fTimeline.bar:SetFocus()
+            end
+            fTimeline.bar:SetText(key)
+            if byUser then
+                fTimeline.bar:ClearFocus()
+            end
+        end,
+    })
+    fTimeline.barList:HookScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.TEXTURELST, .9, .9, 0, 1, true)
+        GameTooltip:Show()
+        self:GetParent():OnEnter()
+    end)
+    fTimeline.barList:HookScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+    -- Bar texture input
+    fTimeline.bar = CreateFrame("EditBox", nil, fTimeline, "IPEditBox")
+    fTimeline.bar:SetAutoFocus(false)
+    fTimeline.bar:SetPoint("LEFT", fTimeline, "TOPLEFT", 30, subTop)
+    fTimeline.bar:SetPoint("RIGHT", fTimeline, "TOPRIGHT", -10, subTop)
+    fTimeline.bar:SetHeight(30)
+    fTimeline.bar:SetScript('OnTextChanged', function(self)
+        Addon:SetTimeline({
+            statusbar = {
+                texture = self:GetText(),
+            },
+        })
+    end)
+    fTimeline.bar:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+
+    return subTop
+end
+
 function Addon:RenderFieldSet(frameParams, elemInfo)
     local frame = frameParams.label
     Addon.fThemes[frame] = CreateFrame("Frame", nil, Addon.fThemes.fContent, "IPFieldSet")
@@ -511,7 +688,12 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
     end)
     Addon.fThemes[frame]:HookScript("OnLeave", function(self)
         if not IPMTTheme[IPMTOptions.theme].elements[frame].hidden and not Addon.fMain[frame].isMovable then
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            if frame == 'timeline' then
+                local color = IPMTTheme[IPMTOptions.theme].elements[frame].background.color
+                Addon.fMain[frame]:SetBackdropColor(color.r, color.g, color.b, color.a)
+            else
+                Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            end
         end
     end)
 
@@ -758,6 +940,10 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
             self:GetParent():OnEnter()
         end)
         Addon.fThemes[frame].iconSize:SetValue(elemInfo.iconSize)
+    end
+
+    if frame == 'timeline' then
+        subTop = Addon:RenderTimelineEditor(subTop, elemInfo)
     end
 
     Addon.fThemes[frame]:SetHeight((subTop - 40) * -1)

@@ -62,6 +62,7 @@ end
 function Addon:SetTimerDirection(value)
     if IPMTOptions.timerDir ~= value then
         IPMTOptions.timerDir = value
+        Addon:RenderTimeline()
     end
 end
 
@@ -235,7 +236,9 @@ function Addon:ApplyTheme(themeID)
             Addon.fMain[frame]:Hide()
         else
             Addon.fMain[frame]:Show()
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            if frame ~= 'timeline' then
+                Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            end
         end
     end
     Addon:SetFont(theme.font, true)

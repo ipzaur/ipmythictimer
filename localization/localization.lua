@@ -5,6 +5,7 @@ Addon.localization = {}
 Addon.localization.ADDELEMENT = "Add element"
 
 Addon.localization.BACKGROUND = "Background"
+Addon.localization.BGCOLOR    = "Background color"
 Addon.localization.BORDER     = "Border"
 Addon.localization.BORDERLIST = "Select a border from the library"
 Addon.localization.BOTTOM     = "Bottom"
@@ -68,6 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Enemy killed",
     PROGNOSIS = "Percents after pull",
     TIMER     = "Key timer",
+    TIMELINE  = "Time line",
     TORMENT   = "Torment lieutenants",
 }
 Addon.localization.ELEMACTION =  {
@@ -101,6 +103,7 @@ Addon.localization.HELP       = {
     PROGRESS   = "Trash killed",
     TIMER      = "Time left",
 }
+Addon.localization.HORIZONTAL = "Horizontal"
 
 Addon.localization.ICONSIZE   = "Icon size"
 Addon.localization.IMPORT     = "Import"
@@ -120,7 +123,9 @@ Addon.localization.MAPBUTOPT  = "Show/Hide minimap button"
 Addon.localization.MELEEATACK = "Melee attack"
 
 Addon.localization.OPTIONS    = "Options"
+Addon.localization.ORIENT     = "Orientation"
 
+Addon.localization.PADDING    = "Padding"
 Addon.localization.POINT      = "Point"
 Addon.localization.PRECISEPOS = "Right click for precise positioning"
 Addon.localization.PROGFORMAT = {
@@ -180,6 +185,8 @@ Addon.localization.TIME       = "Time"
 Addon.localization.TIMERCHCKP = "Timer checkpoints"
 
 Addon.localization.UNKNOWN    = "Unknown"
+
+Addon.localization.VERTICAL   = "Vertical"
 
 Addon.localization.WAVEALERT  = "Alert every {percent}%"
 Addon.localization.WIDTH      = "Width"
