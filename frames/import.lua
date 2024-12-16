@@ -3,7 +3,7 @@ local AddonName, Addon = ...
 function Addon:RenderImport()
     local width = 600
     local heigth = 600
-    -- Debug Frame
+    -- Import Frame
     Addon.fImport = CreateFrame("Frame", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
     Addon.fImport:SetFrameStrata("HIGH")
     Addon.fImport:SetSize(width, heigth)
@@ -21,7 +21,7 @@ function Addon:RenderImport()
     end)
     Addon.fImport:Hide()
 
-    -- Options caption
+    -- Import caption
     Addon.fImport.caption = Addon.fImport:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
     Addon.fImport.caption:SetPoint("CENTER", Addon.fImport, "TOP", 0, -24)
     Addon.fImport.caption:SetJustifyH("CENTER")

@@ -69,7 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Убито противников",
     PROGNOSIS = "Проценты после боя",
     TIMER     = "Время ключа",
-    TIMELINE  = "Полоса времени",
+    TIMERBAR  = "Полоса времени",
     TORMENT   = "Истязающие лейтенанты",
 }
 Addon.localization.ELEMACTION =  {
@@ -122,6 +122,7 @@ Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настро
 Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку около миникарты"
 Addon.localization.MELEEATACK = "Ближний бой"
 
+Addon.localization.OK         = "Ок"
 Addon.localization.OPTIONS    = "Настройки"
 Addon.localization.ORIENT     = "Расположение"
 
@@ -190,4 +191,5 @@ Addon.localization.VERTICAL   = "Вертикальное"
 
 Addon.localization.WHODIED    = "Кто умер"
 Addon.localization.WIDTH      = "Ширина"
+Addon.localization.WHATSNEW   = "Что нового?"
 Addon.localization.WAVEALERT  = "Оповещать каждые {percent}%"

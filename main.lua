@@ -326,8 +326,8 @@ local function UpdateTime(block, elapsedTime)
     color = theme.elements.timer.color[plusLevel]
     IPMTDungeon.time = elapsedTime
 
-    -- update timeline
-    local fSection = Addon.fMain.timeline.section
+    -- update timerbar
+    local fSection = Addon.fMain.timerbar.section
     if IPMTOptions.timerDir == Addon.TIMER_DIRECTION_DESC then
         for i=plusLevel+1,2 do
             fSection[i].active:Hide()
@@ -345,7 +345,7 @@ local function UpdateTime(block, elapsedTime)
             local deltaTime = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel] - elapsedTime
             local ratio = deltaTime / fullDelta
             local barSize = math.ceil(fSection[plusLevel].size*ratio)
-            if IPMTTheme[IPMTOptions.theme].elements.timeline.type == 'H' then
+            if IPMTTheme[IPMTOptions.theme].elements.timerbar.type == 'H' then
                 fSection[plusLevel].active:SetWidth(barSize)
             else
                 fSection[plusLevel].active:SetHeight(barSize)
@@ -372,7 +372,7 @@ local function UpdateTime(block, elapsedTime)
             local deltaTime = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel] - elapsedTime
             local ratio = 1 - deltaTime / fullDelta
             local barSize = math.floor(fSection[barIndex].size*ratio) + 1
-            if IPMTTheme[IPMTOptions.theme].elements.timeline.type == 'H' then
+            if IPMTTheme[IPMTOptions.theme].elements.timerbar.type == 'H' then
                 fSection[barIndex].active:SetWidth(barSize)
             else
                 fSection[barIndex].active:SetHeight(barSize)
@@ -803,24 +803,11 @@ function Addon:InitVars()
     if IPMTDB == nil then
         IPMTDB = {}
     end
-
--- remove after 3 versions +
-    local iter = pairs(IPMTDB)
-    local id, npcInfo = iter(IPMTDB)
-    if id and id > 5000 then
-        IPMTDB = {}
-    end
--- remove after 3 version -
 end
 
 function Addon:Render()
     Addon:RenderMain()
-    
-    if IPMTOptions.version == 0 then
-        Addon:ShowOptions()
-        Addon:ShowHelp()
-        IPMTOptions.version = Addon.version
-    end
+    Addon:InitNews()
 end
 
 function Addon:Init()

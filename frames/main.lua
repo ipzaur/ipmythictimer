@@ -72,18 +72,18 @@ function Addon:RenderMain()
     end
 end
 
-function Addon:RenderTimeline(elemInfo)
+function Addon:RenderTimerbar(elemInfo)
     local theme = IPMTTheme[IPMTOptions.theme]
     if elemInfo == nil then
-        elemInfo = theme.elements.timeline
+        elemInfo = theme.elements.timerbar
     else
-        Addon.fMain.timeline:SetSize(elemInfo.size.w, elemInfo.size.h)
-        Addon.fMain.timeline:ClearAllPoints()
-        Addon.fMain.timeline:SetPoint(elemInfo.position.point, Addon.fMain, elemInfo.position.rPoint, elemInfo.position.x, elemInfo.position.y)
+        Addon.fMain.timerbar:SetSize(elemInfo.size.w, elemInfo.size.h)
+        Addon.fMain.timerbar:ClearAllPoints()
+        Addon.fMain.timerbar:SetPoint(elemInfo.position.point, Addon.fMain, elemInfo.position.rPoint, elemInfo.position.x, elemInfo.position.y)
     end
     local bgColor = elemInfo.background.color
-    Addon.fMain.timeline:SetBackdropColor(bgColor.r,bgColor.g,bgColor.b, bgColor.a)
-    local fSection = Addon.fMain.timeline.section
+    Addon.fMain.timerbar:SetBackdropColor(bgColor.r,bgColor.g,bgColor.b, bgColor.a)
+    local fSection = Addon.fMain.timerbar.section
 
     local padding = elemInfo.padding
     local size
@@ -106,16 +106,16 @@ function Addon:RenderTimeline(elemInfo)
         fSection[i].active:ClearAllPoints()
         if elemInfo.type == 'H' then
             fSection[i].shadow:SetWidth(fSection[i].size)
-            fSection[i].shadow:SetPoint('TOPLEFT', Addon.fMain.timeline, 'TOPLEFT', pos + padding, -padding)
-            fSection[i].shadow:SetPoint('BOTTOMLEFT', Addon.fMain.timeline, 'BOTTOMLEFT', pos + padding, padding)
+            fSection[i].shadow:SetPoint('TOPLEFT', Addon.fMain.timerbar, 'TOPLEFT', pos + padding, -padding)
+            fSection[i].shadow:SetPoint('BOTTOMLEFT', Addon.fMain.timerbar, 'BOTTOMLEFT', pos + padding, padding)
 
             fSection[i].active:SetWidth(fSection[i].size)
             fSection[i].active:SetPoint('TOPLEFT', fSection[i].shadow, 'TOPLEFT', 0, 0)
             fSection[i].active:SetPoint('BOTTOMLEFT', fSection[i].shadow, 'BOTTOMLEFT', 0, 0)
         else
             fSection[i].shadow:SetHeight(fSection[i].size)
-            fSection[i].shadow:SetPoint('BOTTOMLEFT', Addon.fMain.timeline, 'BOTTOMLEFT', padding, pos + padding)
-            fSection[i].shadow:SetPoint('BOTTOMRIGHT', Addon.fMain.timeline, 'BOTTOMRIGHT', -padding, pos + padding)
+            fSection[i].shadow:SetPoint('BOTTOMLEFT', Addon.fMain.timerbar, 'BOTTOMLEFT', padding, pos + padding)
+            fSection[i].shadow:SetPoint('BOTTOMRIGHT', Addon.fMain.timerbar, 'BOTTOMRIGHT', -padding, pos + padding)
 
             fSection[i].active:SetHeight(fSection[i].size)
             fSection[i].active:SetPoint('BOTTOMLEFT', fSection[i].shadow, 'BOTTOMLEFT', 0, 0)
@@ -136,18 +136,18 @@ function Addon:RenderTimeline(elemInfo)
     end
 end
 
-local function CreateTimeline()
-    Addon.fMain.timeline.section = {}
+local function CreateTimerbar()
+    Addon.fMain.timerbar.section = {}
     for i=0,2 do
-        Addon.fMain.timeline.section[i] = {
-            shadow = Addon.fMain.timeline:CreateTexture(),
-            active = Addon.fMain.timeline:CreateTexture(),
+        Addon.fMain.timerbar.section[i] = {
+            shadow = Addon.fMain.timerbar:CreateTexture(),
+            active = Addon.fMain.timerbar:CreateTexture(),
             size   = nil,
         }
-        Addon.fMain.timeline.section[i].shadow:SetDrawLayer("BACKGROUND", 1)
-        Addon.fMain.timeline.section[i].active:SetDrawLayer("BACKGROUND", 2)
+        Addon.fMain.timerbar.section[i].shadow:SetDrawLayer("BACKGROUND", 1)
+        Addon.fMain.timerbar.section[i].active:SetDrawLayer("BACKGROUND", 2)
     end
-    Addon:RenderTimeline()
+    Addon:RenderTimerbar()
 end
 
 function Addon:RenderElement(info)
@@ -168,8 +168,8 @@ function Addon:RenderElement(info)
     Addon.fMain[frame]:ClearAllPoints()
     Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, elemInfo.position.x, elemInfo.position.y)
     Addon.fMain[frame]:SetBackdrop(Addon.backdrop)
-    if frame == 'timeline' then
-        CreateTimeline()
+    if frame == 'timerbar' then
+        CreateTimerbar()
     else 
         Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
     end

@@ -98,7 +98,7 @@ Addon.theme[1] = {
             },
             hidden   = false,
         },
-        timeline = {
+        timerbar = {
             size   = {
                 w = 180,
                 h = 4,

@@ -69,7 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Trash tués",
     PROGNOSIS = "Pourcentage après pull",
     TIMER     = "Temps restant",
-    TIMELINE  = "Time line", -- need corect
+    TIMERBAR  = "Timer bar", -- need corect
     TORMENT   = "Tourments",
 }
 Addon.localization.ELEMACTION =  {
@@ -122,6 +122,7 @@ Addon.localization.MAPBUT     = "LMB (click) - basculer les options\n" ..
 Addon.localization.MAPBUTOPT  = "Bouton Afficher/Masquer la mini-carte"
 Addon.localization.MELEEATACK = "Attaque de mêlée"
 
+Addon.localization.OK         = "Ok"
 Addon.localization.OPTIONS    = "Options"
 Addon.localization.ORIENT     = "Orientation" -- need correct
 
@@ -190,4 +191,5 @@ Addon.localization.VERTICAL   = "Vertical" -- need correct
 
 Addon.localization.WAVEALERT  = "Alerter tous les {percent}%"
 Addon.localization.WIDTH      = "Largeur"
+Addon.localization.WHATSNEW   = "Quoi de neuf ?" -- need correct
 Addon.localization.WHODIED    = "Qui est mort"

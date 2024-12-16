@@ -12,7 +12,7 @@ local function CheckCollapsedOT(self, isCollapsed)
 end
 ]]
 local function CheckVisibleOT()
-    if IPMTDungeon.keyActive then
+    if IPMTDungeon ~= nil and IPMTDungeon.keyActive then
         ObjectiveTrackerFrame:Hide()
     end
 end

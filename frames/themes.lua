@@ -14,7 +14,7 @@ local justifyVList = {
     BOTTOM = 'BOTTOM',
 }
 
-local timelineTypeList = {
+local timerbarTypeList = {
     H = Addon.localization.HORIZONTAL,
     V = Addon.localization.VERTICAL,
 }
@@ -512,160 +512,160 @@ function Addon:RecalcThemesHeight()
 end
 
 
-function Addon:RenderTimelineEditor(subTop, elemInfo)
-    local fTimeline = Addon.fThemes.timeline
+function Addon:RenderTimerbarEditor(subTop, elemInfo)
+    local fTimerbar = Addon.fThemes.timerbar
 
-    -- Timeline bg color
-    fTimeline.colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    fTimeline.colorCaption:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop + 86)
-    fTimeline.colorCaption:SetJustifyH("LEFT")
-    fTimeline.colorCaption:SetSize(65, 20)
-    fTimeline.colorCaption:SetTextColor(1, 1, 1)
-    fTimeline.colorCaption:SetText(Addon.localization.COLOR)
+    -- Timerbar bg color
+    fTimerbar.colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimerbar.colorCaption:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop + 86)
+    fTimerbar.colorCaption:SetJustifyH("LEFT")
+    fTimerbar.colorCaption:SetSize(65, 20)
+    fTimerbar.colorCaption:SetTextColor(1, 1, 1)
+    fTimerbar.colorCaption:SetText(Addon.localization.COLOR)
     -- Color
-    fTimeline.color = CreateFrame("Button", nil, fTimeline, "IPColorButton")
-    fTimeline.color:SetPoint("LEFT", fTimeline, "TOPLEFT", 90, subTop + 86)
-    fTimeline.color:SetBackdropColor(.5,0,0, 1)
-    fTimeline.color:SetCallback(function(self, r, g, b, a)
-        Addon:SetTimeline({
+    fTimerbar.color = CreateFrame("Button", nil, fTimerbar, "IPColorButton")
+    fTimerbar.color:SetPoint("LEFT", fTimerbar, "TOPLEFT", 90, subTop + 86)
+    fTimerbar.color:SetBackdropColor(.5,0,0, 1)
+    fTimerbar.color:SetCallback(function(self, r, g, b, a)
+        Addon:SetTimerbar({
             background = {
                 color = {r=r, g=g, b=b, a=a},
             },
         })
     end)
     local bgColor = elemInfo.background.color
-    fTimeline.color:ColorChange(bgColor.r, bgColor.g, bgColor.b, bgColor.a, true)
-    fTimeline.color:HookScript("OnEnter", function(self)
-        fTimeline:GetScript("OnEnter")(fTimeline)
+    fTimerbar.color:ColorChange(bgColor.r, bgColor.g, bgColor.b, bgColor.a, true)
+    fTimerbar.color:HookScript("OnEnter", function(self)
+        fTimerbar:GetScript("OnEnter")(fTimerbar)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(Addon.localization.BGCOLOR, .9, .9, 0, 1, true)
         GameTooltip:Show()
     end)
-    fTimeline.color:HookScript("OnLeave", function(self)
+    fTimerbar.color:HookScript("OnLeave", function(self)
         GameTooltip:Hide()
     end)
 
     -- Padding slider
-    fTimeline.padding = CreateFrame("Slider", nil, fTimeline, "IPOptionsSlider")
-    fTimeline.padding:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop)
-    fTimeline.padding:SetPoint("RIGHT", fTimeline, "TOPRIGHT", -10, subTop)
-    fTimeline.padding:SetOrientation('HORIZONTAL')
-    fTimeline.padding:SetMinMaxValues(0, 10)
-    fTimeline.padding:SetValueStep(1.0)
-    fTimeline.padding:EnableMouseWheel(0)
-    fTimeline.padding:SetObeyStepOnDrag(true)
-    fTimeline.padding.Low:SetText('0')
-    fTimeline.padding.High:SetText('10')
-    fTimeline.padding:SetScript('OnValueChanged', function(self)
+    fTimerbar.padding = CreateFrame("Slider", nil, fTimerbar, "IPOptionsSlider")
+    fTimerbar.padding:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop)
+    fTimerbar.padding:SetPoint("RIGHT", fTimerbar, "TOPRIGHT", -10, subTop)
+    fTimerbar.padding:SetOrientation('HORIZONTAL')
+    fTimerbar.padding:SetMinMaxValues(0, 10)
+    fTimerbar.padding:SetValueStep(1.0)
+    fTimerbar.padding:EnableMouseWheel(0)
+    fTimerbar.padding:SetObeyStepOnDrag(true)
+    fTimerbar.padding.Low:SetText('0')
+    fTimerbar.padding.High:SetText('10')
+    fTimerbar.padding:SetScript('OnValueChanged', function(self)
         local value = self:GetValue()
         self.Text:SetText(Addon.localization.PADDING .. " (" .. value .. ")")
-        Addon:SetTimeline({
+        Addon:SetTimerbar({
             padding = value,
         })
     end)
-    fTimeline.padding:HookScript("OnEnter", function(self)
+    fTimerbar.padding:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
-    fTimeline.padding:SetValue(elemInfo.padding)
+    fTimerbar.padding:SetValue(elemInfo.padding)
 
-    -- Timeline type
+    -- Timerbar type
     subTop = subTop - 46
-    fTimeline.typeCaption = fTimeline:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    fTimeline.typeCaption:SetPoint("CENTER", fTimeline, "TOP", 0, subTop)
-    fTimeline.typeCaption:SetJustifyH("CENTER")
-    fTimeline.typeCaption:SetSize(200, 20)
-    fTimeline.typeCaption:SetTextColor(1, 1, 1)
-    fTimeline.typeCaption:SetText(Addon.localization.ORIENT)
+    fTimerbar.typeCaption = fTimerbar:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimerbar.typeCaption:SetPoint("CENTER", fTimerbar, "TOP", 0, subTop)
+    fTimerbar.typeCaption:SetJustifyH("CENTER")
+    fTimerbar.typeCaption:SetSize(200, 20)
+    fTimerbar.typeCaption:SetTextColor(1, 1, 1)
+    fTimerbar.typeCaption:SetText(Addon.localization.ORIENT)
 
     subTop = subTop - 24
-    fTimeline.type = CreateFrame("Button", nil, fTimeline, "IPListBox")
-    fTimeline.type:SetHeight(30)
-    fTimeline.type:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop)
-    fTimeline.type:SetPoint("RIGHT", fTimeline, "TOPRIGHT", -10, subTop)
-    fTimeline.type:SetList(timelineTypeList, elemInfo.type)
-    fTimeline.type:SetCallback({
+    fTimerbar.type = CreateFrame("Button", nil, fTimerbar, "IPListBox")
+    fTimerbar.type:SetHeight(30)
+    fTimerbar.type:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop)
+    fTimerbar.type:SetPoint("RIGHT", fTimerbar, "TOPRIGHT", -10, subTop)
+    fTimerbar.type:SetList(timerbarTypeList, elemInfo.type)
+    fTimerbar.type:SetCallback({
         OnHoverItem = function(self, fItem, key, text)
-            Addon:SetTimelineType(key, true)
+            Addon:SetTimerbarType(key, true)
         end,
         OnCancel = function(self)
-            Addon:SetTimelineType(elemInfo.type)
+            Addon:SetTimerbarType(elemInfo.type)
         end,
         OnSelect = function(self, key, text)
-            Addon:SetTimelineType(key)
+            Addon:SetTimerbarType(key)
         end,
     })
-    fTimeline.type:HookScript("OnEnter", function(self)
+    fTimerbar.type:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
 
     -- Bar texture caption
     subTop = subTop - 46
-    fTimeline.barCaption = fTimeline:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
-    fTimeline.barCaption:SetPoint("CENTER", fTimeline, "TOP", 0, subTop)
-    fTimeline.barCaption:SetJustifyH("CENTER")
-    fTimeline.barCaption:SetSize(200, 20)
-    fTimeline.barCaption:SetTextColor(1, 1, 1)
-    fTimeline.barCaption:SetText(Addon.localization.TEXTURE)
+    fTimerbar.barCaption = fTimerbar:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimerbar.barCaption:SetPoint("CENTER", fTimerbar, "TOP", 0, subTop)
+    fTimerbar.barCaption:SetJustifyH("CENTER")
+    fTimerbar.barCaption:SetSize(200, 20)
+    fTimerbar.barCaption:SetTextColor(1, 1, 1)
+    fTimerbar.barCaption:SetText(Addon.localization.TEXTURE)
 
     -- Bar texture selector
     subTop = subTop - 24
-    fTimeline.barList = CreateFrame("Button", nil, fTimeline, "IPListBox")
-    fTimeline.barList:SetSize(20, 30)
-    fTimeline.barList.fText:Hide()
-    fTimeline.barList.fTriangle:ClearAllPoints()
-    fTimeline.barList.fTriangle:SetPoint("CENTER", fTimeline.barList, "CENTER", 0, 0)
-    fTimeline.barList.fTriangle:SetSize(8, 8)
-    fTimeline.barList:SetPoint("LEFT", fTimeline, "TOPLEFT", 10, subTop)
-    fTimeline.barList:SetList(GetTextureList['statusbar'], elemInfo.statusbar.texture)
-    fTimeline.barList:SetCallback({
+    fTimerbar.barList = CreateFrame("Button", nil, fTimerbar, "IPListBox")
+    fTimerbar.barList:SetSize(20, 30)
+    fTimerbar.barList.fText:Hide()
+    fTimerbar.barList.fTriangle:ClearAllPoints()
+    fTimerbar.barList.fTriangle:SetPoint("CENTER", fTimerbar.barList, "CENTER", 0, 0)
+    fTimerbar.barList.fTriangle:SetSize(8, 8)
+    fTimerbar.barList:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop)
+    fTimerbar.barList:SetList(GetTextureList['statusbar'], elemInfo.statusbar.texture)
+    fTimerbar.barList:SetCallback({
         OnHoverItem = function(self, fItem, key, text)
-            Addon:SetTimeline({
+            Addon:SetTimerbar({
                 statusbar = {
                     texture = key,
                 },
             }, true)
         end,
         OnCancel = function(self)
-            Addon:SetTimeline({
+            Addon:SetTimerbar({
                 statusbar = {
-                    texture = IPMTTheme[IPMTOptions.theme].elements.timeline.statusbar.texture,
+                    texture = IPMTTheme[IPMTOptions.theme].elements.timerbar.statusbar.texture,
                 },
             })
         end,
         OnSelect = function(self, key, text)
-            local byUser = fTimeline.barList.opened
+            local byUser = fTimerbar.barList.opened
             if byUser then
-                fTimeline.bar:SetFocus()
+                fTimerbar.bar:SetFocus()
             end
-            fTimeline.bar:SetText(key)
+            fTimerbar.bar:SetText(key)
             if byUser then
-                fTimeline.bar:ClearFocus()
+                fTimerbar.bar:ClearFocus()
             end
         end,
     })
-    fTimeline.barList:HookScript("OnEnter", function(self)
+    fTimerbar.barList:HookScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText(Addon.localization.TEXTURELST, .9, .9, 0, 1, true)
         GameTooltip:Show()
         self:GetParent():OnEnter()
     end)
-    fTimeline.barList:HookScript("OnLeave", function(self)
+    fTimerbar.barList:HookScript("OnLeave", function(self)
         GameTooltip:Hide()
     end)
     -- Bar texture input
-    fTimeline.bar = CreateFrame("EditBox", nil, fTimeline, "IPEditBox")
-    fTimeline.bar:SetAutoFocus(false)
-    fTimeline.bar:SetPoint("LEFT", fTimeline, "TOPLEFT", 30, subTop)
-    fTimeline.bar:SetPoint("RIGHT", fTimeline, "TOPRIGHT", -10, subTop)
-    fTimeline.bar:SetHeight(30)
-    fTimeline.bar:SetScript('OnTextChanged', function(self)
-        Addon:SetTimeline({
+    fTimerbar.bar = CreateFrame("EditBox", nil, fTimerbar, "IPEditBox")
+    fTimerbar.bar:SetAutoFocus(false)
+    fTimerbar.bar:SetPoint("LEFT", fTimerbar, "TOPLEFT", 30, subTop)
+    fTimerbar.bar:SetPoint("RIGHT", fTimerbar, "TOPRIGHT", -10, subTop)
+    fTimerbar.bar:SetHeight(30)
+    fTimerbar.bar:SetScript('OnTextChanged', function(self)
+        Addon:SetTimerbar({
             statusbar = {
                 texture = self:GetText(),
             },
         })
     end)
-    fTimeline.bar:HookScript("OnEnter", function(self)
+    fTimerbar.bar:HookScript("OnEnter", function(self)
         self:GetParent():OnEnter()
     end)
 
@@ -688,7 +688,7 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
     end)
     Addon.fThemes[frame]:HookScript("OnLeave", function(self)
         if not IPMTTheme[IPMTOptions.theme].elements[frame].hidden and not Addon.fMain[frame].isMovable then
-            if frame == 'timeline' then
+            if frame == 'timerbar' then
                 local color = IPMTTheme[IPMTOptions.theme].elements[frame].background.color
                 Addon.fMain[frame]:SetBackdropColor(color.r, color.g, color.b, color.a)
             else
@@ -942,8 +942,8 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
         Addon.fThemes[frame].iconSize:SetValue(elemInfo.iconSize)
     end
 
-    if frame == 'timeline' then
-        subTop = Addon:RenderTimelineEditor(subTop, elemInfo)
+    if frame == 'timerbar' then
+        subTop = Addon:RenderTimerbarEditor(subTop, elemInfo)
     end
 
     Addon.fThemes[frame]:SetHeight((subTop - 40) * -1)

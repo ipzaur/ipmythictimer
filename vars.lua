@@ -1,5 +1,4 @@
 local AddonName, Addon = ...
-Addon.version = 1349
 
 Addon.AFFIX_TEEMING = 5
 Addon.AFFIX_PERIL   = 152
@@ -93,8 +92,8 @@ Addon.frames = {
         },
     },
     {
-        label = 'timeline',
-        name = Addon.localization.ELEMENT.TIMELINE,
+        label = 'timerbar',
+        name = Addon.localization.ELEMENT.TIMERBAR,
         canResize = true,
     },
     {
@@ -150,7 +149,6 @@ Addon.frames = {
 }
 
 Addon.defaultOption = {
-    version   = 0,
     scale     = 0,
     direction = 1,
     progress  = 1,
@@ -176,6 +174,7 @@ Addon.defaultOption = {
     MDTversion = 0,
     limitProgress = true,
     keysName = {},
+    news = nil,
 }
 
 Addon.cleanDungeon = {

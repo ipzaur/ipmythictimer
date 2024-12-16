@@ -69,7 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Enemy killed",
     PROGNOSIS = "Percents after pull",
     TIMER     = "Key timer",
-    TIMELINE  = "Time line",
+    TIMERBAR  = "Timer bar",
     TORMENT   = "Torment lieutenants",
 }
 Addon.localization.ELEMACTION =  {
@@ -122,6 +122,7 @@ Addon.localization.MAPBUT     = "LMB (click) - toggle options\n" ..
 Addon.localization.MAPBUTOPT  = "Show/Hide minimap button"
 Addon.localization.MELEEATACK = "Melee attack"
 
+Addon.localization.OK         = "Ok"
 Addon.localization.OPTIONS    = "Options"
 Addon.localization.ORIENT     = "Orientation"
 
@@ -190,4 +191,5 @@ Addon.localization.VERTICAL   = "Vertical"
 
 Addon.localization.WAVEALERT  = "Alert every {percent}%"
 Addon.localization.WIDTH      = "Width"
+Addon.localization.WHATSNEW   = "What's new?"
 Addon.localization.WHODIED    = "Who died"

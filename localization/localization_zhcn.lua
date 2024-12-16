@@ -69,7 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "敌方被击杀",
     PROGNOSIS = "拉怪后百分比",
     TIMER     = "钥匙计时器",
-    TIMELINE  = "Time line", -- need corect
+    TIMERBAR  = "Timer bar", -- need corect
     TORMENT   = "磨难怪",
 }
 Addon.localization.ELEMACTION =  {
@@ -122,6 +122,7 @@ Addon.localization.MAPBUT     = "鼠标左键(单击)- 切换选项\n" ..
 Addon.localization.MAPBUTOPT  = "显示/隐藏小地图按钮"
 Addon.localization.MELEEATACK = "近战攻击"
 
+Addon.localization.OK         = "Ok"
 Addon.localization.OPTIONS    = "选项"
 Addon.localization.ORIENT     = "Orientation" -- need correct
 
@@ -190,4 +191,5 @@ Addon.localization.VERTICAL   = "Vertical" -- need correct
 
 Addon.localization.WAVEALERT  = '每{percent}%提醒'
 Addon.localization.WIDTH      = "宽度"
+Addon.localization.WHATSNEW   = "What's new?" -- need correct
 Addon.localization.WHODIED    = "谁死了"
