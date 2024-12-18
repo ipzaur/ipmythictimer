@@ -93,6 +93,9 @@ function Addon:ToggleMapButton(show)
 end
 
 function Addon:ShowOptions()
+    if Addon.opened.options then
+        return
+    end
     Addon.opened.options = true
     if Addon.fOptions == nil then
         Addon:RenderOptions()

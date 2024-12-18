@@ -27,20 +27,21 @@ function Addon:InitNews()
     local showHelp = false
     if IPMTOptions.news == nil then
         IPMTOptions.news = {}
+        Addon:ShowOptions()
+        Addon:ShowHelp()
         showHelp = true
     end
 
     local version = C_AddOns.GetAddOnMetadata(AddonName, 'Version')
     local news = Addon.newsList[version]
     if news ~= nil and IPMTOptions.news[version] == nil then
-        if Addon.fNews == nil then
-            Addon:RenderNews()
-        end
-        Addon:ShowNews(news)
         IPMTOptions.news[version] = true
-        Addon:ShowOptions()
-        if showHelp then
-            Addon:ShowHelp()
+        if not showHelp or version == '1.4.0' then -- remove 1.4.0 then
+            if Addon.fNews == nil then
+                Addon:RenderNews()
+            end
+            Addon:ShowOptions()
+            Addon:ShowNews(news)
         end
     end
 end
