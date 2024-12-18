@@ -5,6 +5,7 @@ local AddonName, Addon = ...
 Addon.localization.ADDELEMENT = "加入元素"
 
 Addon.localization.BACKGROUND = "背景"
+Addon.localization.BGCOLOR    = "Background color" -- need correct
 Addon.localization.BORDER     = "邊框"
 Addon.localization.BORDERLIST = "從函數庫中選擇一個邊框"
 Addon.localization.BOTTOM     = "底部"
@@ -68,6 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "已擊殺小怪",
     PROGNOSIS = "擊殺拉怪後的百分比",
     TIMER     = "鑰石計時器",
+    TIMERBAR  = "Timer bar", -- need corect
     TORMENT   = "折磨副官",
 }
 Addon.localization.ELEMACTION =  {
@@ -101,6 +103,7 @@ Addon.localization.HELP = {
     PROGRESS   = "已擊殺小怪",
     TIMER      = "剩餘的時間",
 }
+Addon.localization.HORIZONTAL = "Horizontal" -- need correct
 
 Addon.localization.ICONSIZE   = "圖示大小"
 Addon.localization.IMPORT     = "匯入"
@@ -119,8 +122,11 @@ Addon.localization.MAPBUT     = "滑鼠左鍵（單擊）- 切換選項\n" ..
 Addon.localization.MAPBUTOPT  = "顯示/隱藏小地圖按鈕"
 Addon.localization.MELEEATACK = "近戰攻擊"
 
+Addon.localization.OK         = "Ok"
 Addon.localization.OPTIONS    = "選項"
+Addon.localization.ORIENT     = "Orientation" -- need correct
 
+Addon.localization.PADDING    = "Padding" -- need correct
 Addon.localization.POINT      = "位置"
 Addon.localization.PRECISEPOS = "右鍵單擊以精確定位"
 Addon.localization.PROGFORMAT = {
@@ -181,6 +187,9 @@ Addon.localization.TIMERCHCKP = "計時器檢查點"
 
 Addon.localization.UNKNOWN    = "未知"
 
+Addon.localization.VERTICAL   = "Vertical" -- need correct
+
 Addon.localization.WAVEALERT  = '每過{percent}%警告'
 Addon.localization.WIDTH      = "寬度"
+Addon.localization.WHATSNEW   = "What's new?" -- need correct
 Addon.localization.WHODIED    = "誰死了"

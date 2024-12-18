@@ -5,6 +5,7 @@ local AddonName, Addon = ...
 Addon.localization.ADDELEMENT = "Добавить элемент"
 
 Addon.localization.BACKGROUND = "Фон"
+Addon.localization.BGCOLOR    = "Цвет фона"
 Addon.localization.BORDER     = "Рамка"
 Addon.localization.BORDERLIST = "Выбрать рамку из библиотеки"
 Addon.localization.BOTTOM     = "Снизу"
@@ -68,6 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Убито противников",
     PROGNOSIS = "Проценты после боя",
     TIMER     = "Время ключа",
+    TIMERBAR  = "Полоса времени",
     TORMENT   = "Истязающие лейтенанты",
 }
 Addon.localization.ELEMACTION =  {
@@ -101,6 +103,7 @@ Addon.localization.HELP       = {
     PROGRESS   = "Убито противников",
     TIMER      = "Оставшееся время",
 }
+Addon.localization.HORIZONTAL = "Горизонтальное"
 
 Addon.localization.ICONSIZE   = "Размер иконки"
 Addon.localization.IMPORT     = "Импорт"
@@ -119,8 +122,11 @@ Addon.localization.MAPBUT     = "ЛКМ (клик) - открыть настро
 Addon.localization.MAPBUTOPT  = "Показать/Скрыть кнопку около миникарты"
 Addon.localization.MELEEATACK = "Ближний бой"
 
+Addon.localization.OK         = "Ок"
 Addon.localization.OPTIONS    = "Настройки"
+Addon.localization.ORIENT     = "Расположение"
 
+Addon.localization.PADDING    = "Отступ"
 Addon.localization.POINT      = "Точка опоры"
 Addon.localization.PRECISEPOS = "Правый клик для точного позиционирования"
 Addon.localization.PROGFORMAT = {
@@ -181,6 +187,9 @@ Addon.localization.TIMERCHCKP = "Контрольные точки"
 
 Addon.localization.UNKNOWN    = "Неизвестно"
 
+Addon.localization.VERTICAL   = "Вертикальное"
+
 Addon.localization.WHODIED    = "Кто умер"
 Addon.localization.WIDTH      = "Ширина"
+Addon.localization.WHATSNEW   = "Что нового?"
 Addon.localization.WAVEALERT  = "Оповещать каждые {percent}%"

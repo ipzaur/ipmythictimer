@@ -14,6 +14,11 @@ local justifyVList = {
     BOTTOM = 'BOTTOM',
 }
 
+local timerbarTypeList = {
+    H = Addon.localization.HORIZONTAL,
+    V = Addon.localization.VERTICAL,
+}
+
 local GetTextureList = {
     background = function()
         local textureList = LSM:List('background')
@@ -22,6 +27,17 @@ local GetTextureList = {
         }
         for i,texture in pairs(textureList) do
             local filepath = LSM:Fetch('background', texture)
+            if filepath then
+                list[filepath] = texture
+            end
+        end
+        return list
+    end,
+    statusbar = function()
+        local textureList = LSM:List('statusbar')
+        local list = {}
+        for i,texture in pairs(textureList) do
+            local filepath = LSM:Fetch('statusbar', texture)
             if filepath then
                 list[filepath] = texture
             end
@@ -495,6 +511,167 @@ function Addon:RecalcThemesHeight()
     Addon.fThemes.fContent:SetSize(320, (top - 52) * -1 + decorsHeight + Addon.fThemes.deaths:GetHeight() + 100)
 end
 
+
+function Addon:RenderTimerbarEditor(subTop, elemInfo)
+    local fTimerbar = Addon.fThemes.timerbar
+
+    -- Timerbar bg color
+    fTimerbar.colorCaption = Addon.fThemes.bg:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimerbar.colorCaption:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop + 86)
+    fTimerbar.colorCaption:SetJustifyH("LEFT")
+    fTimerbar.colorCaption:SetSize(65, 20)
+    fTimerbar.colorCaption:SetTextColor(1, 1, 1)
+    fTimerbar.colorCaption:SetText(Addon.localization.COLOR)
+    -- Color
+    fTimerbar.color = CreateFrame("Button", nil, fTimerbar, "IPColorButton")
+    fTimerbar.color:SetPoint("LEFT", fTimerbar, "TOPLEFT", 90, subTop + 86)
+    fTimerbar.color:SetBackdropColor(.5,0,0, 1)
+    fTimerbar.color:SetCallback(function(self, r, g, b, a)
+        Addon:SetTimerbar({
+            background = {
+                color = {r=r, g=g, b=b, a=a},
+            },
+        })
+    end)
+    local bgColor = elemInfo.background.color
+    fTimerbar.color:ColorChange(bgColor.r, bgColor.g, bgColor.b, bgColor.a, true)
+    fTimerbar.color:HookScript("OnEnter", function(self)
+        fTimerbar:GetScript("OnEnter")(fTimerbar)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.BGCOLOR, .9, .9, 0, 1, true)
+        GameTooltip:Show()
+    end)
+    fTimerbar.color:HookScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+
+    -- Padding slider
+    fTimerbar.padding = CreateFrame("Slider", nil, fTimerbar, "IPOptionsSlider")
+    fTimerbar.padding:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop)
+    fTimerbar.padding:SetPoint("RIGHT", fTimerbar, "TOPRIGHT", -10, subTop)
+    fTimerbar.padding:SetOrientation('HORIZONTAL')
+    fTimerbar.padding:SetMinMaxValues(0, 10)
+    fTimerbar.padding:SetValueStep(1.0)
+    fTimerbar.padding:EnableMouseWheel(0)
+    fTimerbar.padding:SetObeyStepOnDrag(true)
+    fTimerbar.padding.Low:SetText('0')
+    fTimerbar.padding.High:SetText('10')
+    fTimerbar.padding:SetScript('OnValueChanged', function(self)
+        local value = self:GetValue()
+        self.Text:SetText(Addon.localization.PADDING .. " (" .. value .. ")")
+        Addon:SetTimerbar({
+            padding = value,
+        })
+    end)
+    fTimerbar.padding:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+    fTimerbar.padding:SetValue(elemInfo.padding)
+
+    -- Timerbar type
+    subTop = subTop - 46
+    fTimerbar.typeCaption = fTimerbar:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimerbar.typeCaption:SetPoint("CENTER", fTimerbar, "TOP", 0, subTop)
+    fTimerbar.typeCaption:SetJustifyH("CENTER")
+    fTimerbar.typeCaption:SetSize(200, 20)
+    fTimerbar.typeCaption:SetTextColor(1, 1, 1)
+    fTimerbar.typeCaption:SetText(Addon.localization.ORIENT)
+
+    subTop = subTop - 24
+    fTimerbar.type = CreateFrame("Button", nil, fTimerbar, "IPListBox")
+    fTimerbar.type:SetHeight(30)
+    fTimerbar.type:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop)
+    fTimerbar.type:SetPoint("RIGHT", fTimerbar, "TOPRIGHT", -10, subTop)
+    fTimerbar.type:SetList(timerbarTypeList, elemInfo.type)
+    fTimerbar.type:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetTimerbarType(key, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetTimerbarType(elemInfo.type)
+        end,
+        OnSelect = function(self, key, text)
+            Addon:SetTimerbarType(key)
+        end,
+    })
+    fTimerbar.type:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+
+    -- Bar texture caption
+    subTop = subTop - 46
+    fTimerbar.barCaption = fTimerbar:CreateFontString(nil, "BACKGROUND", "GameFontNormal")
+    fTimerbar.barCaption:SetPoint("CENTER", fTimerbar, "TOP", 0, subTop)
+    fTimerbar.barCaption:SetJustifyH("CENTER")
+    fTimerbar.barCaption:SetSize(200, 20)
+    fTimerbar.barCaption:SetTextColor(1, 1, 1)
+    fTimerbar.barCaption:SetText(Addon.localization.TEXTURE)
+
+    -- Bar texture selector
+    subTop = subTop - 24
+    fTimerbar.barList = CreateFrame("Button", nil, fTimerbar, "IPListBox")
+    fTimerbar.barList:SetSize(20, 30)
+    fTimerbar.barList.fText:Hide()
+    fTimerbar.barList.fTriangle:ClearAllPoints()
+    fTimerbar.barList.fTriangle:SetPoint("CENTER", fTimerbar.barList, "CENTER", 0, 0)
+    fTimerbar.barList.fTriangle:SetSize(8, 8)
+    fTimerbar.barList:SetPoint("LEFT", fTimerbar, "TOPLEFT", 10, subTop)
+    fTimerbar.barList:SetList(GetTextureList['statusbar'], elemInfo.statusbar.texture)
+    fTimerbar.barList:SetCallback({
+        OnHoverItem = function(self, fItem, key, text)
+            Addon:SetTimerbar({
+                statusbar = {
+                    texture = key,
+                },
+            }, true)
+        end,
+        OnCancel = function(self)
+            Addon:SetTimerbar({
+                statusbar = {
+                    texture = IPMTTheme[IPMTOptions.theme].elements.timerbar.statusbar.texture,
+                },
+            })
+        end,
+        OnSelect = function(self, key, text)
+            local byUser = fTimerbar.barList.opened
+            if byUser then
+                fTimerbar.bar:SetFocus()
+            end
+            fTimerbar.bar:SetText(key)
+            if byUser then
+                fTimerbar.bar:ClearFocus()
+            end
+        end,
+    })
+    fTimerbar.barList:HookScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(Addon.localization.TEXTURELST, .9, .9, 0, 1, true)
+        GameTooltip:Show()
+        self:GetParent():OnEnter()
+    end)
+    fTimerbar.barList:HookScript("OnLeave", function(self)
+        GameTooltip:Hide()
+    end)
+    -- Bar texture input
+    fTimerbar.bar = CreateFrame("EditBox", nil, fTimerbar, "IPEditBox")
+    fTimerbar.bar:SetAutoFocus(false)
+    fTimerbar.bar:SetPoint("LEFT", fTimerbar, "TOPLEFT", 30, subTop)
+    fTimerbar.bar:SetPoint("RIGHT", fTimerbar, "TOPRIGHT", -10, subTop)
+    fTimerbar.bar:SetHeight(30)
+    fTimerbar.bar:SetScript('OnTextChanged', function(self)
+        Addon:SetTimerbar({
+            statusbar = {
+                texture = self:GetText(),
+            },
+        })
+    end)
+    fTimerbar.bar:HookScript("OnEnter", function(self)
+        self:GetParent():OnEnter()
+    end)
+
+    return subTop
+end
+
 function Addon:RenderFieldSet(frameParams, elemInfo)
     local frame = frameParams.label
     Addon.fThemes[frame] = CreateFrame("Frame", nil, Addon.fThemes.fContent, "IPFieldSet")
@@ -511,7 +688,12 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
     end)
     Addon.fThemes[frame]:HookScript("OnLeave", function(self)
         if not IPMTTheme[IPMTOptions.theme].elements[frame].hidden and not Addon.fMain[frame].isMovable then
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            if frame == 'timerbar' then
+                local color = IPMTTheme[IPMTOptions.theme].elements[frame].background.color
+                Addon.fMain[frame]:SetBackdropColor(color.r, color.g, color.b, color.a)
+            else
+                Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            end
         end
     end)
 
@@ -758,6 +940,10 @@ function Addon:RenderFieldSet(frameParams, elemInfo)
             self:GetParent():OnEnter()
         end)
         Addon.fThemes[frame].iconSize:SetValue(elemInfo.iconSize)
+    end
+
+    if frame == 'timerbar' then
+        subTop = Addon:RenderTimerbarEditor(subTop, elemInfo)
     end
 
     Addon.fThemes[frame]:SetHeight((subTop - 40) * -1)

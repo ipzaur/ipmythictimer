@@ -72,6 +72,83 @@ function Addon:RenderMain()
     end
 end
 
+function Addon:RenderTimerbar(elemInfo)
+    local theme = IPMTTheme[IPMTOptions.theme]
+    if elemInfo == nil then
+        elemInfo = theme.elements.timerbar
+    else
+        Addon.fMain.timerbar:SetSize(elemInfo.size.w, elemInfo.size.h)
+        Addon.fMain.timerbar:ClearAllPoints()
+        Addon.fMain.timerbar:SetPoint(elemInfo.position.point, Addon.fMain, elemInfo.position.rPoint, elemInfo.position.x, elemInfo.position.y)
+    end
+    local bgColor = elemInfo.background.color
+    Addon.fMain.timerbar:SetBackdropColor(bgColor.r,bgColor.g,bgColor.b, bgColor.a)
+    local fSection = Addon.fMain.timerbar.section
+
+    local padding = elemInfo.padding
+    local size
+    if elemInfo.type == 'H' then
+        size = elemInfo.size.w - 2*padding
+    else
+        size = elemInfo.size.h - 2*padding
+    end
+    fSection[1].size = math.ceil(size*0.2)
+    if IPMTOptions.timerDir == Addon.TIMER_DIRECTION_DESC then
+        fSection[0].size = fSection[1].size
+        fSection[2].size = size - 2*fSection[0].size - 4
+    else
+        fSection[0].size = size - 2*fSection[1].size - 4
+        fSection[2].size = fSection[1].size
+    end
+    local pos = 0
+    for i=0,2 do
+        fSection[i].shadow:ClearAllPoints()
+        fSection[i].active:ClearAllPoints()
+        if elemInfo.type == 'H' then
+            fSection[i].shadow:SetWidth(fSection[i].size)
+            fSection[i].shadow:SetPoint('TOPLEFT', Addon.fMain.timerbar, 'TOPLEFT', pos + padding, -padding)
+            fSection[i].shadow:SetPoint('BOTTOMLEFT', Addon.fMain.timerbar, 'BOTTOMLEFT', pos + padding, padding)
+
+            fSection[i].active:SetWidth(fSection[i].size)
+            fSection[i].active:SetPoint('TOPLEFT', fSection[i].shadow, 'TOPLEFT', 0, 0)
+            fSection[i].active:SetPoint('BOTTOMLEFT', fSection[i].shadow, 'BOTTOMLEFT', 0, 0)
+        else
+            fSection[i].shadow:SetHeight(fSection[i].size)
+            fSection[i].shadow:SetPoint('BOTTOMLEFT', Addon.fMain.timerbar, 'BOTTOMLEFT', padding, pos + padding)
+            fSection[i].shadow:SetPoint('BOTTOMRIGHT', Addon.fMain.timerbar, 'BOTTOMRIGHT', -padding, pos + padding)
+
+            fSection[i].active:SetHeight(fSection[i].size)
+            fSection[i].active:SetPoint('BOTTOMLEFT', fSection[i].shadow, 'BOTTOMLEFT', 0, 0)
+            fSection[i].active:SetPoint('BOTTOMRIGHT', fSection[i].shadow, 'BOTTOMRIGHT', 0, 0)
+        end
+        pos = pos + fSection[i].size + 2
+
+        fSection[i].shadow:SetTexture('Interface\\Buttons\\WHITE8X8')
+        fSection[i].shadow:SetVertexColor(0, 0, 0, .75)
+        local color = IPMTTheme[IPMTOptions.theme].elements.timer.color[i]
+        fSection[i].active:SetTexture(elemInfo.statusbar.texture)
+        fSection[i].active:SetVertexColor(color.r, color.g, color.b, color.a)
+        if elemInfo.type == 'H' then
+            fSection[i].active:SetTexCoord(0,0, 0,1, 1,0, 1,1)
+        else
+            fSection[i].active:SetTexCoord(0,1, 1,1, 0,0, 1,0)
+        end
+    end
+end
+
+local function CreateTimerbar()
+    Addon.fMain.timerbar.section = {}
+    for i=0,2 do
+        Addon.fMain.timerbar.section[i] = {
+            shadow = Addon.fMain.timerbar:CreateTexture(),
+            active = Addon.fMain.timerbar:CreateTexture(),
+            size   = nil,
+        }
+        Addon.fMain.timerbar.section[i].shadow:SetDrawLayer("BACKGROUND", 1)
+        Addon.fMain.timerbar.section[i].active:SetDrawLayer("BACKGROUND", 2)
+    end
+    Addon:RenderTimerbar()
+end
 
 function Addon:RenderElement(info)
     local theme = IPMTTheme[IPMTOptions.theme]
@@ -91,7 +168,11 @@ function Addon:RenderElement(info)
     Addon.fMain[frame]:ClearAllPoints()
     Addon.fMain[frame]:SetPoint(point, Addon.fMain, rPoint, elemInfo.position.x, elemInfo.position.y)
     Addon.fMain[frame]:SetBackdrop(Addon.backdrop)
-    Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+    if frame == 'timerbar' then
+        CreateTimerbar()
+    else 
+        Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+    end
     if info.canResize then
         Addon.fMain[frame]:SetSize(elemInfo.size.w, elemInfo.size.h)
     end

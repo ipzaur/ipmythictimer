@@ -62,6 +62,7 @@ end
 function Addon:SetTimerDirection(value)
     if IPMTOptions.timerDir ~= value then
         IPMTOptions.timerDir = value
+        Addon:RenderTimerbar()
     end
 end
 
@@ -92,6 +93,9 @@ function Addon:ToggleMapButton(show)
 end
 
 function Addon:ShowOptions()
+    if Addon.opened.options then
+        return
+    end
     Addon.opened.options = true
     if Addon.fOptions == nil then
         Addon:RenderOptions()
@@ -166,10 +170,17 @@ function Addon:InitOptions()
     if IPMTOptions ~= nil and IPMTOptions.keysName then
         keysName = IPMTOptions.keysName
     end
+    local news = nil
+    if IPMTOptions ~= nil and IPMTOptions.news then
+        news = IPMTOptions.news
+    end
 
     IPMTOptions = Addon:CopyObject(Addon.defaultOption, IPMTOptions)
     if globalVars ~= nil then
         IPMTOptions.global = globalVars
+    end
+    if news ~= nil then
+        IPMTOptions.news = news
     end
     if keysName ~= nil then
         IPMTOptions.keysName = keysName
@@ -235,7 +246,9 @@ function Addon:ApplyTheme(themeID)
             Addon.fMain[frame]:Hide()
         else
             Addon.fMain[frame]:Show()
-            Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            if frame ~= 'timerbar' then
+                Addon.fMain[frame]:SetBackdropColor(1,1,1, 0)
+            end
         end
     end
     Addon:SetFont(theme.font, true)

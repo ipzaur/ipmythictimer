@@ -1,13 +1,13 @@
-## Interface: 110005
+## Interface: 110007
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Ключей
 ## Author: iP
-## Version: 1.3.64
+## Version: 1.4.0
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon, IPMTTheme
 ## X-eMail: ipzaur@gmail.com
-## IconTexture: Interface\AddOns\iPMythicTimer\media\icon
+## IconTexture: Interface\AddOns\iPMythicTimer\media\icon.png
 
 Localization\localization.lua
 Localization\localization_ru.lua
@@ -39,6 +39,7 @@ seasons\season101.lua
 
 frames\main.lua
 frames\help.lua
+frames\news.lua
 frames\import.lua
 frames\options.lua
 frames\elemEditor.lua
@@ -51,6 +52,7 @@ frames\keyRename.lua
 
 ignoredNPC.lua
 main.lua
+news.lua
 prognosis.lua
 help.lua
 import.lua

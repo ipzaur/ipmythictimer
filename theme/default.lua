@@ -98,6 +98,28 @@ Addon.theme[1] = {
             },
             hidden   = false,
         },
+        timerbar = {
+            size   = {
+                w = 180,
+                h = 4,
+            },
+            position = {
+                x = 0,
+                y = 0,
+                point  = 'TOPLEFT',
+                rPoint = 'BOTTOMLEFT',
+            },
+            statusbar = {
+                texture = "Interface\\Buttons\\WHITE8X8",
+            },
+            background = {
+                texture = "Interface\\Buttons\\WHITE8X8",
+                color   = {r=0, g=0, b=0, a=.4},
+            },
+            padding = 1,
+            type   = 'H',
+            hidden = false,
+        },
         plusTimer = {
             size = {
                 w = 50,

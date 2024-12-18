@@ -110,8 +110,12 @@ function Addon:CloseThemeEditor()
         Addon:ToggleMovable(frame, false)
         if info.hidden then
             Addon.fMain[frame]:Hide()
-        elseif IPMTDungeon.keyActive and frame == 'deathTimer' then
-            Addon.deaths:Update()
+        elseif IPMTDungeon.keyActive then
+            if frame == 'deathTimer' then
+                Addon.deaths:Update()
+            elseif frame == 'progress' then
+                Addon:UpdateProgress()
+            end
         end
     end
     for decorID, info in ipairs(theme.decors) do
@@ -152,6 +156,7 @@ function Addon:FillDummy(onlyText)
         if Addon.fool and Addon.fMain.affix[Addon.affixesCount]:IsShown() then
             Addon.fMain.affix[Addon.affixesCount]:Hide()
         end
+        Addon:RenderTimerbar()
     end
 end
 
@@ -168,11 +173,19 @@ function Addon:FillThemeEditor()
     Addon.fThemes.bg.width:SetText(Addon:Round(theme.main.size.w))
     Addon.fThemes.bg.height:SetText(Addon:Round(theme.main.size.h))
     Addon.fThemes.bg.background:SetText(theme.main.background.texture)
-    Addon.fThemes.bg.backgroundColor:ColorChange(theme.main.background.color.r, theme.main.background.color.g, theme.main.background.color.b, theme.main.background.color.a, true)
+    local color = theme.main.background.color
+    Addon.fThemes.bg.backgroundColor:ColorChange(color.r, color.g, color.b, color.a, true)
     Addon.fThemes.bg.backgroundInset:SetValue(theme.main.background.inset)
     Addon.fThemes.bg.border:SetText(theme.main.border.texture)
-    Addon.fThemes.bg.borderColor:ColorChange(theme.main.border.color.r, theme.main.border.color.g, theme.main.border.color.b, theme.main.border.color.a, true)
+    color = theme.main.border.color
+    Addon.fThemes.bg.borderColor:ColorChange(color.r, color.g, color.b, color.a, true)
     Addon.fThemes.bg.borderSize:SetValue(theme.main.border.size)
+
+    Addon.fThemes.timerbar.type:SelectItem(theme.elements.timerbar.type, true)
+    Addon.fThemes.timerbar.bar:SetText(theme.elements.timerbar.statusbar.texture)
+    color = theme.elements.timerbar.background.color
+    Addon.fThemes.timerbar.color:ColorChange(color.r,color.g,color.b, color.a, true)
+    Addon.fThemes.timerbar.padding:SetValue(theme.elements.timerbar.padding)
 
     for i, info in ipairs(Addon.frames) do
         local frame = info.label
@@ -266,11 +279,16 @@ function Addon:ToggleVisible(frame, woSave)
             if elemInfo.hidden then
                 element:SetBackdropColor(.85,0,0, .35)
             else
-                local alpha = .15
-                if woSave == true then
-                    alpha = 0
+                if frame == 'timerbar' then
+                    local color = elemInfo.background.color
+                    element:SetBackdropColor(color.r, color.g, color.b, color.a)
+                else
+                    local alpha = .15
+                    if woSave == true then
+                        alpha = 0
+                    end
+                    element:SetBackdropColor(1,1,1, alpha)
                 end
-                element:SetBackdropColor(1,1,1, alpha)
             end
         end
     end
@@ -616,6 +634,9 @@ function Addon:SetColor(frame, color, i, woSave)
             elemInfo.color[i] = Addon:CopyObject(color)
         end
     end
+    if frame == 'timer' then
+        Addon:RenderTimerbar()
+    end
 end
 
 function Addon:SetIconSize(frame, value, woSave)
@@ -668,11 +689,16 @@ function Addon:ToggleMovable(frame, enable)
             if elemInfo.hidden then
                 element:SetBackdropColor(.85,0,0, .15)
             else
-                local alpha = .15
-                if not Addon.opened.themes then
-                    alpha = 0
+                if frame == 'timerbar' then
+                    local color = elemInfo.background.color
+                    element:SetBackdropColor(color.r, color.g, color.b, color.a)
+                else
+                    local alpha = .15
+                    if not Addon.opened.themes then
+                        alpha = 0
+                    end
+                    element:SetBackdropColor(1,1,1, alpha)
                 end
-                element:SetBackdropColor(1,1,1, alpha)
             end
         end
         local alpha = editorElement.moveMode.icon:GetAlpha()
@@ -852,5 +878,59 @@ function Addon:SetSize(frame, w, h, woSave)
     if woSave ~= true then
         IPMTTheme[IPMTOptions.theme].elements[frame].size.w = w
         IPMTTheme[IPMTOptions.theme].elements[frame].size.h = h
+        if frame == 'timerbar' then
+            Addon:RenderTimerbar()
+        end
+    end
+end
+
+function Addon:SetTimerbarType(value, woSave)
+    local elemInfo = Addon:CopyObject(IPMTTheme[IPMTOptions.theme].elements.timerbar)
+    elemInfo.type = value
+    elemInfo.position.x = 0
+    elemInfo.position.y = 0
+    if value == 'H' then
+        elemInfo.size.w = IPMTTheme[IPMTOptions.theme].main.size.w
+        elemInfo.size.h = 4
+        elemInfo.position.point = 'TOPLEFT'
+        elemInfo.position.rPoint = 'BOTTOMLEFT'
+    else
+        elemInfo.size.w = 4
+        elemInfo.size.h = IPMTTheme[IPMTOptions.theme].main.size.h
+        elemInfo.position.point = 'TOPRIGHT'
+        elemInfo.position.rPoint = 'TOPLEFT'
+    end
+    Addon:MoveElement('timerbar', elemInfo.position, woSave)
+    Addon:RenderTimerbar(elemInfo)
+    if woSave ~= true then
+        IPMTTheme[IPMTOptions.theme].elements.timerbar.type = elemInfo.type
+        Addon.fThemes.timerbar.width:SetText(Addon:Round(elemInfo.size.w))
+        Addon.fThemes.timerbar.height:SetText(Addon:Round(elemInfo.size.h))
+    end
+end
+
+function Addon:SetTimerbar(params, woSave)
+    if params.background ~= nil and params.background.color ~= nil then
+        local color = params.background.color
+        Addon.fMain.timerbar:SetBackdropColor(color.r,color.g,color.b, color.a)
+        if woSave ~= true then
+            IPMTTheme[IPMTOptions.theme].elements.timerbar.background.color = color
+        end
+    end
+    if params.padding ~= nil then
+        local elemInfo = Addon:CopyObject(IPMTTheme[IPMTOptions.theme].elements.timerbar)
+        elemInfo.padding = params.padding
+        Addon:RenderTimerbar(elemInfo)
+        if woSave ~= true then
+            IPMTTheme[IPMTOptions.theme].elements.timerbar.padding = params.padding
+        end
+    end
+    if params.statusbar ~= nil and params.statusbar.texture ~= nil then
+        for i=0,2 do
+            Addon.fMain.timerbar.section[i].active:SetTexture(params.statusbar.texture)
+        end
+        if woSave ~= true then
+            IPMTTheme[IPMTOptions.theme].elements.timerbar.statusbar.texture = params.statusbar.texture
+        end
     end
 end

@@ -5,7 +5,7 @@ function Addon:InitIcon()
     local LDB = LibStub("LibDataBroker-1.1"):NewDataObject("IPMythicTimer", {
         type = "data source",
         text = "IP Mythic Timer",
-        icon = "Interface\\AddOns\\" .. AddonName .. "\\media\\icon",
+        icon = "Interface\\AddOns\\" .. AddonName .. "\\media\\icon.png",
         OnClick = function(button, buttonPressed)
             if buttonPressed == "LeftButton" then
                 Addon:ToggleOptions()

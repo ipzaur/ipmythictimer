@@ -112,7 +112,12 @@ function Addon:GetForcesFromMDT(npcID, wsave)
 end
 
 function Addon:MDTHasDB()
-    return #MDT.dungeonEnemies[112] > 0
+    for mapID in pairs(Addon.MDTdungeon) do
+        if #MDT.dungeonEnemies[Addon.MDTdungeon[mapID]] > 0 then
+            return true
+        end
+    end
+    return false
 end
 
 function Addon:CheckMDTVersion(MDTName)

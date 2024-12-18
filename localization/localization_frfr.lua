@@ -5,6 +5,7 @@ local AddonName, Addon = ...
 Addon.localization.ADDELEMENT = "Ajouter un élément"
 
 Addon.localization.BACKGROUND = "Fond"
+Addon.localization.BGCOLOR    = "Background color" -- need correct
 Addon.localization.BORDER     = "Bord"
 Addon.localization.BORDERLIST = "Sélectionnez une bordure dans la bibliothèque"
 Addon.localization.BOTTOM     = "Bas"
@@ -68,6 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "Trash tués",
     PROGNOSIS = "Pourcentage après pull",
     TIMER     = "Temps restant",
+    TIMERBAR  = "Timer bar", -- need corect
     TORMENT   = "Tourments",
 }
 Addon.localization.ELEMACTION =  {
@@ -101,6 +103,7 @@ Addon.localization.HELP       = {
     PROGRESS   = "Trash tués",
     TIMER      = "Temps restant",
 }
+Addon.localization.HORIZONTAL = "Horizontal" -- need correct
 
 Addon.localization.ICONSIZE   = "Taille de l'icône"
 Addon.localization.IMPORT     = "Importer"
@@ -119,8 +122,11 @@ Addon.localization.MAPBUT     = "LMB (click) - basculer les options\n" ..
 Addon.localization.MAPBUTOPT  = "Bouton Afficher/Masquer la mini-carte"
 Addon.localization.MELEEATACK = "Attaque de mêlée"
 
+Addon.localization.OK         = "Ok"
 Addon.localization.OPTIONS    = "Options"
+Addon.localization.ORIENT     = "Orientation" -- need correct
 
+Addon.localization.PADDING    = "Padding" -- need correct
 Addon.localization.POINT      = "Point"
 Addon.localization.PRECISEPOS = "Clic droit pour un positionnement précis"
 Addon.localization.PROGFORMAT = {
@@ -181,6 +187,9 @@ Addon.localization.TIMERCHCKP = "Points de contrôle du timer"
 
 Addon.localization.UNKNOWN    = "Inconnu"
 
+Addon.localization.VERTICAL   = "Vertical" -- need correct
+
 Addon.localization.WAVEALERT  = "Alerter tous les {percent}%"
 Addon.localization.WIDTH      = "Largeur"
+Addon.localization.WHATSNEW   = "Quoi de neuf ?" -- need correct
 Addon.localization.WHODIED    = "Qui est mort"

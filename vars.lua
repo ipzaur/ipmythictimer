@@ -1,5 +1,4 @@
 local AddonName, Addon = ...
-Addon.version = 1349
 
 Addon.AFFIX_TEEMING = 5
 Addon.AFFIX_PERIL   = 152
@@ -93,6 +92,11 @@ Addon.frames = {
         },
     },
     {
+        label = 'timerbar',
+        name = Addon.localization.ELEMENT.TIMERBAR,
+        canResize = true,
+    },
+    {
         label = 'plusTimer',
         name = Addon.localization.ELEMENT.PLUSTIMER,
         hasText = true,
@@ -145,7 +149,6 @@ Addon.frames = {
 }
 
 Addon.defaultOption = {
-    version   = 0,
     scale     = 0,
     direction = 1,
     progress  = 1,
@@ -171,6 +174,7 @@ Addon.defaultOption = {
     MDTversion = 0,
     limitProgress = true,
     keysName = {},
+    news = nil,
 }
 
 Addon.cleanDungeon = {
@@ -187,9 +191,16 @@ Addon.cleanDungeon = {
     keyMapId    = 0,
     artwork     = 3759909, -- Mists Of Tirna Scithe journal button
     timeLimit   = {
-        [2] = nil,
-        [1] = nil,
-        [0] = nil,
+        [Addon.TIMER_DIRECTION_DESC] = {
+            [2] = nil,
+            [1] = nil,
+            [0] = nil,
+        },
+        [Addon.TIMER_DIRECTION_ASC] = {
+            [0] = nil,
+            [1] = nil,
+            [2] = nil,
+        },
     },
     trash       = {
         total   = 0,

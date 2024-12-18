@@ -265,20 +265,18 @@ local function UpdateTime(block, elapsedTime)
     end
     local timeCoef = {0.8, 0.6}
     local plusLevel = 0
+    local plusLevelText = 0
     local plusTimer = 0
     local timeText = ''
     local plusTimeText = nil
     local color = nil
 
-    if IPMTDungeon.timeLimit == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC] == nil or IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][0] == nil then
-        IPMTDungeon.timeLimit = {
-            [Addon.TIMER_DIRECTION_DESC] = {
-                [0] = block.timeLimit,
-            },
-            [Addon.TIMER_DIRECTION_ASC] = {
-                [2] = block.timeLimit,
-            },
-        }
+    if IPMTDungeon.timeLimit == nil then
+        IPMTDungeon.timeLimit = Addon:CopyObject(Addon.cleanDungeon.timeLimit)
+    end
+    if IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][0] == nil then
+        IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][0] = block.timeLimit
+        IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_ASC][2] = block.timeLimit
         local deltaTime = 0
         local timeLimit = block.timeLimit
         if IPMTDungeon.isPeril then
@@ -315,20 +313,74 @@ local function UpdateTime(block, elapsedTime)
                 plusTimeText = SecondsToClock(plusTimer)
             end
         end
-        color = theme.elements.timer.color[plusLevel]
-        plusLevel = "+" .. plusLevel+1
+        plusLevelText = "+" .. plusLevel+1
     else
         if Addon.fool ~= nil then
             Addon:ShowFool()
         end
         timeText = SecondsToClock(elapsedTime)
         plusTimeText = SecondsToClock(elapsedTime - block.timeLimit)
-        plusLevel = "-1"
-        color = theme.elements.timer.color[-1]
+        plusLevelText = "-1"
+        plusLevel = -1
     end
+    color = theme.elements.timer.color[plusLevel]
     IPMTDungeon.time = elapsedTime
 
-    Addon.fMain.plusLevel.text:SetText(plusLevel)
+    -- update timerbar
+    local fSection = Addon.fMain.timerbar.section
+    if IPMTOptions.timerDir == Addon.TIMER_DIRECTION_DESC then
+        for i=plusLevel+1,2 do
+            fSection[i].active:Hide()
+        end
+        if plusLevel >= 0 then
+            for i=0,plusLevel do
+                fSection[i].active:Show()
+            end
+            local fullDelta
+            if plusLevel < 2 then
+                fullDelta = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel] - IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel+1]
+            else
+                fullDelta = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel]
+            end
+            local deltaTime = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel] - elapsedTime
+            local ratio = deltaTime / fullDelta
+            local barSize = math.ceil(fSection[plusLevel].size*ratio)
+            if IPMTTheme[IPMTOptions.theme].elements.timerbar.type == 'H' then
+                fSection[plusLevel].active:SetWidth(barSize)
+            else
+                fSection[plusLevel].active:SetHeight(barSize)
+            end
+        end
+    else
+        local color = IPMTTheme[IPMTOptions.theme].elements.timer.color[plusLevel]
+        local barIndex = 2-plusLevel
+        for i=0,2 do
+            if plusLevel >= 0 and i>barIndex then
+                fSection[i].active:Hide()
+            else
+                fSection[i].active:Show()
+                fSection[i].active:SetVertexColor(color.r, color.g, color.b, color.a)
+            end
+        end
+        if plusLevel >= 0 then
+            local fullDelta
+            if plusLevel < 2 then
+                fullDelta = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel] - IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel+1]
+            else
+                fullDelta = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel]
+            end
+            local deltaTime = IPMTDungeon.timeLimit[Addon.TIMER_DIRECTION_DESC][plusLevel] - elapsedTime
+            local ratio = 1 - deltaTime / fullDelta
+            local barSize = math.floor(fSection[barIndex].size*ratio) + 1
+            if IPMTTheme[IPMTOptions.theme].elements.timerbar.type == 'H' then
+                fSection[barIndex].active:SetWidth(barSize)
+            else
+                fSection[barIndex].active:SetHeight(barSize)
+            end
+        end
+    end
+
+    Addon.fMain.plusLevel.text:SetText(plusLevelText)
     Addon.fMain.timer.text:SetText(timeText)
     Addon.fMain.timer.text:SetTextColor(color.r, color.g, color.b)
     Addon.fMain.timer.text:SetAlpha(color.a)
@@ -548,7 +600,7 @@ local function InitPlayers()
     end
 end
 
-local updateTimer = 0 
+local updateTimer = 0
 function Addon:OnUpdate(elapsed)
     if IPMTDungeon and IPMTDungeon.keyActive then
         updateTimer = updateTimer + elapsed * 1000
@@ -751,24 +803,11 @@ function Addon:InitVars()
     if IPMTDB == nil then
         IPMTDB = {}
     end
-
--- remove after 3 versions +
-    local iter = pairs(IPMTDB)
-    local id, npcInfo = iter(IPMTDB)
-    if id and id > 5000 then
-        IPMTDB = {}
-    end
--- remove after 3 version -
 end
 
 function Addon:Render()
     Addon:RenderMain()
-    
-    if IPMTOptions.version == 0 then
-        Addon:ShowOptions()
-        Addon:ShowHelp()
-        IPMTOptions.version = Addon.version
-    end
+    Addon:InitNews()
 end
 
 function Addon:Init()
