@@ -674,6 +674,7 @@ local function ShowTimer()
         initAffixes(affixes)
         Addon.deaths:Update()
         Addon:UpdateProgress()
+        Addon:RenderTimerbar()
         Addon.fMain:Show()
 
         local dungeonName = IPMTOptions.keysName[IPMTDungeon.keyMapId]
