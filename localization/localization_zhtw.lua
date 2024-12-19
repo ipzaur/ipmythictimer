@@ -5,7 +5,7 @@ local AddonName, Addon = ...
 Addon.localization.ADDELEMENT = "加入元素"
 
 Addon.localization.BACKGROUND = "背景"
-Addon.localization.BGCOLOR    = "Background color" -- need correct
+Addon.localization.BGCOLOR    = "背景顏色"
 Addon.localization.BORDER     = "邊框"
 Addon.localization.BORDERLIST = "從函數庫中選擇一個邊框"
 Addon.localization.BOTTOM     = "底部"
@@ -35,7 +35,7 @@ Addon.localization.CORRUPTED  = {
     [161243] = "山姆雷克，混沌召喚者 (恐懼)",
     [161244] = "腐化者之血 (軟泥)",
 }
-Addon.localization.CURSEASON  = "Current season" -- need correct
+Addon.localization.CURSEASON  = "當前賽季"
 
 Addon.localization.DAMAGE     = "傷害"
 Addon.localization.DBCLEANED  = "怪物百分比數據庫已清除"
@@ -69,7 +69,7 @@ Addon.localization.ELEMENT    = {
     PROGRESS  = "已擊殺小怪",
     PROGNOSIS = "擊殺拉怪後的百分比",
     TIMER     = "鑰石計時器",
-    TIMERBAR  = "Timer bar", -- need corect
+    TIMERBAR  = "計時條",
     TORMENT   = "折磨副官",
 }
 Addon.localization.ELEMACTION =  {
@@ -103,7 +103,7 @@ Addon.localization.HELP = {
     PROGRESS   = "已擊殺小怪",
     TIMER      = "剩餘的時間",
 }
-Addon.localization.HORIZONTAL = "Horizontal" -- need correct
+Addon.localization.HORIZONTAL = "水平"
 
 Addon.localization.ICONSIZE   = "圖示大小"
 Addon.localization.IMPORT     = "匯入"
@@ -111,7 +111,7 @@ Addon.localization.IMPORT     = "匯入"
 Addon.localization.JUSTIFYH   = "水平文字對齊"
 Addon.localization.JUSTIFYV   = "垂直文字對齊"
 
-Addon.localization.KEYSNAME   = "Keys name" -- need correct
+Addon.localization.KEYSNAME   = "鑰石名稱"
 
 Addon.localization.LAYER      = "層級"
 Addon.localization.LEFT       = "左"
@@ -124,9 +124,9 @@ Addon.localization.MELEEATACK = "近戰攻擊"
 
 Addon.localization.OK         = "Ok"
 Addon.localization.OPTIONS    = "選項"
-Addon.localization.ORIENT     = "Orientation" -- need correct
+Addon.localization.ORIENT     = "定向"
 
-Addon.localization.PADDING    = "Padding" -- need correct
+Addon.localization.PADDING    = "鋪墊"
 Addon.localization.POINT      = "位置"
 Addon.localization.PRECISEPOS = "右鍵單擊以精確定位"
 Addon.localization.PROGFORMAT = {
@@ -137,8 +137,8 @@ Addon.localization.PROGRESS   = "進度格式"
 
 Addon.localization.RELPOINT   = "相對位置"
 Addon.localization.RIGHT      = "右"
-Addon.localization.RNMKEYSBT  = "Rename keys" -- need correct
-Addon.localization.RNMKEYSTT  = "Here you can change the names of the keys for the timer" -- need correct
+Addon.localization.RNMKEYSBT  = "重新命名鑰石"
+Addon.localization.RNMKEYSTT  = "這裡可以更改計時器的鑰石名稱。"
 
 Addon.localization.SCALE      = "縮放"
 Addon.localization.SEASONOPTS = "賽季選項"
@@ -154,7 +154,7 @@ Addon.localization.TEXTURELST = "從函數庫中選擇一個材質"
 Addon.localization.TXTCROP    = "裁切材"
 Addon.localization.TXTRINDENT = "材質縮排"
 Addon.localization.TXTSETTING = "進階材質設定"
-Addon.localization.THEME      = "主題"
+Addon.localization.THEME      = "外觀主題"
 Addon.localization.THEMEACTN  = {
     NEW    = "建立新主題",
     COPY   = "複製當前主題",
@@ -164,7 +164,7 @@ Addon.localization.THEMEACTN  = {
 Addon.localization.THEMEBUTNS = {
     ACTIONS     = "在主題的動作",
     DELETE      = "刪除當前主題",
-    RESTORE     = '恢復主題"' .. Addon.localization.DEFAULT .. '"並選擇它',
+    RESTORE     = '恢復成 "' .. Addon.localization.DEFAULT .. '" 主題',
     OPENEDITOR  = "打開主題編輯器",
     CLOSEEDITOR = "關閉主題編輯器",
 }
@@ -187,9 +187,9 @@ Addon.localization.TIMERCHCKP = "計時器檢查點"
 
 Addon.localization.UNKNOWN    = "未知"
 
-Addon.localization.VERTICAL   = "Vertical" -- need correct
+Addon.localization.VERTICAL   = "垂直"
 
 Addon.localization.WAVEALERT  = '每過{percent}%警告'
 Addon.localization.WIDTH      = "寬度"
-Addon.localization.WHATSNEW   = "What's new?" -- need correct
+Addon.localization.WHATSNEW   = "更新說明"
 Addon.localization.WHODIED    = "誰死了"
