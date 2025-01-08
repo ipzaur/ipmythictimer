@@ -136,31 +136,6 @@ function Addon:CloseOptions()
     Addon:CloseKeyRename()
 end
 
-local hideMainMenu = false
-local function TryToHideMainMenu()
-    if hideMainMenu then
-        hideMainMenu = false
-        HideUIPanel(GameMenuFrame)
-    end
-end
-hooksecurefunc('CloseMenus', TryToHideMainMenu)
-
-local _G = getfenv(0)
-_G.hooksecurefunc("StaticPopup_EscapePressed", function()
-    if Addon.opened.options then
-        if not GameMenuFrame:IsShown() and not SettingsPanel:IsShown() then
-            Addon:CloseOptions()
-            hideMainMenu = true
-        end
-    end
-end)
-
-function Addon:OpenSettingsFromPanel()
-    Addon:ShowOptions()
-    hideMainMenu = true
-    HideUIPanel(SettingsPanel)
-end
-
 function Addon:InitOptions()
     local globalVars = nil
     if IPMTOptions ~= nil and IPMTOptions.global then

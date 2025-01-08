@@ -25,6 +25,9 @@ function Addon:RenderOptions()
             y     = math.floor(y),
         }
     end)
+    Addon.fOptions:SetScript("OnHide", function(self, button)
+        Addon:CloseOptions()
+    end)
     Addon.fOptions:SetMovable(true)
 
     Addon.fOptions.common = CreateFrame("Frame", nil, Addon.fOptions)
@@ -369,7 +372,7 @@ function Addon:RenderOptions()
     Addon.fOptions.closeX:SetBackdrop(Addon.backdrop)
     Addon.fOptions.closeX:SetBackdropColor(0,0,0, 1)
     Addon.fOptions.closeX:SetScript("OnClick", function(self)
-        Addon:CloseOptions()
+        Addon.fOptions:Hide()
     end)
     Addon.fOptions.closeX:SetScript("OnEnter", function(self, event, ...)
         Addon.fOptions.closeX:SetBackdropColor(.1,.1,.1, 1)
@@ -400,6 +403,8 @@ function Addon:RenderOptions()
         Addon.fOptions.common:SetHeight(height + addHeight)
         Addon.fOptions:SetHeight(height + addHeight + 20)
     end
+
+    tinsert(UISpecialFrames, "IPMTSettings")
 end
 
 -- Frame for settings in global options panel
@@ -410,7 +415,8 @@ Addon.panel.fShowOptions:SetPoint("CENTER", Addon.panel, "TOP", 0, -140)
 Addon.panel.fShowOptions:SetSize(200, 30)
 Addon.panel.fShowOptions:SetText(Addon.localization.OPTIONS)
 Addon.panel.fShowOptions:SetScript("OnClick", function(self)
-    Addon:OpenSettingsFromPanel()
+    Addon:ShowOptions()
+    HideUIPanel(SettingsPanel)
 end)
 
 if InterfaceOptions_AddCategory then

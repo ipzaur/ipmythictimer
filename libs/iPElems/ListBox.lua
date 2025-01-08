@@ -13,12 +13,6 @@ local itemHeight = 24
 local maxHeight = 264
 
 local openedListBox = nil
-WorldFrame:HookScript("OnMouseDown", function(self, button)
-    if button == 'LeftButton' and openedListBox ~= nil then
-        openedListBox:ToggleList(false, true)
-    end
-end)
-
 
 function IPListBoxMixin:OnClick()
     self:ToggleList(nil, true)
@@ -45,6 +39,7 @@ function IPListBoxMixin:OnLoad()
     self.needScroll = false
     self.callback = nil
     self.noSort = false
+    self.hovered = false
 
     self:SetBackdrop(backdrop)
     self:SetBackdropColor(.03,.03,.03, 1)
@@ -72,6 +67,20 @@ function IPListBoxMixin:OnLoad()
     self.fList.fContent:SetSize(200, 300)
     self.fList:Hide()
     self.fItem = {}
+
+    if not self.inited then
+        self:SetScript("OnEvent", function(self, event, ...)
+            local button = ...
+            if event == "GLOBAL_MOUSE_DOWN" then
+                if button == 'LeftButton' and openedListBox ~= nil then
+                    if not openedListBox.hovered and not openedListBox:IsMouseOver() then
+                        openedListBox:ToggleList(false, true)
+                    end
+                end
+            end
+        end)
+        self.inited = true
+    end
 end
 
 function IPListBoxMixin:SetList(list, current, noSort)
@@ -129,7 +138,9 @@ function IPListBoxMixin:ToggleList(show, canCancel)
         self.fList:Show()
         self:SetBackdropBorderColor(1,1,1, 1)
         self.fTriangle:SetVertexColor(1, 1, 1, 1)
+        self:RegisterEvent("GLOBAL_MOUSE_DOWN")
     else
+        self.hovered = false
         self.fList:Hide()
         self:SetBackdropBorderColor(1,1,1, 0.5)
         self.fTriangle:SetVertexColor(1, 1, 1, .5)
@@ -137,6 +148,7 @@ function IPListBoxMixin:ToggleList(show, canCancel)
             self.callback:OnCancel()
         end
         openedListBox = nil
+        self:UnregisterEvent("GLOBAL_MOUSE_DOWN")
     end
     self.opened = show
 end
@@ -170,12 +182,14 @@ function IPListBoxMixin:RenderItem(num, key, text, selected)
         self.fItem[num]:SetBackdropBorderColor(0,0,0, 0)
         self.fItem[num]:EnableMouse(true)
         self.fItem[num]:SetScript("OnEnter", function(item, event, ...)
+            self.hovered = true
             self.fItem[num]:SetBackdropColor(1,1,1, .1)
             if self.callback and self.callback.OnHoverItem then
                 self.callback:OnHoverItem(self.fItem[num], self.fItem[num].key, self.fItem[num].text)
             end
         end)
         self.fItem[num]:SetScript("OnLeave", function(item, event, ...)
+            self.hovered = false
             self.fItem[num]:SetBackdropColor(1,1,1, 0)
         end)
         self.fItem[num]:SetScript("OnClick", function(item)
