@@ -5,14 +5,15 @@ local AddonName, Addon = ...
 
 Addon.MDTdungeon = {
 -- TWW
-    --[499] = 0,-- Priory of the Sacred Flame
-    --[500] = 0,-- The Rookery
+    [499] = 115,-- Priory of the Sacred Flame
+    [500] = 118,-- The Rookery
     [501] = 110, -- The Stonevault
     [502] = 114, -- City of Threads
     [503] = 113, -- Ara-Kara, City of Echoes
-    --[504] = 0, -- Darkflame Cleft
+    [504] = 117, -- Darkflame Cleft
     [505] = 111, -- The Dawnbreaker
-    --[506] = 0, -- Cinderbrew Meadery
+    [506] = 116, -- Cinderbrew Meadery
+    [525] = 119, -- Operation: Floodgate
 
 -- DF
     [399] = 42, -- Ruby Life Pools
