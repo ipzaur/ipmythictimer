@@ -1,9 +1,9 @@
-## Interface: 110007, 110100
+## Interface: 110100
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Ключей
 ## Author: iP
-## Version: 1.4.1
+## Version: 1.4.2
 ## OptionalDeps: LibSharedMedia-3.0, LibDBIcon-1.0, LibStub
 ## SavedVariables: IPMTDB, IPMTOptions, IPMTDungeon, IPMTTheme
 ## X-eMail: ipzaur@gmail.com

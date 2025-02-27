@@ -689,6 +689,7 @@ local function ShowTimer()
         Addon.fMain:RegisterEvent("ENCOUNTER_START")
         Addon.fMain:RegisterEvent("GROUP_JOINED")
         Addon.fMain:RegisterEvent("GROUP_LEFT")
+        Addon.fMain:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
         IPMTDungeon.keyActive = true
         Addon:SetDungeonArtwork()
         if Addon.season.ShowTimer then
@@ -711,6 +712,7 @@ local function HideTimer()
     Addon.fMain:UnregisterEvent("ENCOUNTER_START")
     Addon.fMain:UnregisterEvent("GROUP_JOINED")
     Addon.fMain:UnregisterEvent("GROUP_LEFT")
+    Addon.fMain:UnregisterEvent("SCENARIO_CRITERIA_UPDATE")
 end
 
 local function EncounterEnd(encounterID, success)
