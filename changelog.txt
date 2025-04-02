@@ -1,3 +1,6 @@
+Version 1.4.3:
+ - Crawler Mine now gives no force
+
 Version 1.4.2:
  - Some fixes and updates
 

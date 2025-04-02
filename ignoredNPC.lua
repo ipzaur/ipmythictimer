@@ -1,6 +1,7 @@
 local AddonName, Addon = ...
 
 Addon.ignoredNPC = {
+    [133482] = true, -- Crawler Mine (The MOTHERLODE!!)
     [142587] = true, -- Devouring Maggot after "Infest" (Waycrest Manor)
     [168457] = true, -- Summoned Stonewall Gargon (corridor before last boss of Sanguine Depths)
     [168837] = true, -- Summoned Stealthling spiders (Plaguefall)
