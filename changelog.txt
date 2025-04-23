@@ -1,3 +1,6 @@
+Version 1.4.4:
+ - 11.1.5 supported
+
 Version 1.4.3:
  - Crawler Mine now gives no force
 
