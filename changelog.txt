@@ -1,3 +1,6 @@
+Version 1.4.5:
+ - 11.1.7 supported
+
 Version 1.4.4:
  - 11.1.5 supported
 
