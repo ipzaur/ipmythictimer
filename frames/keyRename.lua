@@ -5,10 +5,10 @@ local KEY_HEIGHT = 70
 local keyMapIds = {
     {
         caption = Addon.localization.CURSEASON,
-        ids = {499,506,504,500,525,247,382,370},
+        ids = {503,505,542,378,525,499,391,392},
     }, {
         caption = "The War Within",
-        ids = {499,500,501,502,503,504,505,506,525},
+        ids = {499,500,501,502,503,504,505,506,525,542},
     }, {
         caption = "Dragonflight",
         ids = {399,400,401,402,403,404,405,406,463,464},

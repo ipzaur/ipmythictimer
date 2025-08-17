@@ -14,6 +14,7 @@ Addon.MDTdungeon = {
     [505] = 111, -- The Dawnbreaker
     [506] = 116, -- Cinderbrew Meadery
     [525] = 119, -- Operation: Floodgate
+    [542] = 123, -- Eco-Dome Al'dani
 
 -- DF
     [399] = 42, -- Ruby Life Pools
