@@ -472,6 +472,8 @@ function Addon:RenderThemeEditor()
         Addon:RenderFieldSet(params, theme.elements[params.label])
     end
 
+    Addon:RenderDeaths()
+
 -- Decors
     top = top - 20
     -- Themes caption
@@ -491,7 +493,7 @@ function Addon:RenderThemeEditor()
         end
     end
 
-    -- Clear database button
+    -- Add decor button
     Addon.fThemes.addDecor = CreateFrame("Button", nil, Addon.fThemes.fContent, "IPButton")
     Addon.fThemes.addDecor:SetPoint("CENTER", Addon.fThemes.fContent, "BOTTOM", 0, 440)
     Addon.fThemes.addDecor:SetSize(220, 30)
@@ -500,7 +502,6 @@ function Addon:RenderThemeEditor()
         Addon:AddDecor()
     end)
 
-    Addon:RenderDeaths(theme.deaths)
 
     Addon:RecalcThemesHeight()
 end

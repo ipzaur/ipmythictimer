@@ -1,3 +1,6 @@
+Version 1.4.8:
+ - Fixed theme editor with decors
+
 Version 1.4.7:
  - Some minor stuff for s3
 
