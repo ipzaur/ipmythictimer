@@ -1,3 +1,6 @@
+Version 1.4.9:
+ - Libs updated
+
 Version 1.4.8:
  - Fixed theme editor with decors
 
