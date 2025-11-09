@@ -1,4 +1,4 @@
-## Interface: 110200
+## Interface: 110205
 ## Title: iP Mythic+ Timer
 ## Notes: Compact Mythic+ Timer
 ## Notes-ruRU: Компактный Таймер для Ключей
